@@ -1,60 +1,68 @@
 package victor.training.java8.stream.order;
 
+import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.summingLong;
-import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 
 import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import victor.training.java8.stream.order.dto.OrderDto;
 import victor.training.java8.stream.order.entity.Customer;
 import victor.training.java8.stream.order.entity.Order;
+import victor.training.java8.stream.order.entity.Order.PaymentMethod;
 import victor.training.java8.stream.order.entity.OrderLine;
 import victor.training.java8.stream.order.entity.Product;
-import victor.training.java8.stream.order.entity.Order.PaymentMethod;
 
 public class TransformStreams {
 
+	// @Autowired ne prefacem
+	AltaClasa altaClasa = new AltaClasa();
 	/**
 	 * Transform all entities to DTOs.
 	 * Discussion:.. Make it cleanest!
 	 */
 	public List<OrderDto> p01_toDtos(List<Order> orders) {
+		BiFunction<AltaClasa, Order, OrderDto> wtf = AltaClasa::toDto; // f(AltaClasa, Order):OrderDto
+		Function<Order, OrderDto> given = altaClasa::toDto;
 		return orders.stream()
-				.map(this::toDto)
+				.map(altaClasa::toDto)
 				.collect(toList());
 	}
+	
+	
 
-
-	private OrderDto toDto(Order order) {
-		OrderDto dto = new OrderDto();
-		dto.totalPrice = order.getTotalPrice(); 
-		dto.creationDate = order.getCreationDate();
-		return dto;
+	public static class AltaClasa {
+		// @Autowired private UnRepo repo;
+		public OrderDto toDto(Order order) {
+			OrderDto dto = new OrderDto();
+			dto.totalPrice = order.getTotalPrice(); 
+			dto.creationDate = order.getCreationDate();
+			
+			//merge si cotrobaie prin baza, foloseste un Repo injectat
+			return dto;
+		}
 	}
 	
 	/**
 	 * Note: Order.getPaymentMethod()
 	 */
 	public Set<PaymentMethod> p02_getUsedPaymentMethods(Customer customer) {
-		return null; 
+		return customer.getOrders().stream()
+				.map(Order::getPaymentMethod) // f(Order):PaymentMethod
+				.collect(toSet()); 
 	}
 	
 	/**
@@ -62,7 +70,9 @@ public class TransformStreams {
 	 * Note: Order.getCreationDate()
 	 */
 	public SortedSet<LocalDate> p03_getOrderDatesAscending(Customer customer) {
-		return null; 
+		return customer.getOrders().stream()
+				.map(Order::getCreationDate)
+				.collect(Collectors.toCollection(TreeSet::new)); 
 	}
 	
 	
@@ -70,14 +80,17 @@ public class TransformStreams {
 	 * @return a map order.id -> order
 	 */
 	public Map<Long, Order> p04_mapOrdersById(Customer customer) {
-		return null; 
+		return customer.getOrders().stream()
+				.collect(Collectors.toMap(Order::getId, identity()));  
 	}
 	
 	/** 
 	 * Orders grouped by Order.paymentMethod
+	 * SQL : GROUP BY
 	 */
 	public Map<PaymentMethod, List<Order>> p05_getProductsByPaymentMethod(Customer customer) {
-		return null; 
+		return customer.getOrders().stream()
+				.collect(groupingBy(Order::getPaymentMethod)); 
 	}
 	
 	// -------------- MOVIE BREAK :p --------------------
@@ -96,7 +109,13 @@ public class TransformStreams {
 		for (Order order : customer.getOrders()) {
 			allLines.addAll(order.getOrderLines());
 		}
-		return null; 
+		
+		return allLines.stream()
+			.collect(groupingBy(OrderLine::getProduct, // imparte caprele in multimi (caprarii)
+					// (capraria este o multime de capre care au acelasi payment method)
+					Collectors.summingLong( // cum colectez caprele din fiecare multime
+							OrderLine::getCount // extrag din capra un Long (capra e OrderLine)
+							)));
 		
 	}
 	
