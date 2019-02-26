@@ -1,5 +1,7 @@
 package victor.training.java8.stream.order;
 
+import static java.util.Comparator.comparing;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -64,9 +66,8 @@ public class SearchStreams {
 	 * - Challenge: return an Optional<Order>
 	 */
 	public Optional<Order> p5_getMaxPriceOrder(Customer customer) {
-		Comparator<Order> comparator = 
-				(o1, o2) -> o1.getTotalPrice().compareTo(o2.getTotalPrice());
-		return customer.getOrders().stream().max(comparator); 
+		return customer.getOrders().stream()
+				.max(comparing(Order::getTotalPrice)); 
 	}
 	
 	/**
