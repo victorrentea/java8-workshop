@@ -64,12 +64,9 @@ public class SearchStreams {
 	 * - Challenge: return an Optional<Order>
 	 */
 	public Optional<Order> p5_getMaxPriceOrder(Customer customer) {
-		return customer.getOrders().stream()
-				.max(new Comparator<Order>() {
-					public int compare(Order o1, Order o2) {
-						return o1.getTotalPrice().compareTo(o2.getTotalPrice());
-					}
-				}); 
+		Comparator<Order> comparator = 
+				(o1, o2) -> o1.getTotalPrice().compareTo(o2.getTotalPrice());
+		return customer.getOrders().stream().max(comparator); 
 	}
 	
 	/**
