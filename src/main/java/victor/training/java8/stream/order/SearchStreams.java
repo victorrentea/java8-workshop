@@ -1,5 +1,7 @@
 package victor.training.java8.stream.order;
 
+import static java.util.stream.Collectors.toList;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,7 +24,7 @@ public class SearchStreams {
 	 */
 	public List<Order> p1_getActiveOrders(Customer customer) {	
 		return customer.getOrders().stream()
-				.filter(order -> order.getStatus() == Status.ACTIVE)
+				.filter(Order::isActive)
 				.collect(Collectors.toList()); 
 	}
 	
@@ -41,7 +43,8 @@ public class SearchStreams {
 	 * @return true if customer has at least one order with status ACTIVE
 	 */
 	public boolean p3_hasActiveOrders(Customer customer) {
-		return true; 
+		return customer.getOrders().stream()
+				.anyMatch(Order::isActive); 
 	}
 
 	/**
@@ -49,7 +52,8 @@ public class SearchStreams {
 	 * any OrderLine with isSpecialOffer()==true
 	 */
 	public boolean p4_canBeReturned(Order order) {
-		return true; // order.getOrderLines().stream() 
+		return order.getOrderLines().stream()
+				.noneMatch(orderLine -> orderLine.isSpecialOffer());
 	}
 	
 	// ---------- select the best ------------

@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import victor.training.java8.stream.order.entity.Order.Status;
+
 
 public class Order {
 
@@ -124,6 +126,10 @@ public class Order {
 		}
 		String detailsStr = details.stream().collect(joining(", "));
 		return "Order{"+detailsStr + "}";
+	}
+
+	public boolean isActive() {
+		return status == Status.ACTIVE;
 	}
 	
 }
