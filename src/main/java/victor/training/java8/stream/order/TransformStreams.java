@@ -1,14 +1,17 @@
 package victor.training.java8.stream.order;
 
+import static java.math.BigDecimal.ZERO;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.reducing;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -104,17 +107,8 @@ public class TransformStreams {
 	 */
 	public Map<Product, Long> p06_getProductCount(Customer customer) {
 		
-		List<OrderLine> allLines = new ArrayList<>();
-		
-		for (Order order : customer.getOrders()) {
-			allLines.addAll(order.getOrderLines());
-		}
-		
-		List<OrderLine> puriciLaGramada = customer.getOrders().stream() // Stream<Order>
+		return customer.getOrders().stream() // Stream<Order>
 			.flatMap(order -> order.getOrderLines().stream()) // Stream<OrderLine>
-			.collect(toList()); // List<OrderLine>
-		
-		return allLines.stream()
 			.collect(groupingBy(OrderLine::getProduct, // imparte caprele in multimi (caprarii)
 					// (capraria este o multime de capre care au acelasi payment method)
 					Collectors.summingLong( // cum colectez caprele din fiecare multime
@@ -123,12 +117,17 @@ public class TransformStreams {
 		
 	}
 	
+	
 	/**
 	 * All the unique products bought by the customer, 
 	 * sorted by Product.name.
 	 */
 	public List<Product> p07_getAllOrderedProducts(Customer customer) {
-		return null; 
+		return customer.getOrders().stream()
+				.flatMap(order -> order.getOrderLines().stream())
+				.map(OrderLine::getProduct)
+				.distinct()
+				.collect(toList()); 
 	}
 	
 	
@@ -139,14 +138,20 @@ public class TransformStreams {
 	 * Hint: Reuse the previous function.
 	 */
 	public String p08_getProductsJoined(Customer customer) {
-		return null; 
+		return p07_getAllOrderedProducts(customer).stream()
+				.map(Product::getName)
+				.sorted()
+				.collect(joining(",")); 
 	}
 	
 	/**
 	 * Sum of all Order.getTotalPrice(), truncated to Long.
 	 */
 	public Long p09_getApproximateTotalOrdersPrice(Customer customer) {
-		return null; 
+		return customer.getOrders().stream()
+				.map(Order::getTotalPrice)
+				.collect(reducing(ZERO, BigDecimal::add))
+				.longValue(); 
 	}
 	
 	// ----------- IO ---------------

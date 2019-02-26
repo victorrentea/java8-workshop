@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -84,6 +85,9 @@ public class MethodReferences {
 		Runnable f7 = c::clear;
 		
 		
+		// f(BD,BD):BD
+		BiFunction<BigDecimal, BigDecimal, BigDecimal> f8 = BigDecimal::add;
+		BinaryOperator<BigDecimal> f9 = BigDecimal::add;
 		
 		
 		
