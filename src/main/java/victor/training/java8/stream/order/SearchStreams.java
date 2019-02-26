@@ -1,12 +1,12 @@
 package victor.training.java8.stream.order;
 
-import static java.util.stream.Collectors.toList;
-
-import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import victor.training.java8.stream.order.entity.Customer;
 import victor.training.java8.stream.order.entity.Order;
+import victor.training.java8.stream.order.entity.Order.Status;
 
 public class SearchStreams {
 	
@@ -21,7 +21,9 @@ public class SearchStreams {
 	 * - shorten/clean it up
 	 */
 	public List<Order> p1_getActiveOrders(Customer customer) {	
-		return customer.getOrders().stream().collect(toList()); 
+		return customer.getOrders().stream()
+				.filter(order -> order.getStatus() == Status.ACTIVE)
+				.collect(Collectors.toList()); 
 	}
 	
 	/**
@@ -29,8 +31,16 @@ public class SearchStreams {
 	 * - ...Any or ...First ?
 	 * - what do you do when you don't find it ? null/throw/Optional ?
 	 */
-	public Order p2_getOrderById(List<Order> orders, long orderId) {
-		return null; // orders.stream()
+	public Optional<Order> p2_getOrderById(List<Order> orders, long orderId) {
+		List<Order> list = orders.stream()
+					.filter(order -> order.getId() == orderId)
+					.collect(Collectors.toList());
+		if (list.isEmpty()) {
+//			throw new IllegalArgumentException("N-am " + orderId);
+//			return null;
+			return Optional.empty();
+		}
+		return Optional.of(list.get(0));
 	}
 	
 	/**

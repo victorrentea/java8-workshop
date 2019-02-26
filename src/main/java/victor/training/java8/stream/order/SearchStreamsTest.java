@@ -18,8 +18,8 @@ import org.junit.runners.MethodSorters;
 
 import victor.training.java8.stream.order.entity.Customer;
 import victor.training.java8.stream.order.entity.Order;
-import victor.training.java8.stream.order.entity.OrderLine;
 import victor.training.java8.stream.order.entity.Order.Status;
+import victor.training.java8.stream.order.entity.OrderLine;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SearchStreamsTest {
@@ -38,14 +38,13 @@ public class SearchStreamsTest {
 	@Test
 	public void p2_getOrderById() {
 		List<Order> orders = Arrays.asList(new Order(1L), new Order(2L), new Order(3L));
-		assertEquals(2L, (long) service.p2_getOrderById(orders, 2L).getId());
+		assertEquals(2L, (long) service.p2_getOrderById(orders, 2L).get().getId());
 	}
 	
 	@Test
-	@Ignore
 	public void p2_getOrderById_whenIdNotFound() {
 		List<Order> orders = Arrays.asList(new Order(1L));
-		assertEquals(null, service.p2_getOrderById(orders, 1000L));
+		assertFalse(service.p2_getOrderById(orders, 1000L).isPresent());
 	}
 
 	@Test
