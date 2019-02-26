@@ -32,15 +32,9 @@ public class SearchStreams {
 	 * - what do you do when you don't find it ? null/throw/Optional ?
 	 */
 	public Optional<Order> p2_getOrderById(List<Order> orders, long orderId) {
-		List<Order> list = orders.stream()
+		return orders.stream()
 					.filter(order -> order.getId() == orderId)
-					.collect(Collectors.toList());
-		if (list.isEmpty()) {
-//			throw new IllegalArgumentException("N-am " + orderId);
-//			return null;
-			return Optional.empty();
-		}
-		return Optional.of(list.get(0));
+					.findFirst();
 	}
 	
 	/**
