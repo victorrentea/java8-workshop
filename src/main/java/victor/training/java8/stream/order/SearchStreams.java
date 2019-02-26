@@ -1,6 +1,7 @@
 package victor.training.java8.stream.order;
 
 import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.toList;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -74,7 +75,10 @@ public class SearchStreams {
 	 * last 3 Orders sorted descending by creationDate
 	 */
 	public List<Order> p6_getLast3Orders(Customer customer) {
-		return null; 
+		return customer.getOrders().stream()
+				.sorted(comparing(Order::getCreationDate).reversed())
+				.limit(3)
+				.collect(toList()); 
 	}
 	
 	
