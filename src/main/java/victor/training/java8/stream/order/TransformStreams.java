@@ -11,6 +11,7 @@ import static java.util.stream.Collectors.toSet;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +42,8 @@ public class TransformStreams {
 		BiFunction<AltaClasa, Order, OrderDto> wtf = AltaClasa::toDto; // f(AltaClasa, Order):OrderDto
 		Function<Order, OrderDto> given = altaClasa::toDto;
 		return orders.stream()
-				.map(altaClasa::toDto)
+//				.map(altaClasa::toDto)// sau..
+				.map(OrderDto::new)
 				.collect(toList());
 	}
 	
@@ -51,10 +53,9 @@ public class TransformStreams {
 		// @Autowired private UnRepo repo;
 		public OrderDto toDto(Order order) {
 			OrderDto dto = new OrderDto();
+			//merge si cotrobaie prin baza, foloseste un Repo injectat
 			dto.totalPrice = order.getTotalPrice(); 
 			dto.creationDate = order.getCreationDate();
-			
-			//merge si cotrobaie prin baza, foloseste un Repo injectat
 			return dto;
 		}
 	}
@@ -148,10 +149,13 @@ public class TransformStreams {
 	 * Sum of all Order.getTotalPrice(), truncated to Long.
 	 */
 	public Long p09_getApproximateTotalOrdersPrice(Customer customer) {
+//		return customer.getOrders().stream()
+//				.map(Order::getTotalPrice)
+//				.collect(reducing(ZERO, BigDecimal::add))
+//				.longValue(); 
 		return customer.getOrders().stream()
-				.map(Order::getTotalPrice)
-				.collect(reducing(ZERO, BigDecimal::add))
-				.longValue(); 
+				.mapToLong(order -> order.getTotalPrice().longValue())
+				.sum(); 
 	}
 	
 	// ----------- IO ---------------
@@ -164,14 +168,14 @@ public class TransformStreams {
 	 */
 	public List<OrderLine> p10_readOrderFromFile(File file) throws IOException {
 		
-		Stream<String> lines = null; // ??
-		//return lines
-		//.map(line -> line.split(";")) // Stream<String[]>
-		//.filter(cell -> "LINE".equals(cell[0]))
-		//.map(this::parseOrderLine) // Stream<OrderLine>
-		//.peek(this::validateOrderLine)
-		//.collect(toList());
-		return null;
+		try (Stream<String> lines = Files.lines(file.toPath())) {
+			return lines
+				.map(line -> line.split(";")) // Stream<String[]>
+				.filter(cell -> "LINE".equals(cell[0]))
+				.map(this::parseOrderLine) // Stream<OrderLine>
+				.peek(this::validateOrderLine)
+				.collect(toList());
+		}
 		
 	}
 	
