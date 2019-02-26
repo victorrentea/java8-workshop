@@ -61,16 +61,15 @@ public class SearchStreams {
 	/**
 	 * The Order with maximum getTotalPrice. 
 	 * i.e. the most expensive Order, or null if no Orders
-	 * - Challenge: return an Optional<creationDate>
+	 * - Challenge: return an Optional<Order>
 	 */
-	public Order p5_getMaxPriceOrder(Customer customer) {
+	public Optional<Order> p5_getMaxPriceOrder(Customer customer) {
 		return customer.getOrders().stream()
 				.max(new Comparator<Order>() {
 					public int compare(Order o1, Order o2) {
 						return o1.getTotalPrice().compareTo(o2.getTotalPrice());
 					}
-				})
-				.orElse(null); 
+				}); 
 	}
 	
 	/**
