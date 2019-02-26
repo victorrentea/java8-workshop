@@ -110,6 +110,10 @@ public class TransformStreams {
 			allLines.addAll(order.getOrderLines());
 		}
 		
+		List<OrderLine> puriciLaGramada = customer.getOrders().stream() // Stream<Order>
+			.flatMap(order -> order.getOrderLines().stream()) // Stream<OrderLine>
+			.collect(toList()); // List<OrderLine>
+		
 		return allLines.stream()
 			.collect(groupingBy(OrderLine::getProduct, // imparte caprele in multimi (caprarii)
 					// (capraria este o multime de capre care au acelasi payment method)
