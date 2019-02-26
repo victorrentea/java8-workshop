@@ -1,26 +1,34 @@
 package victor.training.java8.promisiuni;
 
 import static victor.training.java8.parallelstream.ConcurrencyUtil.log;
+import static victor.training.java8.parallelstream.ConcurrencyUtil.sleep2;
+
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import victor.training.java8.parallelstream.ConcurrencyUtil;
 
 public class BonDeOrdine {
-public static void main(String[] args) throws InterruptedException {
+public static void main(String[] args) throws InterruptedException, ExecutionException {
 	new BonDeOrdine().entryPoint();
 }
 	
-	void entryPoint() throws InterruptedException {
+	
+	void entryPoint() throws InterruptedException, ExecutionException {
+		ExecutorService piscina = Executors.newFixedThreadPool(2); // consideram ca e deja pornit
 		log("Start!");		
 		stepA();
-		Thread tB = new Thread(this::stepB);
-		Thread tC = new Thread(this::stepC);
 		
-		tB.start();
-		tC.start();
+		
+		Future<?> viitorB = piscina.submit(this::stepB);
+		Future<?> viitorC = piscina.submit(this::stepC);
+
 		log("le-am pornit");
 		
-		tB.join();
-		tC.join();
+		viitorB.get();
+		viitorC.get();
 		
 		stepD();
 		log("Gata!");
@@ -28,14 +36,18 @@ public static void main(String[] args) throws InterruptedException {
 	
 	void stepA() {
 		log("Execut A");
+		sleep2(1000);
 	}
 	void stepB() {
 		log("Execut B");
+		sleep2(1000);
 	}
 	void stepC() {
 		log("Execut C");
+		sleep2(1000);
 	}
 	void stepD() {
 		log("Execut D");
+		sleep2(1000);
 	}
 }
