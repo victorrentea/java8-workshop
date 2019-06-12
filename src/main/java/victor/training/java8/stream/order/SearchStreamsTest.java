@@ -18,8 +18,8 @@ import org.junit.runners.MethodSorters;
 
 import victor.training.java8.stream.order.entity.Customer;
 import victor.training.java8.stream.order.entity.Order;
-import victor.training.java8.stream.order.entity.Order.Status;
 import victor.training.java8.stream.order.entity.OrderLine;
+import victor.training.java8.stream.order.entity.Order.Status;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SearchStreamsTest {
@@ -38,13 +38,14 @@ public class SearchStreamsTest {
 	@Test
 	public void p2_getOrderById() {
 		List<Order> orders = Arrays.asList(new Order(1L), new Order(2L), new Order(3L));
-		assertEquals(2L, (long) service.p2_getOrderById(orders, 2L).get().getId());
+		assertEquals(2L, (long) service.p2_getOrderById(orders, 2L).getId());
 	}
 	
 	@Test
+	@Ignore
 	public void p2_getOrderById_whenIdNotFound() {
 		List<Order> orders = Arrays.asList(new Order(1L));
-		assertFalse(service.p2_getOrderById(orders, 1000L).isPresent());
+		assertEquals(null, service.p2_getOrderById(orders, 1000L));
 	}
 
 	@Test
@@ -77,13 +78,14 @@ public class SearchStreamsTest {
 		LocalDate yesterday = now().minusDays(1);
 		Order order1 = new Order().setTotalPrice(BigDecimal.ONE).setCreationDate(now());
 		Order order2 = new Order().setTotalPrice(BigDecimal.TEN).setCreationDate(yesterday);
-		assertEquals(order2, service.p5_getMaxPriceOrder(new Customer(order1, order2)).get());
+		assertEquals(order2, service.p5_getMaxPriceOrder(new Customer(order1, order2)));
 		// assertEquals(yesterday, service.p5_getMaxPriceOrder(new Customer(order1, order2)).get());
 	}
 	
 	@Test
 	public void p5_getMaxPriceOrder_whenNoOrders_returnsNothing() {
-		assertFalse(service.p5_getMaxPriceOrder(new Customer()).isPresent());
+		assertNull(service.p5_getMaxPriceOrder(new Customer()));
+		// assertFalse(service.p5_getMaxPriceOrder(new Customer()).isPresent());
 	}
 	
 	@Test

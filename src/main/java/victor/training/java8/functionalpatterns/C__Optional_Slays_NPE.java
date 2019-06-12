@@ -1,9 +1,5 @@
 package victor.training.java8.functionalpatterns;
 
-import static java.util.Optional.empty;
-
-import java.util.Optional;
-
 /* "I call it my billion-dollar mistake. 
  * It was the invention of the null reference in 1965..."
  *  -- Sir Charles Antony Richard  */
@@ -12,30 +8,22 @@ import java.util.Optional;
 
 class DiscountService {
 	public String getDiscountLine(Customer customer) {
-		return customer.getMemberCard()
-				.flatMap(card -> getApplicableDiscountPercentage(card))
-				.map(discount -> "Discount: " +discount)
-				.orElse("");
-		
-		
+		return "Discount: " + getApplicableDiscountPercentage(customer.getMemberCard());
 	}
 		
-	private Optional<Integer> getApplicableDiscountPercentage(MemberCard card) {
+	private Integer getApplicableDiscountPercentage(MemberCard card) { 
 		if (card.getFidelityPoints() >= 100) {
-			return Optional.of(5);
+			return 5;
 		}
 		if (card.getFidelityPoints() >= 50) {
-			return Optional.of(3);
+			return 3;
 		}
-		return empty(); // pisica moarta
+		return null;
 	}
 		
 	// test: 60, 10, no MemberCard
 	public static void main(String[] args) {
-		DiscountService service = new DiscountService();
-		System.out.println(service.getDiscountLine(new Customer(new MemberCard(60))));
-		System.out.println(service.getDiscountLine(new Customer(new MemberCard(10))));
-		System.out.println(service.getDiscountLine(new Customer()));
+		
 	}
 }
 
@@ -54,8 +42,8 @@ class Customer {
 	public Customer(MemberCard profile) {
 		this.memberCard = profile;
 	}
-	public Optional<MemberCard> getMemberCard() {
-		return Optional.ofNullable(memberCard);
+	public MemberCard getMemberCard() {
+		return memberCard;
 	}
 }
 
