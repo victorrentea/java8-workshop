@@ -1,26 +1,24 @@
 package victor.training.java8.stream.order;
 
-import static java.math.BigDecimal.ZERO;
-import static java.util.function.Function.identity;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.reducing;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.math.BigDecimal;
-import java.nio.file.Files;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import victor.training.java8.stream.order.dto.OrderDto;
@@ -32,41 +30,80 @@ import victor.training.java8.stream.order.entity.Product;
 
 public class TransformStreams {
 
-	// @Autowired ne prefacem
-	AltaClasa altaClasa = new AltaClasa();
+	
+	// @Inject === @Autowired
+	private OrderMapper mapper;
 	/**
 	 * Transform all entities to DTOs.
 	 * Discussion:.. Make it cleanest!
 	 */
 	public List<OrderDto> p01_toDtos(List<Order> orders) {
-		BiFunction<AltaClasa, Order, OrderDto> wtf = AltaClasa::toDto; // f(AltaClasa, Order):OrderDto
-		Function<Order, OrderDto> given = altaClasa::toDto;
-		return orders.stream()
-//				.map(altaClasa::toDto)// sau..
-				.map(OrderDto::new)
+		
+		return orders.stream() // Stream<Order>
+//				.map(this::toDto) // Stream<OrderDto>
+//				.map(mapper::toDto) // Stream<OrderDto>
+				.map(order -> new OrderDto(order)) // Stream<OrderDto>
 				.collect(toList());
 	}
 	
-	
+	{
 
-	public static class AltaClasa {
-		// @Autowired private UnRepo repo;
-		public OrderDto toDto(Order order) {
-			OrderDto dto = new OrderDto();
-			//merge si cotrobaie prin baza, foloseste un Repo injectat
-			dto.totalPrice = order.getTotalPrice(); 
-			dto.creationDate = order.getCreationDate();
-			return dto;
-		}
+		//Integer.parseInt(s) --> f(String):int
+		Function<String, Integer> parseInt = Integer::parseInt;
+		
+		// **** Metode de instanta ***** referit de pe clasa.
+		// toDto --> toDto(TransformStream,Order):OrderDto
+		BiFunction<TransformStreams, Order, OrderDto> refLuataDePeClasa = TransformStreams::toDto;
+		
+		// isActive(Order):Boolean
+		Function<Order, Boolean> isAct = Order::isActive;
+		Predicate<Order> isActPred = Order::isActive;
+		Function<Order, BigDecimal> totalPrice = Order::getTotalPrice;
+		Function<Order, List<OrderLine>> getLines = Order::getOrderLines;
+		List<OrderLine> list = getLines.apply(new Order());
+		
+		// **** Metode de instanta ***** referit de pe o instanta existenta.
+		Function<Order, OrderDto> refLuataDePeClasa2 = this::toDto;
+		Order orderInstance = new Order();
+		Supplier<Boolean> unBoolDinNimic = orderInstance::isActive; // f():boolean
+		Supplier<List<OrderLine>> getLinesDinNimic = orderInstance::getOrderLines;
+		
+		Function<Order,OrderDto> mapRef = mapper::toDto; //  f(Order): OrderDto
+		BiFunction<OrderMapper, Order, OrderDto> mapRef2 =  OrderMapper::toDto; // f(OrderMapper,Order): OrderDto    sau
+		
+		PrintStream ps = System.out;
+		Consumer<String> println = ps::println; // f(String):void
+		System.out.println("a");
+		Consumer<Long> printlnl = ps::println; // f(String):void
+		System.out.println(1L);
+		
+		BiConsumer<PrintStream, String> printFaraInstanta = PrintStream::println; // f(PrintStream,String):void
+		printFaraInstanta.accept(System.out, "de printat");
+		
+		
+		Date acum = new Date();
+		Supplier<Date> maUitLaCeas = Date::new;// f():Date
+		
+		Date in1970 = new Date(0l);
+		Function<Long,Date> aoleu = Date::new;// f(Long):Date
+		
+		
 	}
+
+	private OrderDto toDto(Order order) {
+		OrderDto dto = new OrderDto();
+		dto.totalPrice = order.getTotalPrice(); 
+		dto.creationDate = order.getCreationDate();
+		return dto;
+	}
+	
+	
 	
 	/**
 	 * Note: Order.getPaymentMethod()
 	 */
 	public Set<PaymentMethod> p02_getUsedPaymentMethods(Customer customer) {
-		return customer.getOrders().stream()
-				.map(Order::getPaymentMethod) // f(Order):PaymentMethod
-				.collect(toSet()); 
+		return null; 
 	}
 	
 	/**
@@ -74,9 +111,7 @@ public class TransformStreams {
 	 * Note: Order.getCreationDate()
 	 */
 	public SortedSet<LocalDate> p03_getOrderDatesAscending(Customer customer) {
-		return customer.getOrders().stream()
-				.map(Order::getCreationDate)
-				.collect(Collectors.toCollection(TreeSet::new)); 
+		return null; 
 	}
 	
 	
@@ -84,17 +119,14 @@ public class TransformStreams {
 	 * @return a map order.id -> order
 	 */
 	public Map<Long, Order> p04_mapOrdersById(Customer customer) {
-		return customer.getOrders().stream()
-				.collect(Collectors.toMap(Order::getId, identity()));  
+		return null; 
 	}
 	
 	/** 
 	 * Orders grouped by Order.paymentMethod
-	 * SQL : GROUP BY
 	 */
 	public Map<PaymentMethod, List<Order>> p05_getProductsByPaymentMethod(Customer customer) {
-		return customer.getOrders().stream()
-				.collect(groupingBy(Order::getPaymentMethod)); 
+		return null; 
 	}
 	
 	// -------------- MOVIE BREAK :p --------------------
@@ -108,27 +140,21 @@ public class TransformStreams {
 	 */
 	public Map<Product, Long> p06_getProductCount(Customer customer) {
 		
-		return customer.getOrders().stream() // Stream<Order>
-			.flatMap(order -> order.getOrderLines().stream()) // Stream<OrderLine>
-			.collect(groupingBy(OrderLine::getProduct, // imparte caprele in multimi (caprarii)
-					// (capraria este o multime de capre care au acelasi payment method)
-					Collectors.summingLong( // cum colectez caprele din fiecare multime
-							OrderLine::getCount // extrag din capra un Long (capra e OrderLine)
-							)));
+		List<OrderLine> allLines = new ArrayList<>();
+		
+		for (Order order : customer.getOrders()) {
+			allLines.addAll(order.getOrderLines());
+		}
+		return null; 
 		
 	}
-	
 	
 	/**
 	 * All the unique products bought by the customer, 
 	 * sorted by Product.name.
 	 */
 	public List<Product> p07_getAllOrderedProducts(Customer customer) {
-		return customer.getOrders().stream()
-				.flatMap(order -> order.getOrderLines().stream())
-				.map(OrderLine::getProduct)
-				.distinct()
-				.collect(toList()); 
+		return null; 
 	}
 	
 	
@@ -139,23 +165,14 @@ public class TransformStreams {
 	 * Hint: Reuse the previous function.
 	 */
 	public String p08_getProductsJoined(Customer customer) {
-		return p07_getAllOrderedProducts(customer).stream()
-				.map(Product::getName)
-				.sorted()
-				.collect(joining(",")); 
+		return null; 
 	}
 	
 	/**
 	 * Sum of all Order.getTotalPrice(), truncated to Long.
 	 */
 	public Long p09_getApproximateTotalOrdersPrice(Customer customer) {
-//		return customer.getOrders().stream()
-//				.map(Order::getTotalPrice)
-//				.collect(reducing(ZERO, BigDecimal::add))
-//				.longValue(); 
-		return customer.getOrders().stream()
-				.mapToLong(order -> order.getTotalPrice().longValue())
-				.sum(); 
+		return null; 
 	}
 	
 	// ----------- IO ---------------
@@ -168,14 +185,14 @@ public class TransformStreams {
 	 */
 	public List<OrderLine> p10_readOrderFromFile(File file) throws IOException {
 		
-		try (Stream<String> lines = Files.lines(file.toPath())) {
-			return lines
-				.map(line -> line.split(";")) // Stream<String[]>
-				.filter(cell -> "LINE".equals(cell[0]))
-				.map(this::parseOrderLine) // Stream<OrderLine>
-				.peek(this::validateOrderLine)
-				.collect(toList());
-		}
+		Stream<String> lines = null; // ??
+		//return lines
+		//.map(line -> line.split(";")) // Stream<String[]>
+		//.filter(cell -> "LINE".equals(cell[0]))
+		//.map(this::parseOrderLine) // Stream<OrderLine>
+		//.peek(this::validateOrderLine)
+		//.collect(toList());
+		return null;
 		
 	}
 	
@@ -193,3 +210,20 @@ public class TransformStreams {
 	// TODO print cannonical paths of all files in current directory
 	// use Unchecked... stuff
 }
+
+class OrderMapper {
+	public OrderDto toDto(Order order) {
+		OrderDto dto = new OrderDto();
+		dto.totalPrice = order.getTotalPrice(); 
+		dto.creationDate = order.getCreationDate();
+		return dto;
+	}
+}
+
+
+
+
+
+
+
+
