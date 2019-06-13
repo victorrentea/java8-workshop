@@ -25,10 +25,10 @@ public class SearchStreams {
 	/**
 	 * - shorten/clean it up
 	 */
-	public List<Order> p1_getActiveOrders(Customer customer) {	
+	public List<Order> p1_getActiveOrders(Customer customer) {
 		return customer.getOrders().stream()
 				.filter(Order::isActive)
-				.collect(Collectors.toList()); 
+				.collect(toList());
 	}
 	
 	/**
@@ -37,17 +37,14 @@ public class SearchStreams {
 	 * - what do you do when you don't find it ? null/throw/Optional ?
 	 */
 	public Optional<Order> p2_getOrderById(List<Order> orders, long orderId) {
-		return orders.stream()
-					.filter(order -> order.getId() == orderId)
-					.findFirst();
+		return null;
 	}
 	
 	/**
 	 * @return true if customer has at least one order with status ACTIVE
 	 */
 	public boolean p3_hasActiveOrders(Customer customer) {
-		return customer.getOrders().stream()
-				.anyMatch(Order::isActive); 
+		return false;
 	}
 
 	/**
@@ -55,8 +52,7 @@ public class SearchStreams {
 	 * any OrderLine with isSpecialOffer()==true
 	 */
 	public boolean p4_canBeReturned(Order order) {
-		return order.getOrderLines().stream()
-				.noneMatch(OrderLine::isSpecialOffer);
+		return false;
 	}
 	
 	// ---------- select the best ------------
@@ -67,18 +63,14 @@ public class SearchStreams {
 	 * - Challenge: return an Optional<Order>
 	 */
 	public Optional<Order> p5_getMaxPriceOrder(Customer customer) {
-		return customer.getOrders().stream()
-				.max(comparing(Order::getTotalPrice)); 
+		return null;
 	}
 	
 	/**
 	 * last 3 Orders sorted descending by creationDate
 	 */
 	public List<Order> p6_getLast3Orders(Customer customer) {
-		return customer.getOrders().stream()
-				.sorted(comparing(Order::getCreationDate).reversed())
-				.limit(3)
-				.collect(toList()); 
+		return null;
 	}
 	
 	
