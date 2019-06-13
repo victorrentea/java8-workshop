@@ -37,7 +37,9 @@ public class SearchStreams {
 	 * - what do you do when you don't find it ? null/throw/Optional ?
 	 */
 	public Optional<Order> p2_getOrderById(List<Order> orders, long orderId) {
-		return null;
+		return orders.stream()
+				.filter(o -> o.getId() == orderId)
+				.findFirst();
 	}
 	
 	/**

@@ -37,8 +37,9 @@ public class SearchStreamsTest {
 
 	@Test
 	public void p2_getOrderById() {
-		List<Order> orders = Arrays.asList(new Order(1L), new Order(2L), new Order(3L));
-		assertEquals(2L, (long) service.p2_getOrderById(orders, 2L).get().getId());
+		List<Order> orders = Arrays.asList(new Order(1L), new Order(128L), new Order(3L));
+//		assertTrue(service.p2_getOrderById(orders, 2L).isPresent()); // redundant!!!
+		assertEquals(128L, (long) service.p2_getOrderById(orders, 128L).get().getId());
 	}
 	
 	@Test
