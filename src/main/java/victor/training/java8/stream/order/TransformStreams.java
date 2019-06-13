@@ -1,5 +1,8 @@
 package victor.training.java8.stream.order;
 
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.summarizingLong;
+import static java.util.stream.Collectors.summingLong;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -13,6 +16,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.LongSummaryStatistics;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
@@ -23,6 +27,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import victor.training.java8.stream.order.dto.OrderDto;
@@ -135,7 +140,8 @@ public class TransformStreams {
 	 * Orders grouped by Order.paymentMethod
 	 */
 	public Map<PaymentMethod, List<Order>> p05_getProductsByPaymentMethod(Customer customer) {
-		return null; 
+		return customer.getOrders().stream()
+				.collect(Collectors.groupingBy(Order::getPaymentMethod)); 
 	}
 	
 	// -------------- MOVIE BREAK :p --------------------
@@ -148,13 +154,9 @@ public class TransformStreams {
 	 * i.e. SELECT PROD_ID, SUM(COUNT) FROM PROD GROUPING BY PROD_ID
 	 */
 	public Map<Product, Long> p06_getProductCount(Customer customer) {
-		
-		List<OrderLine> allLines = new ArrayList<>();
-		
-		for (Order order : customer.getOrders()) {
-			allLines.addAll(order.getOrderLines());
-		}
-		return null; 
+		return customer.getOrders().stream()
+				.flatMap(order -> order.getOrderLines().stream())
+				.collect(groupingBy(OrderLine::getProduct,summingLong(OrderLine::getCount)));
 		
 	}
 	
