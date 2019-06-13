@@ -1,6 +1,7 @@
 package victor.training.java8.stream.order;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,7 +47,7 @@ public class TransformStreams {
 				.collect(toList());
 	}
 	
-	{
+	void methodReference() {
 
 		//Integer.parseInt(s) --> f(String):int
 		Function<String, Integer> parseInt = Integer::parseInt;
@@ -103,7 +104,9 @@ public class TransformStreams {
 	 * Note: Order.getPaymentMethod()
 	 */
 	public Set<PaymentMethod> p02_getUsedPaymentMethods(Customer customer) {
-		return null; 
+		return customer.getOrders().stream()
+				.map(Order::getPaymentMethod)
+				.collect(toSet()); 
 	}
 	
 	/**
