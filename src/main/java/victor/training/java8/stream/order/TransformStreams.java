@@ -2,6 +2,7 @@ package victor.training.java8.stream.order;
 
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 
 import java.io.File;
@@ -126,7 +127,8 @@ public class TransformStreams {
 	 * @return a map order.id -> order
 	 */
 	public Map<Long, Order> p04_mapOrdersById(Customer customer) {
-		return null; 
+		return customer.getOrders().stream()
+				.collect(toMap(Order::getId, o -> o)); 
 	}
 	
 	/** 
