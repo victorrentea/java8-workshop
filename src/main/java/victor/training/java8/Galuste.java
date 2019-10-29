@@ -7,6 +7,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
+import static java.util.concurrent.CompletableFuture.runAsync;
 import static java.util.concurrent.CompletableFuture.supplyAsync;
 
 public class Galuste {
@@ -15,16 +16,23 @@ public class Galuste {
         long t0 = System.currentTimeMillis();
 
 
-        CompletableFuture<String> futureA = supplyAsync(Galusca1::m);
+        CompletableFuture<String> futurea = supplyAsync(Galusca1::m);
 
 //        String a = Galusca1.m();
-        String a = futureA.get();
+        String a = futurea.get();
+
+        CompletableFuture<String> futureA = supplyAsync(() -> Galusca2.m(a));
+        CompletableFuture<String> futurea1 = supplyAsync(() -> Galusca3.m(a));
+//
+        String A = futureA.get();
+        String a1 = futurea1.get();
 
 
-        String A = Galusca2.m(a);
-        String a1 = Galusca3.m(a);
-        String Aa1Aa1 = Galusca4.m(A + a1);
-        Galusca5.m(Aa1Aa1);
+        CompletableFuture<String> futureAa1Aa1 = supplyAsync(() -> Galusca4.m(A + a1));
+        String Aa1Aa1 = futureAa1Aa1.get();
+
+        runAsync(() -> Galusca5.m(Aa1Aa1));
+
         long t1 = System.currentTimeMillis();
         System.out.println(t1 - t0);
     }
