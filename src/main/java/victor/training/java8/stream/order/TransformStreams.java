@@ -3,13 +3,11 @@ package victor.training.java8.stream.order;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.function.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -20,6 +18,7 @@ import victor.training.java8.stream.order.entity.OrderLine;
 import victor.training.java8.stream.order.entity.Product;
 import victor.training.java8.stream.order.entity.Order.PaymentMethod;
 
+import static java.math.BigDecimal.ZERO;
 import static java.util.stream.Collectors.*;
 
 
@@ -161,9 +160,9 @@ public class TransformStreams {
 	 */
 	public Long p09_getApproximateTotalOrdersPrice(Customer customer) {
 		return customer.getOrders().stream()
-				.map(o -> o.getTotalPrice()) // Stream<BigDecimal>
-				.mapToLong(bd -> bd.longValue()) // LongStream
-				.sum();
+				.map(Order::getTotalPrice) // Stream<BigDecimal>
+				.reduce(ZERO, BigDecimal::add)
+				.longValue();
 	}
 	
 	// ----------- IO ---------------
@@ -175,25 +174,37 @@ public class TransformStreams {
 	 * - Validate the created OrderLine. Throw ? :S
 	 */
 	public List<OrderLine> p10_readOrderFromFile(File file) throws IOException {
-		
-		Stream<String> lines = null; // ??
-		//return lines
-		//.map(line -> line.split(";")) // Stream<String[]>
-		//.filter(cell -> "LINE".equals(cell[0]))
-		//.map(this::parseOrderLine) // Stream<OrderLine>
-		//.peek(this::validateOrderLine)
-		//.collect(toList());
-		return null;
-		
+
+		Stream<String> lines = Files.lines(file.toPath());
+		try {
+			return lines
+					.map(line -> line.split(";")) // Stream<String[]>
+					.filter(cell -> "LINE".equals(cell[0]))
+					.map(this::parseOrderLine) // Stream<OrderLine>
+					.peek(new Consumer<OrderLine>() {
+						@Override
+						public void accept(OrderLine orderLine) {
+							try {
+								validateOrderLine(orderLine);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					})
+					.collect(toList());
+		} finally {
+			lines.close();
+		}
+
 	}
 	
 	private OrderLine parseOrderLine(String[] cells) {
 		return new OrderLine(new Product(cells[1]), Integer.parseInt(cells[2]));
 	}
 	
-	private void validateOrderLine(OrderLine orderLine) {
+	private void validateOrderLine(OrderLine orderLine) throws Exception {
 		if (orderLine.getCount() < 0) {
-			throw new IllegalArgumentException("Negative items");			
+			throw new Exception("Negative items");
 		}
 	}
 	
