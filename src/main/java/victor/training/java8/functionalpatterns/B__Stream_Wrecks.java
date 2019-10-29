@@ -6,6 +6,7 @@ import static java.util.stream.Collectors.toList;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 // get the products frequently ordered during the past year
@@ -15,16 +16,16 @@ class ProductService {
 	private ProductRepo productRepo;
 
 	public List<Product> getFrequentOrderedProducts(List<Order> orders) {
-		return orders.stream()
+		Map<Product, Integer> productOrderCount = orders.stream()
 				.filter(o -> o.getCreationDate().isAfter(LocalDate.now().minusYears(1)))
 				.flatMap(o -> o.getOrderLines().stream())
-				.collect(groupingBy(OrderLine::getProduct, summingInt(OrderLine::getItemCount)))
-				.entrySet()
-				.stream()
+				.collect(groupingBy(OrderLine::getProduct, summingInt(OrderLine::getItemCount)));
+		List<Long> hiddenIds = productRepo.getHiddenProductIds();
+		return productOrderCount.entrySet().stream()
 				.filter(e -> e.getValue() >= 10)
 				.map(Entry::getKey)
-				.filter(p -> !p.isDeleted())
-				.filter(p -> !productRepo.getHiddenProductIds().contains(p.getId()))
+				.filter(Product::isNotDeleted)
+				.filter(p -> !hiddenIds.contains(p.getId()))
 				.collect(toList());
 	}
 }
@@ -49,7 +50,10 @@ class Product {
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
+	public boolean isNotDeleted() {
+		return !deleted;
+	}
 }
 
 class Order {

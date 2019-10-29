@@ -183,21 +183,34 @@ public class TransactionPlay {
 //			sum += n;
 //		}
 		numere.stream()
-				.forEach(e-> {
+				.forEach(new Consumer<Integer>() {
+					int stare;
+					@Override
+					public void accept(Integer e) {
 //					sum += e;
-					System.out.println("Vad: " + e);
+						System.out.println("Vad: " +stare+++" : " + e);
+					}
 				});
 
 		Supplier<Integer> f = coaceUnSupplier();
 		System.out.println(f.get());
 		System.out.println(f.get());
+		System.out.println(f.get());
+		System.out.println(f.get());
 	}
 
 	Supplier<Integer> coaceUnSupplier() {
-		int counter = 0;
-		return () ->{
+		return new Supplier<Integer>() {
+			int counter = 0;
+			@Override
+			public Integer get() {
 				return counter++;
+			}
 		};
+
+
+
+
 	}
 
 
