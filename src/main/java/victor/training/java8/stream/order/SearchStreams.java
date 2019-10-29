@@ -47,8 +47,8 @@ public class SearchStreams {
 		return customer.getOrders()
 				.stream()
 				.filter(Order::isActive)
-				.collect(toList())
-				.size()>0;
+				.findFirst()
+				.isPresent();
 	}
 
 	/**
