@@ -9,6 +9,7 @@ import java.util.function.Predicate;
 
 import victor.training.java8.stream.order.entity.Customer;
 import victor.training.java8.stream.order.entity.Order;
+import victor.training.java8.stream.order.entity.OrderLine;
 
 public class SearchStreams {
 	
@@ -44,11 +45,7 @@ public class SearchStreams {
 	 * @return true if customer has at least one order with status ACTIVE
 	 */
 	public boolean p3_hasActiveOrders(Customer customer) {
-		return customer.getOrders()
-				.stream()
-				.filter(Order::isActive)
-				.findFirst()
-				.isPresent();
+		return customer.getOrders().stream().anyMatch(Order::isActive);
 	}
 
 	/**
@@ -56,7 +53,7 @@ public class SearchStreams {
 	 * any OrderLine with isSpecialOffer()==true
 	 */
 	public boolean p4_canBeReturned(Order order) {
-		return true; // order.getOrderLines().stream() 
+		return order.getOrderLines().stream().noneMatch(OrderLine::isSpecialOffer);
 	}
 	
 	// ---------- select the best ------------
