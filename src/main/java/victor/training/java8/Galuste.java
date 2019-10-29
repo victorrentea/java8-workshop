@@ -15,31 +15,14 @@ public class Galuste {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         long t0 = System.currentTimeMillis();
 
-
         CompletableFuture<String> futurea = supplyAsync(Galusca1::m);
-
+        // fork
         CompletableFuture<String> futureA =  futurea.thenApplyAsync(a -> Galusca2.m(a));
         CompletableFuture<String> futurea1 =  futurea.thenApplyAsync(a -> Galusca3.m(a));
-//        String a = Galusca1.m();
-//        String a = futurea.get();
-
-//        CompletableFuture.allOf(futureA,futurea1)
-
+        // join
         futureA.thenCombineAsync(futurea1, (A,a1) -> A+a1)
             .thenApplyAsync(Aa1 -> Galusca4.m(Aa1))
             .thenAcceptAsync(Aa1Aa1 -> Galusca5.m(Aa1Aa1));
-
-//        CompletableFuture<String> futureA = supplyAsync(() -> Galusca2.m(a));
-//        CompletableFuture<String> futurea1 = supplyAsync(() -> Galusca3.m(a));
-//
-////        String A = futureA.get();
-//        String a1 = futurea1.get();
-
-
-//        CompletableFuture<String> futureAa1Aa1 = supplyAsync(() -> Galusca4.m(A + a1));
-//        String Aa1Aa1 = futureAa1Aa1.get();
-
-//        runAsync(() -> Galusca5.m(Aa1Aa1));
 
         long t1 = System.currentTimeMillis();
         System.out.println(t1 - t0);
