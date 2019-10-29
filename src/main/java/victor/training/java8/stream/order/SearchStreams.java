@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import victor.training.java8.stream.order.entity.Customer;
@@ -22,8 +23,9 @@ public class SearchStreams {
 	 * - shorten/clean it up
 	 */
 	public List<Order> p1_getActiveOrders(Customer customer) {	
-		return customer.getOrders().stream()
-				.filter(order -> order.getStatus() == Order.Status.ACTIVE)
+		return customer.getOrders()
+				.stream()
+				.filter(Order::isActive)
 				.collect(toList());
 	}
 	
@@ -32,22 +34,21 @@ public class SearchStreams {
 	 * - ...Any or ...First ?
 	 * - what do you do when you don't find it ? null/throw/Optional ?
 	 */
-	public Order p2_getOrderById(List<Order> orders, long orderId) {
+	public Optional<Order> p2_getOrderById(List<Order> orders, long orderId) {
 		return orders.stream()
-				.filter(order -> order.getId() == orderId)
-				.findFirst()
-				.orElse(null);
-				// you do elseThrow if you want a custom exception.
-				// .orElseThrow(() -> new MyException("There is no Order in the provided list that matches the id provided: " + orderId));
-				// Better, keeps the reader focused:
-//				.orElseThrow(() -> new MyException(MYErrorCode.NO_ORDER, orderId));
+				.filter(order -> order.getId().equals(orderId))
+				.findFirst();
 	}
 	
 	/**
 	 * @return true if customer has at least one order with status ACTIVE
 	 */
 	public boolean p3_hasActiveOrders(Customer customer) {
-		return true; 
+		return customer.getOrders()
+				.stream()
+				.filter(Order::isActive)
+				.collect(toList())
+				.size()>0;
 	}
 
 	/**

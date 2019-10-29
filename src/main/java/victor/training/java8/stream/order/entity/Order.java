@@ -11,29 +11,35 @@ import java.util.List;
 
 public class Order {
 
-	public enum Status {
-		DRAFT, ACTIVE, INACTIVE
+
+
+    public enum Status {
+		DRAFT, ACTIVE, INACTIVE;
 	}
-	
+
+
 	public enum PaymentMethod {
 		CARD,
 		CASH_ON_SITE,
-		CASH_ON_DELIVERY
+		CASH_ON_DELIVERY;
 	}
-	
 	private Long id;
+
 	private Status status;
 	private List<OrderLine> orderLines;
 	private LocalDate creationDate;
 	private BigDecimal totalPrice;
 	private PaymentMethod paymentMethod;
-	
 	private LocalDate deliveryDueDate;
-	private Customer customer;
 
+	private Customer customer;
 	public Order() {
 	}
-	
+
+	public boolean isActive() {
+		return status == Order.Status.ACTIVE;
+	}
+
 	public Order(Status status) {
 		this.status = status;
 	}
