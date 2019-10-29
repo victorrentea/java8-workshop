@@ -18,23 +18,33 @@ public class Galuste {
 
         CompletableFuture<String> futurea = supplyAsync(Galusca1::m);
 
+        CompletableFuture<String> futureA =  futurea.thenApply(a -> Galusca2.m(a));
+        CompletableFuture<String> futurea1 =  futurea.thenApply(a -> Galusca3.m(a));
 //        String a = Galusca1.m();
-        String a = futurea.get();
+//        String a = futurea.get();
 
-        CompletableFuture<String> futureA = supplyAsync(() -> Galusca2.m(a));
-        CompletableFuture<String> futurea1 = supplyAsync(() -> Galusca3.m(a));
+//        CompletableFuture.allOf(futureA,futurea1)
+
+        futureA.thenCombine(futurea1, (A,a1) -> A+a1)
+            .thenApply(Aa1 -> Galusca4.m(Aa1))
+            .thenAccept(Aa1Aa1 -> Galusca5.m(Aa1Aa1));
+
+//        CompletableFuture<String> futureA = supplyAsync(() -> Galusca2.m(a));
+//        CompletableFuture<String> futurea1 = supplyAsync(() -> Galusca3.m(a));
 //
-        String A = futureA.get();
-        String a1 = futurea1.get();
+////        String A = futureA.get();
+//        String a1 = futurea1.get();
 
 
-        CompletableFuture<String> futureAa1Aa1 = supplyAsync(() -> Galusca4.m(A + a1));
-        String Aa1Aa1 = futureAa1Aa1.get();
+//        CompletableFuture<String> futureAa1Aa1 = supplyAsync(() -> Galusca4.m(A + a1));
+//        String Aa1Aa1 = futureAa1Aa1.get();
 
-        runAsync(() -> Galusca5.m(Aa1Aa1));
+//        runAsync(() -> Galusca5.m(Aa1Aa1));
 
         long t1 = System.currentTimeMillis();
         System.out.println(t1 - t0);
+
+        Thread.sleep(6000);
     }
 
 }
@@ -81,7 +91,7 @@ class Galusca5 {
     public static void m(String Aa1Aa1) {
         log.debug("Procesez");
         Thread.sleep(1000);
-        System.out.println(Aa1Aa1);
+        log.debug(Aa1Aa1);
     }
 }
 
