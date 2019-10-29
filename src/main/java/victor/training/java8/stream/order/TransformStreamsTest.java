@@ -115,9 +115,9 @@ public class TransformStreamsTest {
 		Product table = new Product("Table");
 		
 		Order order1 = new Order(
+				new OrderLine(table, 1),
 				new OrderLine(chair, 3));
 		Order order2 = new Order(
-				new OrderLine(table, 1),
 				new OrderLine(chair, 1));
 		
 		List<Product> actual = service.p07_getAllOrderedProducts(new Customer(order1, order2));

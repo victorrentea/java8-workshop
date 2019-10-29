@@ -135,7 +135,12 @@ public class TransformStreams {
 	 * sorted by Product.name.
 	 */
 	public List<Product> p07_getAllOrderedProducts(Customer customer) {
-		return null; 
+		return customer.getOrders().stream() // Stream<Order>
+				.flatMap(o -> o.getOrderLines().stream()) // Stream<OrderLine>
+				.map(OrderLine::getProduct)
+				.distinct()// Stream<Product>
+				.sorted(Comparator.comparing(Product::getName))
+				.collect(toList());
 	}
 	
 	
@@ -146,14 +151,19 @@ public class TransformStreams {
 	 * Hint: Reuse the previous function.
 	 */
 	public String p08_getProductsJoined(Customer customer) {
-		return null; 
+		return p07_getAllOrderedProducts(customer).stream() // Stream<Product>
+				.map(Product::getName) // Stream<String>
+				.collect(joining(","));
 	}
 	
 	/**
 	 * Sum of all Order.getTotalPrice(), truncated to Long.
 	 */
 	public Long p09_getApproximateTotalOrdersPrice(Customer customer) {
-		return null; 
+		return customer.getOrders().stream()
+				.map(o -> o.getTotalPrice()) // Stream<BigDecimal>
+				.mapToLong(bd -> bd.longValue()) // LongStream
+				.sum();
 	}
 	
 	// ----------- IO ---------------
