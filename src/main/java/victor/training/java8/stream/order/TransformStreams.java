@@ -142,6 +142,9 @@ public class TransformStreams {
 		//.map(this::parseOrderLine) // Stream<OrderLine>
 		//.peek(this::validateOrderLine)
 		//.collect(toList());
+
+		// TODO check the number of lines is >= 2
+
 		return null;
 		
 	}
