@@ -18,16 +18,16 @@ public class Galuste {
 
         CompletableFuture<String> futurea = supplyAsync(Galusca1::m);
 
-        CompletableFuture<String> futureA =  futurea.thenApply(a -> Galusca2.m(a));
-        CompletableFuture<String> futurea1 =  futurea.thenApply(a -> Galusca3.m(a));
+        CompletableFuture<String> futureA =  futurea.thenApplyAsync(a -> Galusca2.m(a));
+        CompletableFuture<String> futurea1 =  futurea.thenApplyAsync(a -> Galusca3.m(a));
 //        String a = Galusca1.m();
 //        String a = futurea.get();
 
 //        CompletableFuture.allOf(futureA,futurea1)
 
-        futureA.thenCombine(futurea1, (A,a1) -> A+a1)
-            .thenApply(Aa1 -> Galusca4.m(Aa1))
-            .thenAccept(Aa1Aa1 -> Galusca5.m(Aa1Aa1));
+        futureA.thenCombineAsync(futurea1, (A,a1) -> A+a1)
+            .thenApplyAsync(Aa1 -> Galusca4.m(Aa1))
+            .thenAcceptAsync(Aa1Aa1 -> Galusca5.m(Aa1Aa1));
 
 //        CompletableFuture<String> futureA = supplyAsync(() -> Galusca2.m(a));
 //        CompletableFuture<String> futurea1 = supplyAsync(() -> Galusca3.m(a));
