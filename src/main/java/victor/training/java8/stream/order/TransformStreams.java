@@ -29,8 +29,19 @@ import victor.training.java8.stream.order.entity.Product;
 import victor.training.java8.stream.order.entity.Order.PaymentMethod;
 import victor.training.java8.stream.transaction.Transaction;
 
+
+class OrderMapper {
+	public OrderBdt toBdt(Order order) {
+		OrderBdt dto = new OrderBdt();
+		dto.totalPrice = order.getTotalPrice();
+		dto.creationDate = order.getCreationDate();
+		return dto;
+	}
+}
+
 public class TransformStreams {
 
+	OrderMapper mapper = new OrderMapper();
 	/**
 	 * Transform all entities to DTOs.
 	 * Discussion:.. Make it cleanest!
@@ -60,20 +71,15 @@ public class TransformStreams {
 
 		/// inapoi pe drum
 
-		Function<Order, OrderBdt> toBDTDePeInstanta = this::toBdt;
-		BiFunction<TransformStreams, Order, OrderBdt> toBDTDePeClasa = TransformStreams::toBdt;
+		Function<Order, OrderBdt> toBDTDePeInstanta = mapper::toBdt;
+		BiFunction<OrderMapper, Order, OrderBdt> toBDTDePeClasa = OrderMapper::toBdt;
 
 		return orders.stream()
-				.map(this::toBdt)
+				.map(mapper::toBdt)
 				.collect(Collectors.toList());
 	}
 
-	private OrderBdt toBdt(Order order) {
-		OrderBdt dto = new OrderBdt();
-		dto.totalPrice = order.getTotalPrice();
-		dto.creationDate = order.getCreationDate();
-		return dto;
-	}
+
 
 	/**
 	 * Note: Order.getPaymentMethod()
