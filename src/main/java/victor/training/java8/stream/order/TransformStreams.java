@@ -1,19 +1,11 @@
 package victor.training.java8.stream.order;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toMap;
-
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -27,16 +19,11 @@ import victor.training.java8.stream.order.entity.Order;
 import victor.training.java8.stream.order.entity.OrderLine;
 import victor.training.java8.stream.order.entity.Product;
 import victor.training.java8.stream.order.entity.Order.PaymentMethod;
-import victor.training.java8.stream.transaction.Transaction;
+
+import static java.util.stream.Collectors.*;
 
 
 class OrderMapper {
-	public OrderBdt toBdt(Order order) {
-		OrderBdt dto = new OrderBdt();
-		dto.totalPrice = order.getTotalPrice();
-		dto.creationDate = order.getCreationDate();
-		return dto;
-	}
 }
 
 public class TransformStreams {
@@ -48,7 +35,7 @@ public class TransformStreams {
 	 */
 	public List<OrderBdt> p01_toDtos(List<Order> orders) {
 
-		int i = Integer.parseInt("s");
+//		int i = Integer.parseInt("s");
 		Function<String, Integer> parse = Integer::parseInt;
 		LocalDate localDate = LocalDate.parse("2019-10-10");
 		Function<String, LocalDate> x = LocalDate::parse;
@@ -59,7 +46,7 @@ public class TransformStreams {
 		Supplier<Long> millis = System::currentTimeMillis; // prima minune
 		BiFunction<String, DateTimeFormatter, LocalDate> parseul2 = LocalDate::parse;
 
-		System.exit(2);
+//		System.exit(2);
 		Consumer<Integer> chiuveta = System::exit;
 
 		//end of part 1 ------------
@@ -71,11 +58,17 @@ public class TransformStreams {
 
 		/// inapoi pe drum
 
-		Function<Order, OrderBdt> toBDTDePeInstanta = mapper::toBdt;
-		BiFunction<OrderMapper, Order, OrderBdt> toBDTDePeClasa = OrderMapper::toBdt;
+		new Date(); //f():Date
+		new Date(12L); //f(Long):date
+
+		Supplier<Date> dateAcum = Date::new;
+		Function<Long,Date> dateCandva = Date::new;
+
+		Function<Order, OrderBdt> toBDTDePeInstanta = order2 -> new OrderBdt(order2);
+		BiFunction<OrderMapper, Order, OrderBdt> toBDTDePeClasa = (orderMapper, order1) -> new OrderBdt(order1);
 
 		return orders.stream()
-				.map(mapper::toBdt)
+				.map(OrderBdt::new)
 				.collect(Collectors.toList());
 	}
 
@@ -85,7 +78,9 @@ public class TransformStreams {
 	 * Note: Order.getPaymentMethod()
 	 */
 	public Set<PaymentMethod> p02_getUsedPaymentMethods(Customer customer) {
-		return null; 
+		return customer.getOrders().stream()
+				.map(Order::getPaymentMethod)
+				.collect(Collectors.toSet());
 	}
 	
 	/**
@@ -93,7 +88,9 @@ public class TransformStreams {
 	 * Note: Order.getCreationDate()
 	 */
 	public SortedSet<LocalDate> p03_getOrderDatesAscending(Customer customer) {
-		return null; 
+		return customer.getOrders().stream()
+				.map(Order::getCreationDate)
+				.collect(toCollection(TreeSet::new));
 	}
 	
 	
@@ -101,14 +98,17 @@ public class TransformStreams {
 	 * @return a map order.id -> order
 	 */
 	public Map<Long, Order> p04_mapOrdersById(Customer customer) {
-		return null; 
+		return customer.getOrders()
+				.stream() // stream<Order>
+				.collect(toMap(Order::getId, o -> o));
 	}
 	
-	/** 
+	/**
+	 * GROUP BY
 	 * Orders grouped by Order.paymentMethod
 	 */
 	public Map<PaymentMethod, List<Order>> p05_getProductsByPaymentMethod(Customer customer) {
-		return null; 
+		return customer.getOrders().stream().collect(groupingBy(Order::getPaymentMethod));
 	}
 	
 	// -------------- MOVIE BREAK :p --------------------
