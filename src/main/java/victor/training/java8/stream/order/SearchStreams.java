@@ -1,11 +1,15 @@
 package victor.training.java8.stream.order;
 
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 
+import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import victor.training.java8.stream.order.entity.Customer;
 import victor.training.java8.stream.order.entity.Order;
@@ -64,14 +68,21 @@ public class SearchStreams {
 	 * - Challenge: return an Optional<creationDate>
 	 */
 	public Order p5_getMaxPriceOrder(Customer customer) {
-		return null; 
+//		Comparator<Order> orderComparator = (o1, o2) -> o1.getTotalPrice().compareTo(o2.getTotalPrice());
+		return customer.getOrders().stream()
+				.max(comparing(Order::getTotalPrice)/*.thenComparing(Order::getId)*/)
+				.orElse(null);
+//				.orElseThrow(() -> new IllegalArgumentException("Customer without orders"));
 	}
 	
 	/**
 	 * last 3 Orders sorted descending by creationDate
 	 */
 	public List<Order> p6_getLast3Orders(Customer customer) {
-		return null; 
+		return customer.getOrders().stream()
+				.sorted(comparing(Order::getCreationDate).reversed())
+				.limit(3)
+				.collect(toList());
 	}
 	
 	

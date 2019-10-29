@@ -2,33 +2,32 @@ package victor.training.java8.stream.order;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.summingLong;
-import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
-import static java.util.stream.Collectors.toSet;
 
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.file.Files;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import victor.training.java8.stream.order.dto.OrderDto;
+import victor.training.java8.stream.order.dto.OrderBdt;
 import victor.training.java8.stream.order.entity.Customer;
 import victor.training.java8.stream.order.entity.Order;
 import victor.training.java8.stream.order.entity.OrderLine;
 import victor.training.java8.stream.order.entity.Product;
 import victor.training.java8.stream.order.entity.Order.PaymentMethod;
+import victor.training.java8.stream.transaction.Transaction;
 
 public class TransformStreams {
 
@@ -36,19 +35,46 @@ public class TransformStreams {
 	 * Transform all entities to DTOs.
 	 * Discussion:.. Make it cleanest!
 	 */
-	public List<OrderDto> p01_toDtos(List<Order> orders) {
-		
-		List<OrderDto> dtos = new ArrayList<>();
-		for (Order order : orders) {
-			OrderDto dto = new OrderDto();
-			dto.totalPrice = order.getTotalPrice(); 
-			dto.creationDate = order.getCreationDate();
-			dtos.add(dto);
-		}
-		return dtos;
-		
+	public List<OrderBdt> p01_toDtos(List<Order> orders) {
+
+		int i = Integer.parseInt("s");
+		Function<String, Integer> parse = Integer::parseInt;
+		LocalDate localDate = LocalDate.parse("2019-10-10");
+		Function<String, LocalDate> x = LocalDate::parse;
+
+		Function<Order, BigDecimal> c = Order::getTotalPrice;
+		Function<Customer, List<Order>> getOrders = Customer::getOrders;
+		Function<Order, String> toStr = Order::toString;
+		Supplier<Long> millis = System::currentTimeMillis; // prima minune
+		BiFunction<String, DateTimeFormatter, LocalDate> parseul2 = LocalDate::parse;
+
+		System.exit(2);
+		Consumer<Integer> chiuveta = System::exit;
+
+		//end of part 1 ------------
+
+		Order o = new Order();
+		Supplier<String> toStringPeInstanta = o::toString;
+		Supplier<Long> orderId = o::getId;
+		Supplier<List<OrderLine>> orderLinesId = o::getOrderLines;
+
+		/// inapoi pe drum
+
+		Function<Order, OrderBdt> toBDTDePeInstanta = this::toBdt;
+		BiFunction<TransformStreams, Order, OrderBdt> toBDTDePeClasa = TransformStreams::toBdt;
+
+		return orders.stream()
+				.map(this::toBdt)
+				.collect(Collectors.toList());
 	}
-	
+
+	private OrderBdt toBdt(Order order) {
+		OrderBdt dto = new OrderBdt();
+		dto.totalPrice = order.getTotalPrice();
+		dto.creationDate = order.getCreationDate();
+		return dto;
+	}
+
 	/**
 	 * Note: Order.getPaymentMethod()
 	 */

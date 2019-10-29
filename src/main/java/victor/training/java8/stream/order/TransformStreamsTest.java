@@ -19,7 +19,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import victor.training.java8.stream.order.dto.OrderDto;
+import victor.training.java8.stream.order.dto.OrderBdt;
 import victor.training.java8.stream.order.entity.Customer;
 import victor.training.java8.stream.order.entity.Order;
 import victor.training.java8.stream.order.entity.OrderLine;
@@ -39,7 +39,7 @@ public class TransformStreamsTest {
 		Order order1 = new Order().setCreationDate(today).setTotalPrice(BigDecimal.TEN);
 		Order order2 = new Order().setCreationDate(yesterday).setTotalPrice(BigDecimal.ONE);
 		
-		List<OrderDto> dtos = service.p01_toDtos(Arrays.asList(order1, order2));
+		List<OrderBdt> dtos = service.p01_toDtos(Arrays.asList(order1, order2));
 		
 		assertEquals(today, dtos.get(0).creationDate);
 		assertEquals(BigDecimal.TEN, dtos.get(0).totalPrice);
