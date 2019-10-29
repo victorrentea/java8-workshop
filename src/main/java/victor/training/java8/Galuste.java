@@ -21,6 +21,7 @@ public class Galuste {
         CompletableFuture<String> futureA =  futurea.thenApplyAsync(a -> Galusca2.m(a));
         CompletableFuture<String> futurea1 =  futurea.thenApplyAsync(a -> Galusca3.m(a));
         // join
+
         futureA.thenCombineAsync(futurea1, (A,a1) -> A+a1)
                 .exceptionally(e -> {
                     if (e.getMessage().contains("ORA-131421")) {
