@@ -24,7 +24,7 @@ public class SearchStreams {
 	 */
 	public List<Order> p1_getActiveOrders(Customer customer) {	
 		return customer.getOrders().stream()
-				.filter(order -> order.getStatus() == Order.Status.ACTIVE)
+				.filter(Order::isActive)
 				.collect(toList());
 	}
 	
@@ -34,17 +34,17 @@ public class SearchStreams {
 	 * - what do you do when you don't find it ? null/throw/Optional ?
 	 */
 	public Order p2_getOrderById(List<Order> orders, long orderId) {
-		Optional<Order> orderOpt = orders.stream()
-			.filter(order -> order.getId() == orderId)
-			.findFirst();
-
-		if (orderOpt.isPresent()) {
-			System.out.println("Am gasit order " + orderOpt.get());
-			System.out.println("XXxx");
-		}
-		orderOpt.ifPresent(o -> System.out.println("Am gasit order " + o));
-		orderOpt.ifPresent(o -> metodaCuNumeCuviincios(o));
-
+//		Optional<Order> orderOpt = orders.stream()
+//			.filter(order -> order.getId() == orderId)
+//			.findFirst();
+//
+//		if (orderOpt.isPresent()) {
+//			System.out.println("Am gasit order " + orderOpt.get());
+//			System.out.println("XXxx");
+//		}
+//		orderOpt.ifPresent(o -> System.out.println("Am gasit order " + o));
+//		orderOpt.ifPresent(o -> metodaCuNumeCuviincios(o));
+//
 
 		return orders.stream()
 			.filter(order -> order.getId() == orderId)
@@ -63,7 +63,17 @@ public class SearchStreams {
 	 * @return true if customer has at least one order with status ACTIVE
 	 */
 	public boolean p3_hasActiveOrders(Customer customer) {
-		return true; 
+
+//		List<Order> list = customer.getOrders().stream()
+//			.filter(order -> order.getStatus() == Order.Status.ACTIVE)
+//			.collect(toList());
+//		return list.size() > 0;
+//		return !list.isEmpty();
+//			.filter(order -> order.getStatus() == Order.Status.ACTIVE)
+//			.count() > 0;
+//			.anyMatch(order -> order.getStatus() == Order.Status.ACTIVE); // short-circuiting
+		return  customer.getOrders().stream()
+			.anyMatch(Order::isActive); // short-circuiting: se opreste la primul match
 	}
 
 	/**
