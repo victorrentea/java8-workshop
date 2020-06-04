@@ -110,7 +110,9 @@ public class SearchStreams {
 //		maxOpt.map(order -> order.getCreationDate())
 
 //		a.getB().getC().getD();
-//		a.getB().map(b->b.getC()).map(c->c.getD()).orElse(null);
+		// getB():Optional<B> ; getC(): Optional<C>
+//		a.getB().map(b->b.getC())/*Optional<Optional<C>>*/ -- faci flatMap si dispare ambalajul aditional
+//		.map(c->c.getD()).orElse(null);
 
 
 		return maxOpt.map(Order::getCreationDate);
