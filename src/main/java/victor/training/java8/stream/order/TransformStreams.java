@@ -81,6 +81,11 @@ public class TransformStreams {
 			e.printStackTrace();
 		}
 
+//		new Date()
+		Supplier<Date> f18 = Date::new;
+//		new Date(1L);
+		Function<Long, Date> f19 = Date::new;
+
 
 		return orders.stream().map(OrderDto::new).collect(toList());
 	}
@@ -131,17 +136,11 @@ public class TransformStreams {
 	 * i.e. SELECT PROD_ID, SUM(COUNT) FROM PROD GROUPING BY PROD_ID
 	 */
 	public Map<Product, Long> p06_getProductCount(Customer customer) {
-		
-		List<OrderLine> allLines = new ArrayList<>();
-		
-		for (Order order : customer.getOrders()) {
-			allLines.addAll(order.getOrderLines());
-		}
 
-//		Map<Product, List<OrderLine>> map = allLines.stream()
-//			.collect(groupingBy(OrderLine::getProduct, toList()));
-//			.collect(groupingBy(OrderLine::getProduct));
-		return allLines.stream()
+		return customer.getOrders()
+			.stream()
+			.flatMap(order -> order.getOrderLines().stream())
+//			.collect(toList()).stream()
 			.collect(groupingBy(OrderLine::getProduct, summingLong(OrderLine::getCount)));
 		
 	}
