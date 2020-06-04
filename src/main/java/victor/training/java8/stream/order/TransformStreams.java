@@ -24,7 +24,7 @@ import victor.training.java8.stream.order.entity.Product;
 import victor.training.java8.stream.order.entity.Order.PaymentMethod;
 
 class OrderMapper {
-	public OrderDto toDto(Order order) {
+	public static OrderDto toDto(Order order) {
 		OrderDto dto = new OrderDto();
 		dto.totalPrice = order.getTotalPrice();
 		dto.creationDate = order.getCreationDate();
@@ -42,7 +42,7 @@ public class TransformStreams {
 	 * Discussion:.. Make it cleanest!
 	 */
 	public List<OrderDto> p01_toDtos(List<Order> orders) {
-		return orders.stream().map(orderMapper::toDto).collect(toList());
+		return orders.stream().map(OrderMapper::toDto).collect(toList());
 	}
 
 
