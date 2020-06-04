@@ -37,18 +37,20 @@ public class TransformStreams {
 	 * Discussion:.. Make it cleanest!
 	 */
 	public List<OrderDto> p01_toDtos(List<Order> orders) {
-		
-		List<OrderDto> dtos = new ArrayList<>();
-		for (Order order : orders) {
-			OrderDto dto = new OrderDto();
-			dto.totalPrice = order.getTotalPrice(); 
-			dto.creationDate = order.getCreationDate();
-			dtos.add(dto);
-		}
-		return dtos;
+
+//		return orders.stream().map(order -> toDto(order)).collect(toList());
+
+		return orders.stream().map(this::toDto).collect(toList());
 		
 	}
-	
+
+	private OrderDto toDto(Order order) {
+		OrderDto dto = new OrderDto();
+		dto.totalPrice = order.getTotalPrice();
+		dto.creationDate = order.getCreationDate();
+		return dto;
+	}
+
 	/**
 	 * Note: Order.getPaymentMethod()
 	 */
