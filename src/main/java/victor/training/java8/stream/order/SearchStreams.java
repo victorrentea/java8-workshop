@@ -34,6 +34,16 @@ public class SearchStreams {
 	 * - what do you do when you don't find it ? null/throw/Optional ?
 	 */
 	public Order p2_getOrderById(List<Order> orders, long orderId) {
+		Optional<Order> orderOpt = orders.stream()
+			.filter(order -> order.getId() == orderId)
+			.findFirst();
+
+		if (orderOpt.isPresent()) {
+			System.out.println("Am gasit order " + orderOpt.get());
+			System.out.println("XXxx");
+		}
+		orderOpt.ifPresent(o -> System.out.println("Am gasit order " + o));
+		orderOpt.ifPresent(o -> metodaCuNumeCuviincios(o));
 
 
 		return orders.stream()
@@ -43,7 +53,12 @@ public class SearchStreams {
 		// ar fi putut sa arunce si exceptie, dar ar fi fost prea agresiv:
 		// nu ai fi putut folosi metoda asta in liniste. Poate tu chiar vrei sa vezi daca ai vren elem inauntru.
 	}
-	
+
+	private void metodaCuNumeCuviincios(Order o) {
+		System.out.println("Am gasit order " + o);
+		System.out.println("XXxx");
+	}
+
 	/**
 	 * @return true if customer has at least one order with status ACTIVE
 	 */
