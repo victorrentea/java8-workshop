@@ -7,15 +7,21 @@ import static java.util.stream.Collectors.toMap;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.concurrent.Callable;
+import java.util.function.*;
 import java.util.stream.Stream;
 
+import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionTemplate;
 import victor.training.java8.stream.order.dto.OrderDto;
 import victor.training.java8.stream.order.entity.Customer;
 import victor.training.java8.stream.order.entity.Order;
@@ -23,8 +29,10 @@ import victor.training.java8.stream.order.entity.OrderLine;
 import victor.training.java8.stream.order.entity.Product;
 import victor.training.java8.stream.order.entity.Order.PaymentMethod;
 
+@Service
 class OrderMapper {
-	public static OrderDto toDto(Order order) {
+	// @Autowired alte dep;
+	public OrderDto toDto(Order order) {
 		OrderDto dto = new OrderDto();
 		dto.totalPrice = order.getTotalPrice();
 		dto.creationDate = order.getCreationDate();
@@ -33,16 +41,45 @@ class OrderMapper {
 }
 
 public class TransformStreams {
-
 	@Autowired
 	private OrderMapper orderMapper = new OrderMapper();
-
 	/**
 	 * Transform all entities to DTOs.
 	 * Discussion:.. Make it cleanest!
 	 */
 	public List<OrderDto> p01_toDtos(List<Order> orders) {
-		return orders.stream().map(OrderMapper::toDto).collect(toList());
+
+		Function<String, Integer> f1 = String::length; // f(string):int
+		Supplier<Integer> f2 = "abc"::length; // f():int
+		Function<String, Integer> f3 = Integer::parseInt; // f(String):Integer
+		Function<Order, Long> f4 = Order::getId; // f(Order):Long
+		Order order1 = new Order();
+		Supplier<Long> f5 = order1::getId;// f():Long    () -> order1.getId();
+		Callable<Long> f6 = order1::getId;// f():Long
+
+//		/*Function<Order, OrderDto> f7 =*/ OrderMapper::toDto; // (Order) -> OrderDto <--- asta daca toDto este statica
+
+		BiFunction<OrderMapper, Order, OrderDto> f7 = OrderMapper::toDto; // (OrderMapper, Order) -> OrderDto -->
+		Function<Order, OrderDto> f8 = orderMapper::toDto; // (Order) -> OrderDto
+
+		Function<List<Order>, List<OrderDto>> f9 = this::p01_toDtos; // (List<Order>) -> List<OrderDto>
+		BiFunction<TransformStreams, List<Order>, List<OrderDto>>  f10 = TransformStreams::p01_toDtos; //
+
+		BiFunction<Integer, Integer, Integer> f11 = Math::max; //
+		Function<Order, BigDecimal> f12 = Order::getTotalPrice; // (Order) -> BigDecimal
+		Supplier<BigDecimal> f13 = order1::getTotalPrice; // () -> BigDecimal
+		Consumer<BigDecimal> f14 = order1::setTotalPrice; // (BigDecimal) -> nimic
+		BiConsumer<Order, BigDecimal> f15 = Order::setTotalPrice; // (Order,BigDecimal) -> nimic
+
+		BigDecimal zero = BigDecimal.ZERO;
+		BigDecimal ten = BigDecimal.TEN;
+		BigDecimal unshpe = zero.add(ten);
+		BiFunction<BigDecimal, BigDecimal, BigDecimal> f16 = BigDecimal::add; // (BD,BD) -> BD
+		Function<BigDecimal, BigDecimal> f17 = ten::add; //
+
+
+
+		return orders.stream().map(f8).collect(toList());
 	}
 
 
