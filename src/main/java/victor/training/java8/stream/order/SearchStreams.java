@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import victor.training.java8.stream.order.entity.Customer;
@@ -84,8 +85,10 @@ public class SearchStreams {
 	 * any OrderLine with isSpecialOffer()==true
 	 */
 	public boolean p4_canBeReturned(Order order) {
+		Predicate<OrderLine> isSpecialOffer = OrderLine::isSpecialOffer;
+		Function<OrderLine, Boolean> isSpecialOffer2 = OrderLine::isSpecialOffer;
 		return order.getOrderLines().stream()
-			.noneMatch(OrderLine::isSpecialOffer);
+			.noneMatch(isSpecialOffer);
 	}
 	
 	// ---------- select the best ------------
