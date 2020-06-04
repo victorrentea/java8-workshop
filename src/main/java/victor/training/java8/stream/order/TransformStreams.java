@@ -33,10 +33,7 @@ import victor.training.java8.stream.order.entity.Order.PaymentMethod;
 class OrderMapper {
 	// @Autowired alte dep;
 	public OrderDto toDto(Order order) {
-		OrderDto dto = new OrderDto();
-		dto.totalPrice = order.getTotalPrice();
-		dto.creationDate = order.getCreationDate();
-		return dto;
+		return new OrderDto(order);
 	}
 }
 
@@ -59,8 +56,6 @@ public class TransformStreams {
 
 //		/*Function<Order, OrderDto> f7 =*/ OrderMapper::toDto; // (Order) -> OrderDto <--- asta daca toDto este statica
 
-		BiFunction<OrderMapper, Order, OrderDto> f7 = OrderMapper::toDto; // (OrderMapper, Order) -> OrderDto -->
-		Function<Order, OrderDto> f8 = orderMapper::toDto; // (Order) -> OrderDto
 
 		Function<List<Order>, List<OrderDto>> f9 = this::p01_toDtos; // (List<Order>) -> List<OrderDto>
 		BiFunction<TransformStreams, List<Order>, List<OrderDto>>  f10 = TransformStreams::p01_toDtos; //
@@ -77,9 +72,12 @@ public class TransformStreams {
 		BiFunction<BigDecimal, BigDecimal, BigDecimal> f16 = BigDecimal::add; // (BD,BD) -> BD
 		Function<BigDecimal, BigDecimal> f17 = ten::add; //
 
+		BiFunction<OrderMapper, Order, OrderDto> f7 = OrderMapper::toDto; // (OrderMapper, Order) -> OrderDto -->
+		Function<Order, OrderDto> f8 = orderMapper::toDto; // (Order) -> OrderDto
 
+		Function<Order, OrderDto> f8bis = OrderDto::new; // wtf?! : f(Order)-> OrderDto
 
-		return orders.stream().map(f8).collect(toList());
+		return orders.stream().map(OrderDto::new).collect(toList());
 	}
 
 
@@ -88,7 +86,7 @@ public class TransformStreams {
 	 * Note: Order.getPaymentMethod()
 	 */
 	public Set<PaymentMethod> p02_getUsedPaymentMethods(Customer customer) {
-		return null; 
+		return null;
 	}
 	
 	/**
