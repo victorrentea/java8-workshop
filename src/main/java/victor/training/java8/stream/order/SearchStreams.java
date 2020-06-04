@@ -101,11 +101,19 @@ public class SearchStreams {
 
 		Optional<Order> maxOpt = customer.getOrders().stream()
 			.max(comparing(Order::getTotalPrice));
-		if (maxOpt.isPresent()) {
-			return Optional.of(maxOpt.get().getCreationDate());
-		} else {
-			return Optional.empty();
-		}
+//		if (maxOpt.isPresent()) {
+//			return Optional.of(maxOpt.get().getCreationDate());
+//		} else {
+//			return Optional.empty();
+//		}
+		// ===
+//		maxOpt.map(order -> order.getCreationDate())
+
+//		a.getB().getC().getD();
+//		a.getB().map(b->b.getC()).map(c->c.getD()).orElse(null);
+
+
+		return maxOpt.map(Order::getCreationDate);
 	}
 
 	
@@ -113,7 +121,10 @@ public class SearchStreams {
 	 * last 3 Orders sorted descending by creationDate
 	 */
 	public List<Order> p6_getLast3Orders(Customer customer) {
-		return null; 
+		return customer.getOrders().stream()
+			.sorted(comparing(Order::getCreationDate).reversed())
+			.limit(3)
+			.collect(toList());
 	}
 	
 	
