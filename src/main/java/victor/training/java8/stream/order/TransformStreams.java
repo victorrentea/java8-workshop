@@ -1,23 +1,17 @@
 package victor.training.java8.stream.order;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
-
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.function.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang.StringUtils;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +22,8 @@ import victor.training.java8.stream.order.entity.Order;
 import victor.training.java8.stream.order.entity.OrderLine;
 import victor.training.java8.stream.order.entity.Product;
 import victor.training.java8.stream.order.entity.Order.PaymentMethod;
+
+import static java.util.stream.Collectors.*;
 
 @Service
 class OrderMapper {
@@ -57,6 +53,7 @@ public class TransformStreams {
 //		/*Function<Order, OrderDto> f7 =*/ OrderMapper::toDto; // (Order) -> OrderDto <--- asta daca toDto este statica
 
 
+
 		Function<List<Order>, List<OrderDto>> f9 = this::p01_toDtos; // (List<Order>) -> List<OrderDto>
 		BiFunction<TransformStreams, List<Order>, List<OrderDto>>  f10 = TransformStreams::p01_toDtos; //
 
@@ -77,6 +74,14 @@ public class TransformStreams {
 
 		Function<Order, OrderDto> f8bis = OrderDto::new; // wtf?! : f(Order)-> OrderDto
 
+		try (Stream<String> lines = Files.lines(new File("test.ok.txt").toPath())) {
+			lines.filter(StringUtils::isNotBlank).map(String::toUpperCase).collect(toList());
+//			lines.clo
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+
 		return orders.stream().map(OrderDto::new).collect(toList());
 	}
 
@@ -86,7 +91,8 @@ public class TransformStreams {
 	 * Note: Order.getPaymentMethod()
 	 */
 	public Set<PaymentMethod> p02_getUsedPaymentMethods(Customer customer) {
-		return null;
+		Function<Order, PaymentMethod> f = Order::getPaymentMethod;
+		return customer.getOrders().stream().map(f).collect(toSet());
 	}
 	
 	/**
@@ -94,22 +100,25 @@ public class TransformStreams {
 	 * Note: Order.getCreationDate()
 	 */
 	public SortedSet<LocalDate> p03_getOrderDatesAscending(Customer customer) {
-		return null; 
+		return customer.getOrders().stream().map(Order::getCreationDate).collect(toCollection(TreeSet::new));
 	}
 	
 	
 	/**
-	 * @return a map order.id -> order
+	 * @return a Map order.id -> order
 	 */
 	public Map<Long, Order> p04_mapOrdersById(Customer customer) {
-		return null; 
+		// pericole: daca doua intrari produc aceeasi cheie, crapa cu exceptie, daca nu oferi un merge function (vzi overloadurile)
+		// pericol2: si mai naspa: daca valoarea pusa in mapa e null -> exceptie!!
+		return customer.getOrders().stream().collect(toMap(Order::getId, order -> order));
 	}
 	
 	/** 
 	 * Orders grouped by Order.paymentMethod
+	 *  GROUP BY
 	 */
 	public Map<PaymentMethod, List<Order>> p05_getProductsByPaymentMethod(Customer customer) {
-		return null; 
+		return customer.getOrders().stream().collect(groupingBy(Order::getPaymentMethod));
 	}
 	
 	// -------------- MOVIE BREAK :p --------------------
@@ -128,7 +137,12 @@ public class TransformStreams {
 		for (Order order : customer.getOrders()) {
 			allLines.addAll(order.getOrderLines());
 		}
-		return null; 
+
+//		Map<Product, List<OrderLine>> map = allLines.stream()
+//			.collect(groupingBy(OrderLine::getProduct, toList()));
+//			.collect(groupingBy(OrderLine::getProduct));
+		return allLines.stream()
+			.collect(groupingBy(OrderLine::getProduct, summingLong(OrderLine::getCount)));
 		
 	}
 	
