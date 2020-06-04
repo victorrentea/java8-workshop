@@ -1,5 +1,6 @@
 package victor.training.java8.stream.order;
 
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 
 import java.util.Comparator;
@@ -9,6 +10,7 @@ import java.util.function.Predicate;
 
 import victor.training.java8.stream.order.entity.Customer;
 import victor.training.java8.stream.order.entity.Order;
+import victor.training.java8.stream.order.entity.OrderLine;
 
 public class SearchStreams {
 	
@@ -81,7 +83,8 @@ public class SearchStreams {
 	 * any OrderLine with isSpecialOffer()==true
 	 */
 	public boolean p4_canBeReturned(Order order) {
-		return true; // order.getOrderLines().stream() 
+		return order.getOrderLines().stream()
+			.noneMatch(OrderLine::isSpecialOffer);
 	}
 	
 	// ---------- select the best ------------
@@ -92,8 +95,14 @@ public class SearchStreams {
 	 * - Challenge: return an Optional<creationDate>
 	 */
 	public Order p5_getMaxPriceOrder(Customer customer) {
-		return null; 
+//		Comparator<Order> c = (o1, o2) -> o1.getTotalPrice().compareTo(o2.getTotalPrice());
+//		Comparator<Order> c = Comparator.comparing(Order::getTotalPrice);
+
+		return customer.getOrders().stream()
+			.max(comparing(Order::getTotalPrice))
+			.orElse(null);
 	}
+
 	
 	/**
 	 * last 3 Orders sorted descending by creationDate
