@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang.StringUtils;
+import org.jooq.lambda.Unchecked;
+import org.jooq.lambda.fi.util.function.CheckedSupplier;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -88,6 +90,7 @@ public class TransformStreams {
       Function<Long, Date> f19 = Date::new;
 
 
+//      return orders.stream().map(orderMapper::toDto).collect(toList());
       return orders.stream().map(OrderDto::new).collect(toList());
    }
 
@@ -218,19 +221,34 @@ public class TransformStreams {
     */
    public List<OrderLine> p10_readOrderFromFile(File file) throws IOException {
 
-      Stream<String> lines = null; // ??
-      //return lines
-      //.map(line -> line.split(";")) // Stream<String[]>
-      //.filter(cell -> "LINE".equals(cell[0]))
-      //.map(this::parseOrderLine) // Stream<OrderLine>
-      //.peek(this::validateOrderLine)
-      //.collect(toList());
+      try (MyRes r = new MyRes()) {
+         System.out.println("Corb try");
+      }
+//Stream~=Iterator
+      Supplier<Stream<String>> streamSupplier = Unchecked.supplier(() -> Files.lines(file.toPath()));
 
+      return logicaDeImport(streamSupplier);
       // TODO check the number of lines is >= 2
 
-      return null;
-
    }
+
+   private List<OrderLine> logicaDeImport(Supplier<Stream<String>> streamSupplier) {
+      try (Stream<String> lines = streamSupplier.get()) { // ??
+         if (lines.count() < 2) {
+            throw new IllegalArgumentException("Too few lines");
+         }
+      }
+      try (Stream<String> lines = streamSupplier.get()) { // ??
+         return lines
+             .map(line -> line.split(";")) // Stream<String[]>
+             .filter(cell -> "LINE".equals(cell[0]))
+             .map(this::parseOrderLine) // Stream<OrderLine>
+             .peek(this::validateOrderLine)
+             .collect(toList());
+
+      }
+   }
+
 
    private OrderLine parseOrderLine(String[] cells) {
       return new OrderLine(new Product(cells[1]), Integer.parseInt(cells[2]));
@@ -242,6 +260,14 @@ public class TransformStreams {
       }
    }
 
+
+
+
+   class MyRes implements AutoCloseable {
+      public void close() {
+         System.out.println("Closing res");
+      }
+   }
 
    // TODO print cannonical paths of all files in current directory
    // use Unchecked... stuff
