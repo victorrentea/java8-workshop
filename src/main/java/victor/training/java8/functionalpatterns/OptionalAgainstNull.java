@@ -12,7 +12,10 @@ public class OptionalAgainstNull {
     }
 
     public static String convertToName(A a) {
-        return a.getB().getC().getName();
+        return a.getBOpt()
+            .flatMap(B::getCOpt)
+            .map(C::getName)
+            .orElse("");
     }
 
 }
