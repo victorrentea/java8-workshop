@@ -189,10 +189,15 @@ public class TransformStreams {
 //          });
 
 
+//      return customer.getOrders().stream()
+//          .map(Order::getTotalPrice)
+//          .mapToLong(BigDecimal::longValue)
+//          .sum();
+      // cu mai multa precizie:
       return customer.getOrders().stream()
           .map(Order::getTotalPrice)
-          .mapToLong(BigDecimal::longValue)
-          .sum();
+          .reduce(BigDecimal.ZERO, BigDecimal::add)
+          .longValue();
    }
 
       static int x = 0; // merge
