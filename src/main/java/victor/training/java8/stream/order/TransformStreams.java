@@ -11,6 +11,7 @@ import java.util.function.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import io.vavr.control.Try;
 import org.apache.commons.lang.StringUtils;
 import org.jooq.lambda.Unchecked;
 import org.jooq.lambda.fi.util.function.CheckedSupplier;
@@ -239,12 +240,19 @@ public class TransformStreams {
          }
       }
       try (Stream<String> lines = streamSupplier.get()) { // ??
-         return lines
+         List<Try<OrderLine>> allLines = lines
              .map(line -> line.split(";")) // Stream<String[]>
              .filter(cell -> "LINE".equals(cell[0]))
              .map(this::parseOrderLine) // Stream<OrderLine>
-             .peek(this::validateOrderLine)
+             .map(this::validateOrderLine)
              .collect(toList());
+
+         List<Throwable> errors = allLines.stream().filter(Try::isFailure).map(Try::getCause).collect(toList());
+         if (!errors.isEmpty()) {
+            System.err.println("Erori: " + errors);
+         }
+
+         return allLines.stream().filter(Try::isSuccess).map(Try::get).collect(toList());
 
       }
    }
@@ -254,9 +262,11 @@ public class TransformStreams {
       return new OrderLine(new Product(cells[1]), Integer.parseInt(cells[2]));
    }
 
-   private void validateOrderLine(OrderLine orderLine) {
+   private Try<OrderLine> validateOrderLine(OrderLine orderLine) {
       if (orderLine.getCount() < 0) {
-         throw new IllegalArgumentException("Negative items");
+         return Try.failure(new IllegalArgumentException("Negative items"));
+      } else {
+         return Try.success(orderLine);
       }
    }
 

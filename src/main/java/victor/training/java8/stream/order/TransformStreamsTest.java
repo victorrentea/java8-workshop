@@ -160,9 +160,15 @@ public class TransformStreamsTest {
 		assertEquals(1, orderLines.get(1).getCount());
 	}
 	
-	@Test(expected = IllegalArgumentException.class)
+//	@Test(expected = IllegalArgumentException.class)
+//	public void p10_readOrderFromFile_throws() throws IOException {
+//		service.p10_readOrderFromFile(new File("test.invalid.txt")); // look at stacktrace
+//		// TODO uncomment to see the exception trace :S
+//	}
+	@Test
 	public void p10_readOrderFromFile_throws() throws IOException {
-		service.p10_readOrderFromFile(new File("test.invalid.txt")); // look at stacktrace
-		// TODO uncomment to see the exception trace :S
+		List<OrderLine> orderLines = service.p10_readOrderFromFile(new File("test.invalid.txt"));// look at stacktrace
+		assertEquals("Table", orderLines.get(0).getProduct().getName());
+		assertEquals(1, orderLines.get(0).getCount());
 	}
 }
