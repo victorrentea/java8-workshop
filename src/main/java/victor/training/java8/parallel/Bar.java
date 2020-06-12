@@ -29,7 +29,8 @@ class Bautor {
 //      Future<bere>  = executorService.submit(Barman::toarnaBere);
 
       CompletableFuture<Bere> visDeBere = CompletableFuture.supplyAsync(() -> Barman.toarnaBere());
-      CompletableFuture<Tuica> visDeTuica = CompletableFuture.supplyAsync(Barman::toarnaTuica);
+      CompletableFuture<Tuica> visDeTuica = CompletableFuture.supplyAsync(Barman::toarnaTuica)
+          .exceptionally(e -> new Posirca());
       log.info("A plecat fata cu comanda");
 //      Bere bere = visDeBere.get();
 //      Tuica tuica = visDeTuica.get();
@@ -48,6 +49,7 @@ class Bautor {
 //      log.info("Beau " + submarin);
 
       visDeSubmarin.thenAccept(s ->  log.info("Beau " + s));
+//      visDeSubmarin.thenAccept(s ->  /*Aici vei scrie clientului final pe socketul lui*/);
       log.info("Ies. Eliberez mainul");
    }
 }
@@ -68,6 +70,14 @@ class Submarin {
          e.printStackTrace();
       }
 
+   }
+
+   @Override
+   public String toString() {
+      return "Submarin{" +
+          "bere=" + bere +
+          ", tuica=" + tuica +
+          '}';
    }
 }
 
@@ -92,6 +102,9 @@ class Barman {
       } catch (InterruptedException e) {
          e.printStackTrace();
       }
+      if (true) {
+         throw new IllegalStateException("E gol butoiu");
+      }
       log.info("Torn gata");
       return new Tuica();
    }
@@ -99,3 +112,4 @@ class Barman {
 
 class Bere {}
 class Tuica {}
+class Posirca  extends Tuica {}
