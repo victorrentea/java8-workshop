@@ -32,10 +32,27 @@ class Bautor {
       Tuica tuica = visDeTuica.get();
 //      Bere bere = Barman.toarnaBere();
 //      Tuica tuica = Barman.toarnaTuica();
-      log.info("Beau " + bere + " cu " + tuica);
+      Submarin submarin = new Submarin(bere, tuica);
+      // TASK nu mai vreau eu betivan sa-mi fac singur cocktailul. Ci vreau barmanul sa-l faca. pe threadurile lu.
+      log.info("Beau " + submarin);
    }
 }
 
+class Submarin {
+   private final Bere bere;
+   private final Tuica tuica;
+
+   Submarin(Bere bere, Tuica tuica) {
+      this.bere = bere;
+      this.tuica = tuica;
+      try {
+         Thread.sleep(1000);
+      } catch (InterruptedException e) {
+         e.printStackTrace();
+      }
+
+   }
+}
 
 
 class Barman {
