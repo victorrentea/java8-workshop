@@ -11,6 +11,7 @@ import java.util.concurrent.ForkJoinPool;
 public class Bar {
    public static void main(String[] args) throws ExecutionException, InterruptedException {
       Bautor.bea();
+      Thread.sleep(3000);
    }
 }
 
@@ -30,8 +31,8 @@ class Bautor {
       CompletableFuture<Bere> visDeBere = CompletableFuture.supplyAsync(() -> Barman.toarnaBere());
       CompletableFuture<Tuica> visDeTuica = CompletableFuture.supplyAsync(Barman::toarnaTuica);
       log.info("A plecat fata cu comanda");
-      Bere bere = visDeBere.get();
-      Tuica tuica = visDeTuica.get();
+//      Bere bere = visDeBere.get();
+//      Tuica tuica = visDeTuica.get();
 
 
 //      CompletableFuture.allOf(visDeBere, visDeTuica)
@@ -43,8 +44,11 @@ class Bautor {
 //      CompletableFuture<Submarin> visDeSubmarin = visDeBere.thenCombine(visDeTuica, Submarin::new); // ruleaza ::new cockaitlul in main)(
 //      CompletableFuture<Submarin> visDeSubmarin = visDeBere.thenCombineAsync(visDeTuica, Submarin::new); // ruleaza ::new pe commonPool
       CompletableFuture<Submarin> visDeSubmarin = visDeBere.thenCombineAsync(visDeTuica, Submarin::new, cocktailPool);
-      Submarin submarin = visDeSubmarin.get();
-      log.info("Beau " + submarin);
+//      Submarin submarin = visDeSubmarin.get(); // NU VA FACE GET pentru a nu bloca main nici macar o secunda.
+//      log.info("Beau " + submarin);
+
+      visDeSubmarin.thenAccept(s ->  log.info("Beau " + s));
+      log.info("Ies. Eliberez mainul");
    }
 }
 
