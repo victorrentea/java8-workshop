@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ForkJoinPool;
 
 public class Bar {
    public static void main(String[] args) throws ExecutionException, InterruptedException {
@@ -30,21 +32,32 @@ class Bautor {
       log.info("A plecat fata cu comanda");
       Bere bere = visDeBere.get();
       Tuica tuica = visDeTuica.get();
-//      Bere bere = Barman.toarnaBere();
-//      Tuica tuica = Barman.toarnaTuica();
-      Submarin submarin = new Submarin(bere, tuica);
-      // TASK nu mai vreau eu betivan sa-mi fac singur cocktailul. Ci vreau barmanul sa-l faca. pe threadurile lu.
+
+
+//      CompletableFuture.allOf(visDeBere, visDeTuica)
+//          .thenRun(() -> log.info("E gataaa!"));
+
+
+      ForkJoinPool cocktailPool = new ForkJoinPool(2);
+
+//      CompletableFuture<Submarin> visDeSubmarin = visDeBere.thenCombine(visDeTuica, Submarin::new); // ruleaza ::new cockaitlul in main)(
+//      CompletableFuture<Submarin> visDeSubmarin = visDeBere.thenCombineAsync(visDeTuica, Submarin::new); // ruleaza ::new pe commonPool
+      CompletableFuture<Submarin> visDeSubmarin = visDeBere.thenCombineAsync(visDeTuica, Submarin::new, cocktailPool);
+      Submarin submarin = visDeSubmarin.get();
       log.info("Beau " + submarin);
    }
 }
 
+
 class Submarin {
+   private static final Logger log = LoggerFactory.getLogger(Submarin.class);
    private final Bere bere;
    private final Tuica tuica;
 
    Submarin(Bere bere, Tuica tuica) {
       this.bere = bere;
       this.tuica = tuica;
+      log.info("Fac submarin");
       try {
          Thread.sleep(1000);
       } catch (InterruptedException e) {
