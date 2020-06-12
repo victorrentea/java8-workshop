@@ -19,20 +19,22 @@ public class ParallelStreams {
 
       Collections.reverse(numbers);
 
-      List<Integer> result = numbers.parallelStream()
+      numbers.parallelStream()
           .filter(n -> {
              System.out.println(Thread.currentThread().getName() + " Filtrez " + n);
              return n % 2 == 1;
           })
-//          .distinct()
+//          .distinct() // out of memory, de asemenea !
 //          .sorted()
           .map(n -> {
              System.out.println(Thread.currentThread().getName() + " Square " + n);
              return n * n;
           })
-          .collect(toList());
+          .forEach(x -> { // le printeaza in ordinea in care ajung la el (in parallelstream - alandala)
+//             System.out.println(x);
+             System.out.println(Thread.currentThread().getName() + " Result: " + x);
+          });
 
-      System.out.println(Thread.currentThread().getName() + " Result: " + result);
 
    }
 }
