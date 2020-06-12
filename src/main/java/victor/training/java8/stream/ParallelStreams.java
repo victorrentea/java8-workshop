@@ -3,6 +3,8 @@ package victor.training.java8.stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -15,12 +17,15 @@ public class ParallelStreams {
    public static void main(String[] args) {
       List<Integer> numbers = IntStream.range(0, 10).boxed().collect(toList());
 
+      Collections.reverse(numbers);
+
       List<Integer> result = numbers.parallelStream()
           .filter(n -> {
              System.out.println(Thread.currentThread().getName() + " Filtrez " + n);
              return n % 2 == 1;
           })
-          .distinct()
+//          .distinct()
+//          .sorted()
           .map(n -> {
              System.out.println(Thread.currentThread().getName() + " Square " + n);
              return n * n;
