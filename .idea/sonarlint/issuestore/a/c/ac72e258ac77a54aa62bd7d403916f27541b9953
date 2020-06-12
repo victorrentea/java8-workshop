@@ -1,0 +1,94 @@
+
+C
+java:S1481J"(Remove this unused "f17" local variable.(‘×µÿÿÿÿÿ
+B
+java:S1481M"'Remove this unused "f8" local variable.(şæÍ¼ıÿÿÿÿ
+i	java:S100·"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(å¿ëÁüÿÿÿÿ
+@
+java:S1481O"*Remove this unused "f8bis" local variable.(Ó¸ìÿ
+I
+java:S1135Ÿ"2Complete the task associated to this TODO comment.(Õ„Ã
+d	java:S100œ"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(©ò‘
+d	java:S100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(äéİÕ
+h	java:S100f"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(öµœ±ÿÿÿÿÿ
+d	java:S100ä"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.( ‡ˆÜ
+N
+java:S1135í"2Complete the task associated to this TODO comment.(ï¿ŸÌùÿÿÿÿ
+=
+java:S1481="'Remove this unused "f9" local variable.(—¥»·
+c	java:S1000"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(‚ò
+=
+java:S14818"'Remove this unused "f6" local variable.(Ø™›…
+W	java:S125»"<This block of commented-out lines of code should be removed.(Çç¯Ûÿÿÿÿÿ
+V	java:S125^"<This block of commented-out lines of code should be removed.(ÕíÂÂüÿÿÿÿ
+?
+java:S1481¸"(Remove this unused "sum" local variable.(¸ ŒË
+h
+java:S42767"RRefactor this code to use the more specialised Functional Interface 'LongSupplier'(ì¥¨‚
+=
+java:S1481L"'Remove this unused "f7" local variable.(“Ì¡¾
+>
+java:S1481B"(Remove this unused "f13" local variable.(Ö”ç
+d	java:S100­"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÇÑş
+>
+java:S1481C"(Remove this unused "f14" local variable.(äå­µ
+>
+java:S1148U"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+l
+java:S42763"QRefactor this code to use the more specialised Functional Interface 'IntSupplier'(Íœ¿™üÿÿÿÿ
+n
+java:S1128"XRemove this unused import 'org.springframework.transaction.support.TransactionTemplate'.(×¬§
+<
+java:S14815"'Remove this unused "f4" local variable.(Æå¨
+I
+java:S1128"3Remove this unused import 'org.mockito.BDDMockito'.(ò½»Ù
+z
+java:S4276J"_Refactor this code to use the more specialised Functional Interface 'UnaryOperator<BigDecimal>'(‘×µÿÿÿÿÿ
+C
+java:S1481["(Remove this unused "f19" local variable.(ñ¡åäüÿÿÿÿ
+v
+java:S42764"[Refactor this code to use the more specialised Functional Interface 'ToIntFunction<String>'(åºÚµÿÿÿÿÿ
+V	java:S125Z"<This block of commented-out lines of code should be removed.(åœÊšøÿÿÿÿ
+{
+java:S4276I"`Refactor this code to use the more specialised Functional Interface 'BinaryOperator<BigDecimal>'(›àÄ½ùÿÿÿÿ
+=
+java:S14812"'Remove this unused "f1" local variable.(ğÁß¸
+5
+java:S3864"!Remove this use of "Stream.peek".(Ó¿ÈÕ
+P	java:S125""<This block of commented-out lines of code should be removed.(è…á=
+C
+java:S1481>"(Remove this unused "f10" local variable.(ªÏŒ¬ıÿÿÿÿ
+B
+java:S14814"'Remove this unused "f3" local variable.(åºÚµÿÿÿÿÿ
+Q	java:S1257"<This block of commented-out lines of code should be removed.(ì¥¨‚
+B
+java:S14813"'Remove this unused "f2" local variable.(Íœ¿™üÿÿÿÿ
+S
+java:S1128"8Remove this unused import 'java.util.stream.Collectors'.(Óóº´úÿÿÿÿ
+=
+java:S14817"'Remove this unused "f5" local variable.(ì¥¨‚
+b	java:S100w"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ü§
+p
+java:S42765"[Refactor this code to use the more specialised Functional Interface 'ToLongFunction<Order>'(Æå¨
+h
+java:S4276×"QRefactor this code to use the more specialised Functional Interface 'IntSupplier'(ŒÅĞ
+F
+java:S1481H"+Remove this unused "unshpe" local variable.(²ÆÄÙøÿÿÿÿ
+C
+java:S1481I"(Remove this unused "f16" local variable.(›àÄ½ùÿÿÿÿ
+s
+java:S4276["XRefactor this code to use the more specialised Functional Interface 'LongFunction<Date>'(ñ¡åäüÿÿÿÿ
+d	java:S100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¥öÀş
+>
+java:S1481Y"(Remove this unused "f18" local variable.(Ãí»Ö
+C
+java:S1481A"(Remove this unused "f12" local variable.(ÓÄã¸úÿÿÿÿ
+q
+java:S42762"[Refactor this code to use the more specialised Functional Interface 'ToIntFunction<String>'(ğÁß¸
+C
+java:S1481@"(Remove this unused "f11" local variable.(¦Àûåÿÿÿÿÿ
+C
+java:S1481D"(Remove this unused "f15" local variable.(ÖÉ¨şÿÿÿÿ
+x
+java:S4276@"]Refactor this code to use the more specialised Functional Interface 'BinaryOperator<Integer>'(¦Àûåÿÿÿÿÿ
+h	java:S100o"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(šŒ–“øÿÿÿÿ
