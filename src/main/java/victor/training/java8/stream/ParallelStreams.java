@@ -20,8 +20,7 @@ public class ParallelStreams {
              System.out.println(Thread.currentThread().getName() + " Filtrez " + n);
              return n % 2 == 1;
           })
-          .sequential()
-          .parallel()
+          .distinct()
           .map(n -> {
              System.out.println(Thread.currentThread().getName() + " Square " + n);
              return n * n;
