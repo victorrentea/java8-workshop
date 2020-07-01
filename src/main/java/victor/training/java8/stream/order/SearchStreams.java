@@ -2,11 +2,8 @@ package victor.training.java8.stream.order;
 
 import static java.util.stream.Collectors.toList;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
+import java.util.Optional;
 
 import victor.training.java8.stream.order.entity.Customer;
 import victor.training.java8.stream.order.entity.Order;
@@ -38,16 +35,19 @@ public class SearchStreams {
 	 * - ...Any or ...First ?
 	 * - what do you do when you don't find it ? null/throw/Optional ?
 	 */
-	public Order p2_getOrderById(List<Order> orders, long orderId) {
+	public Optional<Order> p2_getOrderById(List<Order> orders, long orderId) {
 		return orders.stream()
 				.filter(order -> order.getId() == orderId)
 //		When it's red , yellow , blue or gray
 //		Alt-Enter will save your day.
 				.findFirst()
-				.orElseThrow(() -> {
+				/*.orElseThrow(() -> {
 					System.out.println("Instantiez exceptie HAhshsblaladshslal");
 					return new MyAppException(ErrorCode.NO_ORDER_BY_ID); // @RestControllerAdvice traduce aceste coduri i18n prin messages_EN.properties
-				});
+				})*/;
+
+		// userRepo.findByEmail(email); - ar trebui sa crape mereu cu ex?
+		// createUser -> sa verifici ca NU e nici unul deja cu emailul userului de creat
 	}
 	
 	/**
