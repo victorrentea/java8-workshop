@@ -65,10 +65,12 @@ public class SearchStreams {
 //			.filter(Order::isActive)
 //			.count() >= 1; // nu mai collect() in nicio lista. Puteau fi  ff f multe elemente.
 
-		return customer.getOrders().stream()
-			.filter(Order::isActive)
-			.findFirst()
-			.isPresent(); // nu mai traversezi toate elementele, ci te opresti la primul gasit
+//		return customer.getOrders().stream()
+//			.filter(Order::isActive)
+//			.findFirst()
+//			.isPresent(); // nu mai traversezi toate elementele, ci te opresti la primul gasit
+
+		return customer.getOrders().stream().anyMatch(Order::isActive); // ce beton arata
 	}
 
 	/**
