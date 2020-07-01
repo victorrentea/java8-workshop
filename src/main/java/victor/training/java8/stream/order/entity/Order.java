@@ -9,11 +9,20 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class Order {
+public class Order /*implements Comparable<Order> */{
 
 
+//	@Override
+//	public int compareTo(Order o) {
+//		return 0;
+//	}
 
-   public enum Status {
+	// In app mari, viata ne invata ca de cele mai multe ori elementele
+	// se sorteaza dupa un criteriu USE-CASE specific.
+	// Sa le faci natural comparabile mereu dupa acelasi
+	// criteriu e prea tupeist. Prea generic.
+
+	public enum Status {
 		DRAFT, ACTIVE, INACTIVE;
 	}
 

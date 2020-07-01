@@ -4,6 +4,7 @@ import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -110,7 +111,13 @@ public class SearchStreams {
 	 * last 3 Orders sorted descending by creationDate
 	 */
 	public List<Order> p6_getLast3Orders(Customer customer) {
-		return null; 
+
+		return customer.getOrders().stream()
+			.sorted(Comparator.comparing(Order::getCreationDate).reversed())
+			.limit(3)
+//			.skip(1)
+			.collect(toList());
+
 	}
 	
 	
