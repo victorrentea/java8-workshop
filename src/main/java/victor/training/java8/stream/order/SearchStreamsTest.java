@@ -42,11 +42,12 @@ public class SearchStreamsTest {
 		assertEquals(2L, (long) service.p2_getOrderById(orders, 2L).getId());
 	}
 	
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 //	@Ignore
 	public void p2_getOrderById_whenIdNotFound() {
 		List<Order> orders = Arrays.asList(new Order(1L));
-		assertEquals(null, service.p2_getOrderById(orders, 1000L));
+		service.p2_getOrderById(orders, 1000L);
+//		assertEquals(null, service.p2_getOrderById(orders, 1000L));
 	}
 
 	@Test

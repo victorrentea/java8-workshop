@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import victor.training.java8.stream.order.entity.Customer;
 import victor.training.java8.stream.order.entity.Order;
@@ -43,7 +44,10 @@ public class SearchStreams {
 //		When it's red , yellow , blue or gray
 //		Alt-Enter will save your day.
 				.findFirst()
-				.orElse(null);
+				.orElseThrow(() -> {
+					System.out.println("Instantiez exceptie HAhshsblaladshslal");
+					return new IllegalArgumentException();
+				});
 	}
 	
 	/**
