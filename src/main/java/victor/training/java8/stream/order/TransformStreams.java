@@ -30,10 +30,7 @@ import victor.training.java8.stream.order.entity.Order.PaymentMethod;
 
 class OrderMapper {
 	public OrderDto toDto(Order order) {
-		OrderDto dto = new OrderDto();
-		dto.totalPrice = order.getTotalPrice();
-		dto.creationDate = order.getCreationDate();
-		return dto;
+		return new OrderDto(order);
 	}
 }
 
@@ -115,11 +112,13 @@ public class TransformStreams {
 	 */
 	public List<OrderDto> p01_toDtos(List<Order> orders) {
 		BiFunction<OrderMapper, Order, OrderDto> b = OrderMapper::toDto;
-//		Function<Order, OrderDto> f = orderMapper::toDto;
+		Function<Order, OrderDto> f1 = orderMapper::toDto;
+		Function<Order, OrderDto> f2 = OrderDto::new;
 		return orders.stream()
 //			.map(o -> toDto(o))
 //			.map(f6)
-			.map(orderMapper::toDto)
+//			.map(orderMapper::toDto)
+			.map(OrderDto::new)
 			.collect(toList()); // o operatie pe stream pana in collect merge lasata oneliner
 	}
 
