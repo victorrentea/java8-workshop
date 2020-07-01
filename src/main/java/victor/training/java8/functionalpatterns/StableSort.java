@@ -18,6 +18,8 @@ public class StableSort {
       fetchDataFromDb().stream()
           .sorted(comparing(Record::getFirstName).reversed())
           .forEach(System.out::println);
+
+      // UX sucks. TODO Fix it: the order within the "Alfred" subgroup is variable
    }
 
    private static List<Record> fetchDataFromDb() {
@@ -25,9 +27,8 @@ public class StableSort {
           new Record(1L, "Alfred", "12345"),
           new Record(2L, "Alfred", "12346"),
           new Record(3L, "Alfred", "12347"),
-          new Record(4L, "Bob", "12348"),
-          new Record(5L, "Bob", "12349"),
-          new Record(6L, "Bob", "12350"));
+          new Record(4L, "Alfred", "12348"),
+          new Record(5L, "Bob", "12350"));
       Collections.shuffle(list); // simulate random result order from datastore
       return list;
    }
