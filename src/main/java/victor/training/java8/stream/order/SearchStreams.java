@@ -23,7 +23,7 @@ public class SearchStreams {
 	 */
 	public List<Order> p1_getActiveOrders(Customer customer) {
 		return customer.getOrders().stream()
-			.filter(order -> order.getStatus() == Status.ACTIVE)
+			.filter(Order::isActive)
 			.collect(toList());
 		// new Interface() { met() } -> poate sa fie convertita in Lambda -> daca :
 		//1) interfata are o singura metoda
@@ -54,7 +54,14 @@ public class SearchStreams {
 	 * @return true if customer has at least one order with status ACTIVE
 	 */
 	public boolean p3_hasActiveOrders(Customer customer) {
-		return true; 
+		List<Order> activeOrders = customer.getOrders().stream()
+			.filter(Order::isActive)
+			.collect(toList());
+//		return activeOrders.size() >= 1;
+//		return !activeOrders.isEmpty();
+		return customer.getOrders().stream()
+			.filter(Order::isActive)
+			.count() >= 1; // nu mai collect() in nicio lista. Puteau fi  ff f multe elemente.
 	}
 
 	/**
