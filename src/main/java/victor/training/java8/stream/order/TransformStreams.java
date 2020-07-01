@@ -19,6 +19,7 @@ import java.util.function.*;
 import java.util.stream.Stream;
 
 import org.mockito.internal.matchers.Or;
+import org.springframework.beans.factory.annotation.Autowired;
 import victor.training.java8.stream.order.dto.OrderDto;
 import victor.training.java8.stream.order.entity.Customer;
 import victor.training.java8.stream.order.entity.Order;
@@ -28,7 +29,7 @@ import victor.training.java8.stream.order.entity.Order.PaymentMethod;
 
 
 class OrderMapper {
-	public static OrderDto toDto(Order order) {
+	public OrderDto toDto(Order order) {
 		OrderDto dto = new OrderDto();
 		dto.totalPrice = order.getTotalPrice();
 		dto.creationDate = order.getCreationDate();
@@ -105,15 +106,20 @@ public class TransformStreams {
 
 	}
 
+	@Autowired // nu ne merge ca rulam fara
+	private OrderMapper orderMapper = new OrderMapper();
+
 	/**
 	 * Transform all entities to DTOs.
 	 * Discussion:.. Make it cleanest!
 	 */
 	public List<OrderDto> p01_toDtos(List<Order> orders) {
+		BiFunction<OrderMapper, Order, OrderDto> b = OrderMapper::toDto;
+//		Function<Order, OrderDto> f = orderMapper::toDto;
 		return orders.stream()
 //			.map(o -> toDto(o))
 //			.map(f6)
-			.map(OrderMapper::toDto)
+			.map(orderMapper::toDto)
 			.collect(toList()); // o operatie pe stream pana in collect merge lasata oneliner
 	}
 
