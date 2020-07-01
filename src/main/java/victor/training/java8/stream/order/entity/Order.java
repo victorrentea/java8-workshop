@@ -109,9 +109,8 @@ public class Order /*implements Comparable<Order> */{
 		return paymentMethod;
 	}
 
-	public Order setPaymentMethod(PaymentMethod paymentMethod) {
+	public void setPaymentMethod(PaymentMethod paymentMethod) {
 		this.paymentMethod = paymentMethod;
-		return this;
 	}
 
 	public LocalDate getDeliveryDueDate() {
