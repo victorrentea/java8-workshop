@@ -1,9 +1,21 @@
 package victor.training.java8.stream.order.entity;
 
+import lombok.ToString;
+
 public class OrderLine {
 	
 	public enum Status {
 		IN_STOCK, OUT_OF_STOCK, WAITING_FOR_STOCK
+	}
+
+	@Override
+	public String toString() {
+		return "OrderLine{" +
+			"product=" + product +
+			", count=" + count +
+			", specialOffer=" + specialOffer +
+			", status=" + status +
+			'}';
 	}
 
 	private Product product;

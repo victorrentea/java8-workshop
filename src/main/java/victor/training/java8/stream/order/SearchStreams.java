@@ -84,9 +84,24 @@ public class SearchStreams {
 //		return ! order.getOrderLines().stream().filter(o -> o.isSpecialOffer()).findFirst().isPresent();
 //		return !order.getOrderLines().stream().anyMatch(o -> o.isSpecialOffer());
 
+		Optional<OrderLine> oneSpecialOffer = order.getOrderLines().stream().filter(OrderLine::isSpecialOffer).findFirst();
+//		if (oneSpecialOffer.isPresent()) {
+//			metodaDacaE(oneSpecialOffer.get());
+//		}
+		oneSpecialOffer.ifPresent(so -> metodaDacaE(so));
+
 		return order.getOrderLines().stream().noneMatch(OrderLine::isSpecialOffer);
 	}
-	
+
+	private void metodaDacaE(OrderLine oneSpecialOffer) {
+		System.out.println("Nu poti returna orderul pentru ca ai urmatoarele order lines: " + oneSpecialOffer);
+		System.out.println("Nu poti returna orderul pentru ca ai urmatoarele order lines: " + oneSpecialOffer);
+		System.out.println("Nu poti returna orderul pentru ca ai urmatoarele order lines: " + oneSpecialOffer);
+		System.out.println("Nu poti returna orderul pentru ca ai urmatoarele order lines: " + oneSpecialOffer);
+		System.out.println("Nu poti returna orderul pentru ca ai urmatoarele order lines: " + oneSpecialOffer);
+		System.out.println("Nu poti returna orderul pentru ca ai urmatoarele order lines: " + oneSpecialOffer);
+	}
+
 	// ---------- select the best ------------
 	
 	/**
