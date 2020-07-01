@@ -39,16 +39,11 @@ public class SearchStreams {
 	 */
 	public Order p2_getOrderById(List<Order> orders, long orderId) {
 		return orders.stream()
-				.filter(/*new Predicate<Order>() {
-					@Override
-					public boolean test*/(Order order) -> {
-						return order.getId() == orderId;
-//					}
-				})
+				.filter(order -> order.getId() == orderId)
 //		When it's red , yellow , blue or gray
 //		Alt-Enter will save your day.
 				.findFirst()
-				.get();
+				.orElse(null);
 	}
 	
 	/**
