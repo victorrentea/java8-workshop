@@ -24,6 +24,7 @@ import victor.training.java8.stream.order.entity.Order.Status;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SearchStreamsTest {
 
+
 	private SearchStreams service = new SearchStreams();
 
 	@Test
