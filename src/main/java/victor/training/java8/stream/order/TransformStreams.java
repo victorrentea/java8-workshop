@@ -26,6 +26,16 @@ import victor.training.java8.stream.order.entity.OrderLine;
 import victor.training.java8.stream.order.entity.Product;
 import victor.training.java8.stream.order.entity.Order.PaymentMethod;
 
+
+class OrderMapper {
+	public static OrderDto toDto(Order order) {
+		OrderDto dto = new OrderDto();
+		dto.totalPrice = order.getTotalPrice();
+		dto.creationDate = order.getCreationDate();
+		return dto;
+	}
+}
+
 public class TransformStreams {
 
 	public void methodReferencePlay() {
@@ -61,8 +71,8 @@ public class TransformStreams {
 		int i1 = bd.compareTo(two);
 		Function<BigDecimal, Integer> f5 =  bd::compareTo; //f(BD):Integer
 
-		OrderDto orderDto = this.toDto(order1);
-		Function<Order, OrderDto> f6 = this::toDto; // f(Order):OrderDto
+//		OrderDto orderDto = this.toDto(order1);
+////		Function<Order, OrderDto> f6 = this::toDto; // f(Order):OrderDto
 
 		order1.setPaymentMethod(PaymentMethod.CARD);
 		Consumer<PaymentMethod> ft = order1::setPaymentMethod; // f(PaymentMethod):void
@@ -75,8 +85,8 @@ public class TransformStreams {
 		Long apply = f7.apply(order1); // de ex, cum o chemi
 
 
-		BiFunction<TransformStreams, Order, OrderDto> f8_DoamneMaIarta = TransformStreams::toDto; // f(TransformStreams ("this"), Order):OrderDto
-		OrderDto dto = f8_DoamneMaIarta.apply(this, order1);
+//		BiFunction<TransformStreams, Order, OrderDto> f8_DoamneMaIarta = TransformStreams::toDto; // f(TransformStreams ("this"), Order):OrderDto
+//		OrderDto dto = f8_DoamneMaIarta.apply(this, order1);
 
 		BiFunction<BigDecimal, BigDecimal, Integer> f9_haiCaMerge = BigDecimal::compareTo; // f(BigDecimal (e "this"-ul), BigDecimal ("param")):int
 
@@ -87,6 +97,7 @@ public class TransformStreams {
 		Supplier<Date> supDate = Date::new; // soc si groaza prima data cand vezi
 
 		Date date1 = new Date(122132); // "new" in cazul asta ce fel de fct este:   new(Long):Date -->
+
 		Function<Long, Date> overloadCuFourDots = Date::new;
 		LongFunction<Date> overloadCuFourDotsLong = Date::new; // refera aceelasi constructor.
 		// plangi caci cele doua arata la fel, chiar daca indica spre overloaduri diferite ale constructori
@@ -94,27 +105,18 @@ public class TransformStreams {
 
 	}
 
-
 	/**
 	 * Transform all entities to DTOs.
 	 * Discussion:.. Make it cleanest!
 	 */
 	public List<OrderDto> p01_toDtos(List<Order> orders) {
-
 		return orders.stream()
 //			.map(o -> toDto(o))
 //			.map(f6)
-			.map(this::toDto)
+			.map(OrderMapper::toDto)
 			.collect(toList()); // o operatie pe stream pana in collect merge lasata oneliner
-
 	}
 
-	private OrderDto toDto(Order order) {
-		OrderDto dto = new OrderDto();
-		dto.totalPrice = order.getTotalPrice();
-		dto.creationDate = order.getCreationDate();
-		return dto;
-	}
 
 	/**
 	 * Note: Order.getPaymentMethod()
