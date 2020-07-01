@@ -101,15 +101,9 @@ public class SearchStreams {
 
 //		Comparator<Order> orderComparator = Comparator.comparing(Order::getTotalPrice);
 
-		Order order = customer.getOrders().stream()
+		return customer.getOrders().stream()
 			.max(comparing(Order::getTotalPrice))
-			.orElse(null);
-
-		if (order == null) {
-			return Optional.empty();
-		} else {
-			return Optional.of(order.getCreationDate());
-		}
+			.map(o -> o.getCreationDate());
 	}
 	
 	/**
