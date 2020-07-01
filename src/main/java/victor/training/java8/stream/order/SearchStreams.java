@@ -3,13 +3,12 @@ package victor.training.java8.stream.order;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 
-import java.util.Comparator;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 import victor.training.java8.stream.order.entity.Customer;
 import victor.training.java8.stream.order.entity.Order;
-import victor.training.java8.stream.order.entity.Order.Status;
 import victor.training.java8.stream.order.entity.OrderLine;
 
 public class SearchStreams {
@@ -93,17 +92,24 @@ public class SearchStreams {
 	 * The Order with maximum getTotalPrice. 
 	 * i.e. the most expensive Order, or null if no Orders
 	 * - Challenge: return an Optional<creationDate>
+	 * @return
 	 */
-	public Order p5_getMaxPriceOrder(Customer customer) {
+	public Optional<LocalDate> p5_getMaxPriceOrder(Customer customer) {
 
 		// lambda style
 //		Comparator<Order> orderComparator = (o1, o2) -> o1.getTotalPrice().compareTo(o2.getTotalPrice());
 
 //		Comparator<Order> orderComparator = Comparator.comparing(Order::getTotalPrice);
 
-		return customer.getOrders().stream()
+		Order order = customer.getOrders().stream()
 			.max(comparing(Order::getTotalPrice))
 			.orElse(null);
+
+		if (order == null) {
+			return Optional.empty();
+		} else {
+			return Optional.of(order.getCreationDate());
+		}
 	}
 	
 	/**
