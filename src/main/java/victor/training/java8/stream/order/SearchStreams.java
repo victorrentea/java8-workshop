@@ -58,10 +58,17 @@ public class SearchStreams {
 			.filter(Order::isActive)
 			.collect(toList());
 //		return activeOrders.size() >= 1;
+
 //		return !activeOrders.isEmpty();
+
+//		return customer.getOrders().stream()
+//			.filter(Order::isActive)
+//			.count() >= 1; // nu mai collect() in nicio lista. Puteau fi  ff f multe elemente.
+
 		return customer.getOrders().stream()
 			.filter(Order::isActive)
-			.count() >= 1; // nu mai collect() in nicio lista. Puteau fi  ff f multe elemente.
+			.findFirst()
+			.isPresent(); // nu mai traversezi toate elementele, ci te opresti la primul gasit
 	}
 
 	/**
