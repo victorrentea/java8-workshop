@@ -8,6 +8,7 @@ import java.util.Optional;
 import victor.training.java8.stream.order.entity.Customer;
 import victor.training.java8.stream.order.entity.Order;
 import victor.training.java8.stream.order.entity.Order.Status;
+import victor.training.java8.stream.order.entity.OrderLine;
 
 public class SearchStreams {
 	
@@ -78,7 +79,10 @@ public class SearchStreams {
 	 * any OrderLine with isSpecialOffer()==true
 	 */
 	public boolean p4_canBeReturned(Order order) {
-		return true; // order.getOrderLines().stream() 
+//		return ! order.getOrderLines().stream().filter(o -> o.isSpecialOffer()).findFirst().isPresent();
+//		return !order.getOrderLines().stream().anyMatch(o -> o.isSpecialOffer());
+
+		return order.getOrderLines().stream().noneMatch(OrderLine::isSpecialOffer);
 	}
 	
 	// ---------- select the best ------------
