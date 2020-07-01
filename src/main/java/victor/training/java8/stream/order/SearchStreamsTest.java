@@ -37,6 +37,10 @@ public class SearchStreamsTest {
 		assertEquals(Arrays.asList(order1, order2), service.p1_getActiveOrders(customer));
 	}
 
+	// caller:
+
+	// Nu vei defini campuri de tip Optional in obiecte marsalled de catre: jackson(JSON), JAXB(XML), Hibernate(DB)
+
 	@Test
 	public void p2_getOrderById() {
 		List<Order> orders = Arrays.asList(new Order(1L), new Order(2L), new Order(3L));
