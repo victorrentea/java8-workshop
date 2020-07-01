@@ -2,12 +2,14 @@ package victor.training.java8.stream.order;
 
 import static java.util.stream.Collectors.toList;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
 
 import victor.training.java8.stream.order.entity.Customer;
 import victor.training.java8.stream.order.entity.Order;
+import victor.training.java8.stream.order.entity.Order.Status;
 
 public class SearchStreams {
 	
@@ -21,10 +23,13 @@ public class SearchStreams {
 	/**
 	 * - shorten/clean it up
 	 */
-	public List<Order> p1_getActiveOrders(Customer customer) {	
+	public List<Order> p1_getActiveOrders(Customer customer) {
 		return customer.getOrders().stream()
-				.filter(order -> order.getStatus() == Order.Status.ACTIVE)
-				.collect(toList());
+			.filter(order -> order.getStatus() == Status.ACTIVE)
+			.collect(toList());
+		// new Interface() { met() } -> poate sa fie convertita in Lambda -> daca :
+		//1) interfata are o singura metoda
+		// 2) nu ai alte functii/campuri definite
 	}
 	
 	/**
@@ -34,13 +39,16 @@ public class SearchStreams {
 	 */
 	public Order p2_getOrderById(List<Order> orders, long orderId) {
 		return orders.stream()
-				.filter(order -> order.getId() == orderId)
+				.filter(/*new Predicate<Order>() {
+					@Override
+					public boolean test*/(Order order) -> {
+						return order.getId() == orderId;
+//					}
+				})
+//		When it's red , yellow , blue or gray
+//		Alt-Enter will save your day.
 				.findFirst()
-				.orElse(null);
-				// you do elseThrow if you want a custom exception.
-				// .orElseThrow(() -> new MyException("There is no Order in the provided list that matches the id provided: " + orderId));
-				// Better, keeps the reader focused:
-//				.orElseThrow(() -> new MyException(MYErrorCode.NO_ORDER, orderId));
+				.get();
 	}
 	
 	/**
