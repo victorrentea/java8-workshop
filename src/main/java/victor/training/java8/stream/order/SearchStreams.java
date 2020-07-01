@@ -2,6 +2,7 @@ package victor.training.java8.stream.order;
 
 import static java.util.stream.Collectors.toList;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -93,7 +94,16 @@ public class SearchStreams {
 	 * - Challenge: return an Optional<creationDate>
 	 */
 	public Order p5_getMaxPriceOrder(Customer customer) {
-		return null; 
+
+		Comparator<Order> orderComparator = new Comparator<Order>() {
+			@Override
+			public int compare(Order o1, Order o2) {
+				return o1.getTotalPrice().compareTo(o2.getTotalPrice());
+			}
+		};
+		return customer.getOrders().stream()
+			.max(orderComparator)
+			.orElse(null);
 	}
 	
 	/**
