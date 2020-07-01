@@ -18,8 +18,24 @@ public class DishPlay {
    public static void main(String[] args) {
       // The above code sample + problems are from Java 8 in Action book (Manning)
 
+      // TODO select the low-calories (<400) items
+
       // TODO find out three high-calorie dish names
 
-      //
+      // TODO find out the 2nd and 3rd most caloric items
+
+      // TODO find vegetarian dishes
+
+      // TODO find 2 dishes with meat
+
+      // TODO Map<Type, Map<Object, List<Dish>>> dishesByTypeAndCaloricLevel
+
+      // TODO Map<Dish.Type, Long> typesCount
+
+      // TODO Map<Dish.Type, Set<Dish>> groupedAsSets
+
+      // TODO Map<Dish.Type, Integer> totalCaloriesByType
+
+      // TODO Map<Dish.Type, Optional<Dish>> mostCaloricByType
    }
 }
