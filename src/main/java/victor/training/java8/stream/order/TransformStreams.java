@@ -1,5 +1,6 @@
 package victor.training.java8.stream.order;
 
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.summingLong;
@@ -16,10 +17,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.mockito.internal.matchers.Or;
 import org.springframework.beans.factory.annotation.Autowired;
+import sun.reflect.generics.tree.Tree;
 import victor.training.java8.stream.order.dto.OrderDto;
 import victor.training.java8.stream.order.entity.Customer;
 import victor.training.java8.stream.order.entity.Order;
@@ -127,7 +130,9 @@ public class TransformStreams {
 	 * Note: Order.getPaymentMethod()
 	 */
 	public Set<PaymentMethod> p02_getUsedPaymentMethods(Customer customer) {
-		return null; 
+		return customer.getOrders().stream() // Stream<Order>
+			.map(Order::getPaymentMethod)
+			.collect(toSet());
 	}
 	
 	/**
@@ -135,7 +140,10 @@ public class TransformStreams {
 	 * Note: Order.getCreationDate()
 	 */
 	public SortedSet<LocalDate> p03_getOrderDatesAscending(Customer customer) {
-		return null; 
+		return customer.getOrders().stream()
+			//.sorted(comparing(Order::getCreationDate)) // Stream<Order>, da in ordine -- inutila caci colectia finala le sorteaza oricum
+			.map(Order::getCreationDate)
+			.collect(toCollection(TreeSet::new));
 	}
 	
 	
