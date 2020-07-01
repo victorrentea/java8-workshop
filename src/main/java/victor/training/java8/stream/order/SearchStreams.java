@@ -46,7 +46,7 @@ public class SearchStreams {
 				.findFirst()
 				.orElseThrow(() -> {
 					System.out.println("Instantiez exceptie HAhshsblaladshslal");
-					return new IllegalArgumentException();
+					return new MyAppException(ErrorCode.NO_ORDER_BY_ID); // @RestControllerAdvice traduce aceste coduri i18n prin messages_EN.properties
 				});
 	}
 	
