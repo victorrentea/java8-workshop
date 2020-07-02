@@ -22,9 +22,16 @@ class ProductService {
 	// at most 1 year old oders, the count of their lines, the product ordered at least 10 times.
 	// Not hidden (repo)
 	public List<Product> getFrequentOrderedProducts(List<Order> orders) {
-		// List<ProductOrderHistory> e mai sugestiv ca tipuri decat:
+		List<Long> hiddenProductIds = productRepo.getHiddenProductIds();
+		return getProductCounts(orders).stream()
+				.filter(e -> e.getTotalOrderCount() >= 10) // ar fi si mai sugestiv aici sa folosesti ProductOrderHistory
+				.map(ProductOrderHistory::getProduct)
+				.filter(p -> !hiddenProductIds.contains(p.getId()))
+				.collect(toList());
+	}
 
-		List<ProductOrderHistory> productCount = orders.stream()
+	private List<ProductOrderHistory> getProductCounts(List<Order> orders) {
+		return orders.stream()
 			.filter(this::isRecent)
 			.flatMap(order -> order.getOrderLines().stream())
 			.collect(groupingBy(OrderLine::getProduct, summingInt(OrderLine::getItemCount)))
@@ -32,12 +39,6 @@ class ProductService {
 			.stream()
 			.map(e -> new ProductOrderHistory(e.getKey(), e.getValue()))
 			.collect(toList());
-
-		return productCount.stream()
-				.filter(e -> e.getTotalOrderCount() >= 10) // ar fi si mai sugestiv aici sa folosesti ProductOrderHistory
-				.map(ProductOrderHistory::getProduct)
-				.filter(p -> !productRepo.getHiddenProductIds().contains(p.getId()))
-				.collect(toList());
 	}
 
 	private boolean isRecent(Order order) {
