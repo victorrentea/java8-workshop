@@ -157,10 +157,23 @@ public class TransformStreams {
 //		Map<Long, Order> map = new HashMap<>();
 //		map.put(1L, null); // MERGE
 //		map.put(null, null); // MERGE
+
+		BiFunction<Integer, Integer, Integer> f = (a,b) -> a+b;
+		BinaryOperator<Integer> op = (a,b) -> a+b;
+
+		BiFunction<BigDecimal, BigDecimal, BigDecimal> add = BigDecimal::add;
+
+		customer.getOrders().stream()
+//			.collect(toMap(Order::getId, Order::getTotalPrice, (totalInMap, newItemPrice) -> totalInMap.add(newItemPrice))); // ignora una dintre chei. Inghite o intrare
+//			.collect(toMap(Order::getId, Order::getTotalPrice, (newItemPrice, totalInMap) -> totalInMap.add(newItemPrice))); // ordinea param de lambda conteaza daca vrei sa transf in ::
+			.collect(toMap(Order::getId, Order::getTotalPrice, BigDecimal::add)); // ignora una dintre chei. Inghite o intrare
+
+
 		return customer.getOrders().stream()
 //			.collect(toMap(Order::getId, order -> null)); // crapa cu NPE > DECE ? E un Bug in JDK
 //			.collect(toMap(order -> null, order -> order)); // stupoare: asta merge @!!!
-			.collect(toMap(Order::getId, order -> order));
+//			.collect(toMap(Order::getId, order -> order); // crapa daca exista key duplicate
+			.collect(toMap(Order::getId, order -> order, (valueAlreadyInMap, newValue) -> valueAlreadyInMap)); // ignora una dintre chei. Inghite o intrare
 	}
 	
 	/** 

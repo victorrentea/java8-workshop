@@ -70,14 +70,24 @@ public class TransformStreamsTest {
 	
 	@Test
 	public void p04_mapOrdersById() {
-		Order order1 = new Order(1L);
+		Order order1 = new Order(1L).setTotalPrice(BigDecimal.ONE);
 		
 		Map<Long, Order> actual = service.p04_mapOrdersById(new Customer(order1));
 		Map<Long, Order> expected = Collections.singletonMap(1L, order1);
 		assertEquals(expected, actual);
 	}
 	
-	
+	@Test
+	public void p04_mapOrdersById_sameId_ignoresDuplicates() {
+		Order order1 = new Order(1L).setTotalPrice(BigDecimal.ONE);
+
+		Customer customer = new Customer(order1, new Order(1L).setTotalPrice(BigDecimal.ZERO));
+		Map<Long, Order> actual = service.p04_mapOrdersById(customer);
+		Map<Long, Order> expected = Collections.singletonMap(1L, order1);
+		assertEquals(expected, actual);
+	}
+
+
 	@Test
 	public void p05_getProductsByPaymentMethod() {
 		Order order1 = new Order().setPaymentMethod(PaymentMethod.CARD);

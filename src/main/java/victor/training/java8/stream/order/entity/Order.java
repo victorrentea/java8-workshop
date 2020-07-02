@@ -138,7 +138,7 @@ public class Order /*implements Comparable<Order> */{
 			details.add("created="+creationDate);
 		}
 		String detailsStr = details.stream().collect(joining(", "));
-		return "Order{"+detailsStr + "}";
+		return "Order{id="+id+","+detailsStr + "}";
 	}
 	
 }
