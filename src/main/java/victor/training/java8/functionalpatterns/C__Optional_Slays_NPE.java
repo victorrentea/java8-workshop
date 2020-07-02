@@ -1,6 +1,6 @@
 package victor.training.java8.functionalpatterns;
 
-/* "I call it my billion-dollar mistake. 
+/* "I call it my billion-dollar mistake.
  * It was the invention of the null reference in 1965..."
  *  -- Sir Charles Antony Richard  */
 
@@ -8,42 +8,60 @@ package victor.training.java8.functionalpatterns;
 
 class DiscountService {
 
-		
-	// test: 60, 10, no MemberCard
-	public static void main(String[] args) {
-		
-	}
+   public String getDiscountLine(Customer customer) {
+      Integer percentage = getApplicableDiscountPercentage(customer.getMemberCard());
+      if (percentage != null) {
+         return "Discount%: " + percentage;
+      } else {
+         return "";
+      }
+   }
+
+   private Integer getApplicableDiscountPercentage(MemberCard memberCard) {
+      if (memberCard.getFidelityPoints() > 100) {
+         return 5;
+      }
+      if (memberCard.getFidelityPoints() > 50) {
+         return 3;
+      }
+      return null;
+   }
+
+
+   // test: 60, 10, no MemberCard
+   public static void main(String[] args) {
+      DiscountService service = new DiscountService();
+      System.out.println(service.getDiscountLine(new Customer(new MemberCard(60))));
+      System.out.println(service.getDiscountLine(new Customer(new MemberCard(10))));
+   }
 }
-
-
-
-
-
-
 
 
 // VVVVVVVVV ==== supporting (dummy) code ==== VVVVVVVVV
 class Customer {
-	private MemberCard memberCard;
-	public Customer() {
-	}
-	public Customer(MemberCard profile) {
-		this.memberCard = profile;
-	}
-	public MemberCard getMemberCard() {
-		return memberCard;
-	}
+   private MemberCard memberCard;
+
+   public Customer() {
+   }
+
+   public Customer(MemberCard profile) {
+      this.memberCard = profile;
+   }
+
+   public MemberCard getMemberCard() {
+      return memberCard;
+   }
 }
 
 class MemberCard {
-	private final int fidelityPoints;
+   private final int fidelityPoints;
 
-	public MemberCard(int fidelityPoints) {
-		this.fidelityPoints = fidelityPoints;
-	}
+   public MemberCard(int fidelityPoints) {
+      this.fidelityPoints = fidelityPoints;
+   }
 
-	public int getFidelityPoints() {
-		return fidelityPoints;
-	}
-	
+   public int getFidelityPoints() {
+      return fidelityPoints;
+   }
+
 }
