@@ -7,19 +7,7 @@ package victor.training.java8.functionalpatterns;
 // Get a discount line to print in UI
 
 class DiscountService {
-	public String getDiscountLine(Customer customer) {
-		return "Discount: " + getApplicableDiscountPercentage(customer.getMemberCard());
-	}
-		
-	private Integer getApplicableDiscountPercentage(MemberCard card) { 
-		if (card.getFidelityPoints() >= 100) {
-			return 5;
-		}
-		if (card.getFidelityPoints() >= 50) {
-			return 3;
-		}
-		return null;
-	}
+
 		
 	// test: 60, 10, no MemberCard
 	public static void main(String[] args) {
