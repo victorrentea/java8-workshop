@@ -60,7 +60,8 @@ public class CreateStreams {
    }
 
    public Stream<Integer> p2_createFibonacciStream() {
-      return Stream.of(1,1,2,3,5);
+      return Stream.iterate(new int[]{1, 1}, arr -> new int[]{arr[1], arr[0] + arr[1]})
+          .map(arr -> arr[0]);
    }
 
    public Stream<Integer> p3_createPseudoRandomStream(int seed) {

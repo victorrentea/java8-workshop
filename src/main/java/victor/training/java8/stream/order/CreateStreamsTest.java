@@ -44,8 +44,8 @@ public class CreateStreamsTest {
 
    @Test
    public void p2_fibonacci() {
-      List<Integer> actual10 = service.p2_createFibonacciStream().limit(10).collect(toList());
-      List<Integer> expected10 = Arrays.asList(1, 1, 2, 3, 5, 8, 13, 21, 34, 55);
+      List<Integer> actual10 = service.p2_createFibonacciStream().limit(11).collect(toList());
+      List<Integer> expected10 = Arrays.asList(1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89);
       assertEquals(expected10, actual10);
    }
 
