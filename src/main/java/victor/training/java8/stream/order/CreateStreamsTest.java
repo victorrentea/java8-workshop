@@ -16,8 +16,7 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class CreateStreamsTest {
@@ -52,6 +51,13 @@ public class CreateStreamsTest {
       DescriptiveStatistics stats = new DescriptiveStatistics();
       randomStream.forEach(stats::addValue);
       System.out.println(stats.getVariance());
+   }
+   @Test
+   public void p3_pseudoRandomStreamReturnsDifferentValueForDifferentSeed() {
+      List<Integer> once = service.p3_createPseudoRandomStream(10).limit(50).collect(toList());
+      List<Integer> twice = service.p3_createPseudoRandomStream(11).limit(50).collect(toList());
+
+      assertNotEquals(once, twice);
    }
 
    @Test

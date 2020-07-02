@@ -6,14 +6,15 @@ import victor.training.java8.stream.order.entity.Product;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.IntSummaryStatistics;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.toList;
+
 public class CreateStreams {
-
-
    /**
     * - Read lines from file as Strings.
     * - Where do you close the opened file?
@@ -22,18 +23,16 @@ public class CreateStreams {
     */
    public List<OrderLine> p1_readOrderFromFile(File file) throws IOException {
 
-      Stream<String> lines = null; // ??
-      //return lines
-      //.map(line -> line.split(";")) // Stream<String[]>
-      //.filter(cell -> "LINE".equals(cell[0]))
-      //.map(this::parseOrderLine) // Stream<OrderLine>
-      //.peek(this::validateOrderLine)
-      //.collect(toList());
+      try (Stream<String> lines = Files.lines(file.toPath())) {
+         return lines
+             .map(line -> line.split(";")) // Stream<String[]>
+             .filter(cell -> "LINE".equals(cell[0]))
+             .map(this::parseOrderLine) // Stream<OrderLine>
+             .peek(this::validateOrderLine)
+             .collect(toList());
+      }
 
       // TODO check the number of lines is >= 2
-
-      return null;
-
    }
 
    private OrderLine parseOrderLine(String[] cells) {
