@@ -12,6 +12,9 @@ public class OptionalAgainstNull {
     }
 
     public static String convertToName(A a) {
+        if (a.getB() == null || a.getB().getC() == null) {
+            return "X";
+        }
         return a.getB().getC().getName();
     }
 
