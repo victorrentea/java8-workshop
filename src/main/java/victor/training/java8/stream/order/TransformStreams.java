@@ -259,4 +259,15 @@ public class TransformStreams {
 
 	}
 
+
+	public Long p09_getApproximateTotalOrdersPriceCuPlus(Customer customer) {
+		long suma = 0;
+		customer.getOrders().stream()
+			.map(Order::getTotalPrice)
+			.forEach(price -> {
+				suma += price.longValue();
+			});
+		return suma;
+	}
+
 }
