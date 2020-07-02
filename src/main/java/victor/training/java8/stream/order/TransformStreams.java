@@ -262,12 +262,27 @@ public class TransformStreams {
 
 	public Long p09_getApproximateTotalOrdersPriceCuPlus(Customer customer) {
 		long suma = 0;
-		customer.getOrders().stream()
-			.map(Order::getTotalPrice)
-			.forEach(price -> {
-				suma += price.longValue();
-			});
+//		customer.getOrders().stream()
+//			.map(Order::getTotalPrice)
+//			.forEach(price -> {
+//				suma += price.longValue();
+//			});
 		return suma;
+	}
+
+
+	static Supplier<Integer> createMagicSupplier() {
+		int x = 0;
+		return () -> x;
+	}
+
+	public static void main(String[] args) {
+		Supplier<Integer> supplier = createMagicSupplier();
+
+		System.out.println(supplier.get());
+		System.out.println(supplier.get());
+
+		throw new RuntimeException();
 	}
 
 }
