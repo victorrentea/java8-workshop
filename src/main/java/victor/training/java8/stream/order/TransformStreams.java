@@ -187,7 +187,8 @@ public class TransformStreams {
 		return customer.getOrders().stream().collect(groupingBy(Order::getPaymentMethod));
 	}
 	public Map<PaymentMethod, List<LocalDate>> p05_getProductsCreateDateByPaymentMethod(Customer customer) {
-		return customer.getOrders().stream().collect(groupingBy(Order::getPaymentMethod, mapping(Order::getCreationDate, toList())));
+		return customer.getOrders().stream()
+			.collect(groupingBy(Order::getPaymentMethod, mapping(Order::getCreationDate, toList())));
 	}
 
 	// -------------- MOVIE BREAK :p --------------------
@@ -201,12 +202,20 @@ public class TransformStreams {
 	 */
 	public Map<Product, Long> p06_getProductCount(Customer customer) {
 		
-		List<OrderLine> allLines = new ArrayList<>();
-		
-		for (Order order : customer.getOrders()) {
-			allLines.addAll(order.getOrderLines());
-		}
-		return null; 
+//		List<OrderLine> allLines = new ArrayList<>();
+//
+//		for (Order order : customer.getOrders()) {
+//			allLines.addAll(order.getOrderLines());
+//		}
+
+		List<OrderLine> allLines = customer.getOrders().stream()
+			.flatMap(order -> order.getOrderLines().stream())
+			.collect(toList());
+
+
+		return allLines.stream()
+//			.collect(groupingBy(OrderLine::getProduct, counting())); // nu asta
+			.collect(groupingBy(OrderLine::getProduct, summingLong(OrderLine::getCount)));
 		
 	}
 	
