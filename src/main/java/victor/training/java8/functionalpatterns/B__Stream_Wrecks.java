@@ -1,5 +1,7 @@
 package victor.training.java8.functionalpatterns;
 
+import lombok.Data;
+
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.summingInt;
 import static java.util.stream.Collectors.toList;
@@ -19,23 +21,29 @@ class ProductService {
 	// at most 1 year old oders, the count of their lines, the product ordered at least 10 times.
 	// Not hidden (repo)
 	public List<Product> getFrequentOrderedProducts(List<Order> orders) {
-		Map<Product, Integer> productCount = orders.stream()
+		// List<ProductOrderHistory> e mai sugestiv ca tipuri decat:
+		List<ProductOrderHistory> productCount = orders.stream()
 			.filter(order -> order.getCreationDate().isAfter(LocalDate.now().minusYears(1)))
 			.flatMap(order -> order.getOrderLines().stream())
-			.collect(groupingBy(OrderLine::getProduct, summingInt(OrderLine::getItemCount)));
+			.collect(groupingBy(OrderLine::getProduct, summingInt(OrderLine::getItemCount)))
+			.entrySet()
+			.stream()
+			.map(e -> new ProductOrderHistory(e.getKey(), e.getValue()))
+			.collect(toList());
 
-		for (Entry<Product, Integer> productIntegerEntry : productCount.entrySet()) {
-
-		}
-		return productCount.entrySet()
-				.stream()
-				.filter(e -> e.getValue() >= 10)
-				.map(Entry::getKey)
+		return productCount.stream()
+				.filter(e -> e.getTotalOrderCount() >= 10) // ar fi si mai sugestiv aici sa folosesti ProductOrderHistory
+				.map(ProductOrderHistory::getProduct)
 				.filter(p -> !productRepo.getHiddenProductIds().contains(p.getId()))
 				.collect(toList());
 	}
 }
 
+@Data
+class ProductOrderHistory {
+	private final Product product;
+	private final int totalOrderCount;
+}
 
 
 
