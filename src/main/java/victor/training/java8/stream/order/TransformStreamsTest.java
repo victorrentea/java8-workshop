@@ -150,19 +150,5 @@ public class TransformStreamsTest {
 		long actual = service.p09_getApproximateTotalOrdersPrice(new Customer(order1, order2));
 		assertEquals(11L, actual);
 	}
-	
-	@Test
-	public void p10_readOrderFromFile() throws IOException {
-		List<OrderLine> orderLines = service.p10_readOrderFromFile(new File("test.ok.txt"));
-		assertEquals("Chair", orderLines.get(0).getProduct().getName());
-		assertEquals(2, orderLines.get(0).getCount());
-		assertEquals("Table", orderLines.get(1).getProduct().getName());
-		assertEquals(1, orderLines.get(1).getCount());
-	}
-	
-	@Test(expected = IllegalArgumentException.class)
-	public void p10_readOrderFromFile_throws() throws IOException {
-		service.p10_readOrderFromFile(new File("test.invalid.txt")); // look at stacktrace
-		// TODO uncomment to see the exception trace :S
-	}
+
 }

@@ -206,42 +206,5 @@ public class TransformStreams {
 	public Long p09_getApproximateTotalOrdersPrice(Customer customer) {
 		return null; 
 	}
-	
-	// ----------- IO ---------------
-	
-	/**
-	 * - Read lines from file as Strings. 
-	 * - Where do you close the opened file?
-	 * - Parse those to OrderLine using the function bellow
-	 * - Validate the created OrderLine. Throw ? :S
-	 */
-	public List<OrderLine> p10_readOrderFromFile(File file) throws IOException {
-		
-		Stream<String> lines = null; // ??
-		//return lines
-		//.map(line -> line.split(";")) // Stream<String[]>
-		//.filter(cell -> "LINE".equals(cell[0]))
-		//.map(this::parseOrderLine) // Stream<OrderLine>
-		//.peek(this::validateOrderLine)
-		//.collect(toList());
 
-		// TODO check the number of lines is >= 2
-
-		return null;
-		
-	}
-	
-	private OrderLine parseOrderLine(String[] cells) {
-		return new OrderLine(new Product(cells[1]), Integer.parseInt(cells[2]));
-	}
-	
-	private void validateOrderLine(OrderLine orderLine) {
-		if (orderLine.getCount() < 0) {
-			throw new IllegalArgumentException("Negative items");			
-		}
-	}
-	
-	
-	// TODO print cannonical paths of all files in current directory
-	// use Unchecked... stuff
 }
