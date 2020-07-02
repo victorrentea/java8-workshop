@@ -12,9 +12,8 @@ public class OptionalAgainstNull {
     }
 
     public static String convertToName(A a) {
-        return a.getBOpt().flatMap(b ->b.getCOpt()).map(c -> c.getName()).orElse("X");
+        return a.getBOpt().flatMap(B::getCOpt).map(C::getName).orElse("X");
     }
-
 }
 
 class A {
@@ -25,8 +24,11 @@ class A {
     public A() {
         this(null);
     }
-    public B getB() {
-        return b;
+
+    // Law of Demeter ar zice sa creezi metode ca asta in loc sa navighezi din exterior modelul - OOP
+    // Insa, practica din 90% din codul enterprise zice ca da-i cu "."
+    public Optional<String> getCName() {
+        return b.getCName();
     }
     public Optional<B> getBOpt() {
         return ofNullable(b);
@@ -42,9 +44,11 @@ class B {
         this(null);
     }
 
-    public C getC() {
-        return c;
+    // ies prea multe delegate functions ca asta care 'polueaza entitatile'
+    public Optional<String> getCName() {
+        return getCOpt().map(C::getName);
     }
+
     public Optional<C> getCOpt() {
         return ofNullable(c);
     }
