@@ -212,7 +212,12 @@ public class TransformStreams {
 	 * sorted by Product.name.
 	 */
 	public List<Product> p07_getAllOrderedProducts(Customer customer) {
-		return null; 
+		return customer.getOrders().stream() // Stream<Order>
+			.flatMap(order -> order.getOrderLines().stream()) // Stream<OrderLine>
+			.map(OrderLine::getProduct) // Stream<Product>
+			.distinct()
+			.sorted(comparing(Product::getName))
+			.collect(toList());
 	}
 	
 	
