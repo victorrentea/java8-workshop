@@ -20,13 +20,15 @@ class ProductService {
 	public List<Product> getFrequentOrderedProducts(List<Order> orders) {
 		return orders.stream()
 				.filter(order -> order.getCreationDate().isAfter(LocalDate.now().minusYears(1)))
-				.map(Order::getOrderLines)
-				.flatMap(Collection::stream)
+				.flatMap(order -> order.getOrderLines().stream())
 				.collect(groupingBy(OrderLine::getProduct, summingInt(OrderLine::getItemCount)))
 				.entrySet()
 				.stream()
 				.filter(e -> e.getValue() >= 10)
+//				.map(e -> e.getKey().getName().toUpperCase()) // <-- preferabile evita map-uri succesive
 				.map(Entry::getKey)
+//				.map(Product::getName)
+//				.map(Strint::toUpperCase)
 				.filter(p -> !productRepo.getHiddenProductIds().contains(p.getId()))
 				.collect(toList());
 	}
