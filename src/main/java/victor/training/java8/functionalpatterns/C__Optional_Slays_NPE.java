@@ -8,6 +8,8 @@ package victor.training.java8.functionalpatterns;
 
 import java.util.Optional;
 
+import static java.util.Optional.ofNullable;
+
 class DiscountService {
 
    public String getDiscountLine(Customer customer) {
@@ -15,6 +17,7 @@ class DiscountService {
           .flatMap(this::getApplicableDiscountPercentage)
           .map(integer -> "Discount%: " + integer)
           .orElse("");
+
    }
 
    private Optional<Integer> getApplicableDiscountPercentage(MemberCard memberCard) {
@@ -51,9 +54,9 @@ class Customer {
 
 
    public Optional<MemberCard> getMemberCard() {
-      return Optional.ofNullable(memberCard);
+      return ofNullable(memberCard);
    }
-
+}
 class MemberCard {
    private final int fidelityPoints;
 
