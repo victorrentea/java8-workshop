@@ -25,6 +25,8 @@ import victor.training.java8.stream.order.entity.OrderLine;
 import victor.training.java8.stream.order.entity.Product;
 import victor.training.java8.stream.order.entity.Order.PaymentMethod;
 
+import javax.xml.ws.Holder;
+
 
 class OrderMapper {
 	public OrderDto toDto(Order order) {
@@ -273,9 +275,10 @@ public class TransformStreams {
 
 	static Supplier<Integer> createMagicSupplier() {
 //		int x = 0;
-		return () -> x ++;
+		Holder<Integer> hi = new Holder<>(); // instanta hi e pe HEAP
+		hi.value = 0;
+		return () -> hi.value ++;
 	}
-	static int x;
 
 	public static void main(String[] args) {
 		Supplier<Integer> supplier = createMagicSupplier();
