@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.IntSummaryStatistics;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
@@ -22,16 +23,28 @@ public class CreateStreams {
     * - Validate the created OrderLine. Throw ? :S
     */
    public List<OrderLine> p1_readOrderFromFile(File file) throws IOException {
+      Supplier<Stream<String>> streamFactory = () -> {
+         try {
+            return Files.lines(file.toPath());
+         } catch (IOException e) {
+           throw new RuntimeException(e);
+         }
+      };
 
+      return processFile(streamFactory);
 
+   }
 
-      try (Stream<String> lines = Files.lines(file.toPath())) {
+   private List<OrderLine> processFile(Supplier<Stream<String>> streamFactory) {
+      // o linie ==============================
+      // sub aceasta linie nu strebuie sa stiu CUM se obt streamul de stringuri
+      try (Stream<String> lines = streamFactory.get()) {
          if (lines.count() < 2) {
             throw new IllegalArgumentException();
          }
       }
 
-      try (Stream<String> lines = Files.lines(file.toPath())) {
+      try (Stream<String> lines = streamFactory.get()) {
          return lines
              .map(line -> line.split(";")) // Stream<String[]>
              .filter(cell -> "LINE".equals(cell[0]))
@@ -39,8 +52,6 @@ public class CreateStreams {
              .peek(this::validateOrderLine)
              .collect(toList());
       }
-
-      // TODO check the number of lines is >= 2
    }
 
    private OrderLine parseOrderLine(String[] cells) {
