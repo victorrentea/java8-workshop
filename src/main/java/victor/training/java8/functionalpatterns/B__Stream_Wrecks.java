@@ -7,6 +7,7 @@ import static java.util.stream.Collectors.toList;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 // get the products frequently ordered during the past year
@@ -18,17 +19,18 @@ class ProductService {
 	// at most 1 year old oders, the count of their lines, the product ordered at least 10 times.
 	// Not hidden (repo)
 	public List<Product> getFrequentOrderedProducts(List<Order> orders) {
-		return orders.stream()
-				.filter(order -> order.getCreationDate().isAfter(LocalDate.now().minusYears(1)))
-				.flatMap(order -> order.getOrderLines().stream())
-				.collect(groupingBy(OrderLine::getProduct, summingInt(OrderLine::getItemCount)))
-				.entrySet()
+		Map<Product, Integer> productCount = orders.stream()
+			.filter(order -> order.getCreationDate().isAfter(LocalDate.now().minusYears(1)))
+			.flatMap(order -> order.getOrderLines().stream())
+			.collect(groupingBy(OrderLine::getProduct, summingInt(OrderLine::getItemCount)));
+
+		for (Entry<Product, Integer> productIntegerEntry : productCount.entrySet()) {
+
+		}
+		return productCount.entrySet()
 				.stream()
 				.filter(e -> e.getValue() >= 10)
-//				.map(e -> e.getKey().getName().toUpperCase()) // <-- preferabile evita map-uri succesive
 				.map(Entry::getKey)
-//				.map(Product::getName)
-//				.map(Strint::toUpperCase)
 				.filter(p -> !productRepo.getHiddenProductIds().contains(p.getId()))
 				.collect(toList());
 	}
