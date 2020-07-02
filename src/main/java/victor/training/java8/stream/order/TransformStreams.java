@@ -236,12 +236,26 @@ public class TransformStreams {
 	/**
 	 * Sum of all Order.getTotalPrice(), truncated to Long.
 	 */
+//	public Long p09_getApproximateTotalOrdersPrice(Customer customer) {
+//		return (long) customer.getOrders().stream()
+//			.mapToDouble(order -> order.getTotalPrice().doubleValue()) //DoubleStream ,o alta interfata // numeric streams
+////			.boxed() // Stream<Double>
+////			.mapToDouble(d -> d)
+//			.sum();
+//	}
+
+	// daca vrei sa nu ai erori de aprox, sumeaza direct BigDecimal-uri
 	public Long p09_getApproximateTotalOrdersPrice(Customer customer) {
-		return (long) customer.getOrders().stream()
-			.mapToDouble(order -> order.getTotalPrice().doubleValue()) //DoubleStream ,o alta interfata // numeric streams
-//			.boxed() // Stream<Double>
-//			.mapToDouble(d -> d)
-			.sum();
+		BigDecimal bd1 = BigDecimal.ONE;
+		BigDecimal bd2 = BigDecimal.ONE;
+
+		BigDecimal two = bd1.add(bd2);
+
+		return customer.getOrders().stream()
+			.map(Order::getTotalPrice)
+			.reduce(BigDecimal.ZERO, BigDecimal::add)
+			.longValue();
+
 	}
 
 }
