@@ -22,6 +22,7 @@ import java.util.stream.Stream;
 
 import org.mockito.internal.matchers.Or;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import sun.reflect.generics.tree.Tree;
 import victor.training.java8.stream.order.dto.OrderDto;
 import victor.training.java8.stream.order.entity.Customer;
@@ -90,6 +91,7 @@ public class TransformStreams {
 //		OrderDto dto = f8_DoamneMaIarta.apply(this, order1);
 
 		BiFunction<BigDecimal, BigDecimal, Integer> f9_haiCaMerge = BigDecimal::compareTo; // f(BigDecimal (e "this"-ul), BigDecimal ("param")):int
+//		Integer compareResult = f9_haiCaMerge.apply(bd1, bd2);
 
 		BiConsumer<Order, PaymentMethod> f10 = Order::setPaymentMethod; // f(Order, PaymentMethod):void
 		/// ----------- SFARSIT
@@ -119,6 +121,7 @@ public class TransformStreams {
 		Function<Order, OrderDto> f2 = OrderDto::new;
 		return orders.stream()
 //			.map(o -> toDto(o))
+//			.map(this::toDto)
 //			.map(f6)
 //			.map(orderMapper::toDto)
 			.map(OrderDto::new)
@@ -151,7 +154,13 @@ public class TransformStreams {
 	 * @return a map order.id -> order
 	 */
 	public Map<Long, Order> p04_mapOrdersById(Customer customer) {
-		return null; 
+//		Map<Long, Order> map = new HashMap<>();
+//		map.put(1L, null); // MERGE
+//		map.put(null, null); // MERGE
+		return customer.getOrders().stream()
+//			.collect(toMap(Order::getId, order -> null)); // crapa cu NPE > DECE ? E un Bug in JDK
+//			.collect(toMap(order -> null, order -> order)); // stupoare: asta merge @!!!
+			.collect(toMap(Order::getId, order -> order));
 	}
 	
 	/** 
