@@ -272,13 +272,20 @@ public class TransformStreams {
 
 
 	static Supplier<Integer> createMagicSupplier() {
-		int x = 0;
-		return () -> x++;
+//		int x = 0;
+		return new Supplier<Integer>() {
+			int x; // acum pe heap alocat cu new
+			@Override
+			public Integer get() {
+				return x++;
+			}
+		};
 	}
 
 	public static void main(String[] args) {
 		Supplier<Integer> supplier = createMagicSupplier();
 
+		System.out.println(supplier.get());
 		System.out.println(supplier.get());
 		System.out.println(supplier.get());
 
