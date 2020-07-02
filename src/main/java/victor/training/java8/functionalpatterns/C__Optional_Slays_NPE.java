@@ -6,25 +6,27 @@ package victor.training.java8.functionalpatterns;
 
 // Get a discount line to print in UI
 
+import java.util.Optional;
+
 class DiscountService {
 
    public String getDiscountLine(Customer customer) {
-      Integer percentage = getApplicableDiscountPercentage(customer.getMemberCard());
-      if (percentage != null) {
-         return "Discount%: " + percentage;
+      Optional<Integer> percentage = getApplicableDiscountPercentage(customer.getMemberCard());
+      if (percentage.isPresent()) {
+         return "Discount%: " + percentage.get();
       } else {
          return "";
       }
    }
 
-   private Integer getApplicableDiscountPercentage(MemberCard memberCard) {
+   private Optional<Integer> getApplicableDiscountPercentage(MemberCard memberCard) {
       if (memberCard.getFidelityPoints() > 100) {
-         return 5;
+         return Optional.of(5);
       }
       if (memberCard.getFidelityPoints() > 50) {
-         return 3;
+         return Optional.of(3);
       }
-      return null;
+      return Optional.empty();
    }
 
 
