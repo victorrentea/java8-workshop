@@ -127,6 +127,7 @@ public class TransformStreams {
 	 * Note: Order.getPaymentMethod()
 	 */
 	public Set<PaymentMethod> p02_getUsedPaymentMethods(Customer customer) {
+		Map<PaymentMethod, Map<LocalDate, List<Order>>> horror = customer.getOrders().stream().collect(groupingBy(Order::getPaymentMethod, groupingBy(Order::getCreationDate)));
 		return customer.getOrders().stream() // Stream<Order>
 			.map(Order::getPaymentMethod)
 			.collect(toSet());

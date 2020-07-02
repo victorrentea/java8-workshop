@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import victor.training.java8.stream.order.entity.Customer;
 import victor.training.java8.stream.order.entity.Order;
@@ -57,8 +58,9 @@ public class SearchStreams {
 	 * @return true if customer has at least one order with status ACTIVE
 	 */
 	public boolean p3_hasActiveOrders(Customer customer) {
+		Predicate<Order> isActive = Order::isActive;
 		List<Order> activeOrders = customer.getOrders().stream()
-			.filter(Order::isActive)
+			.filter(isActive)
 			.collect(toList());
 //		return activeOrders.size() >= 1;
 
