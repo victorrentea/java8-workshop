@@ -228,7 +228,9 @@ public class TransformStreams {
 	 * Hint: Reuse the previous function.
 	 */
 	public String p08_getProductsJoined(Customer customer) {
-		return null; 
+		return p07_getAllOrderedProducts(customer).stream() // Stream<Product>
+			.map(Product::getName) //Stream<String>
+			.collect(joining(","));
 	}
 	
 	/**
