@@ -238,7 +238,9 @@ public class TransformStreams {
 	 */
 	public Long p09_getApproximateTotalOrdersPrice(Customer customer) {
 		return (long) customer.getOrders().stream()
-			.mapToDouble(order -> order.getTotalPrice().doubleValue()) // numeric streams
+			.mapToDouble(order -> order.getTotalPrice().doubleValue()) //DoubleStream ,o alta interfata // numeric streams
+//			.boxed() // Stream<Double>
+//			.mapToDouble(d -> d)
 			.sum();
 	}
 
