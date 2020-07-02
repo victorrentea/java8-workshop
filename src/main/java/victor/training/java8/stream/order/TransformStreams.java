@@ -1,13 +1,7 @@
 package victor.training.java8.stream.order;
 
 import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.summingLong;
-import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -192,7 +186,10 @@ public class TransformStreams {
 
 		return customer.getOrders().stream().collect(groupingBy(Order::getPaymentMethod));
 	}
-	
+	public Map<PaymentMethod, List<LocalDate>> p05_getProductsCreateDateByPaymentMethod(Customer customer) {
+		return customer.getOrders().stream().collect(groupingBy(Order::getPaymentMethod, mapping(Order::getCreationDate, toList())));
+	}
+
 	// -------------- MOVIE BREAK :p --------------------
 	
 	/** 

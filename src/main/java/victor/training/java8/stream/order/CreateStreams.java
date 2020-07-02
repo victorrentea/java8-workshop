@@ -6,6 +6,7 @@ import victor.training.java8.stream.order.entity.Product;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.IntSummaryStatistics;
 import java.util.List;
 import java.util.stream.Stream;
@@ -55,6 +56,7 @@ public class CreateStreams {
 
    public Stream<String> p4_getAllPaths(File folder) {
       // TODO print cannonical paths of all files in given directory and subdirectories
+      System.out.println("folder = " + folder.getAbsolutePath());
       return null;
    }
 }
