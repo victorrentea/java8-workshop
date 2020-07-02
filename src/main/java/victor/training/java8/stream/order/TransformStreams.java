@@ -273,7 +273,7 @@ public class TransformStreams {
 
 	static Supplier<Integer> createMagicSupplier() {
 		int x = 0;
-		return () -> x;
+		return () -> x++;
 	}
 
 	public static void main(String[] args) {
