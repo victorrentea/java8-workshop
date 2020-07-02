@@ -11,7 +11,7 @@ import java.util.Optional;
 class DiscountService {
 
    public String getDiscountLine(Customer customer) {
-      return customer.getMemberCardOpt()
+      return customer.getMemberCard()
           .flatMap(this::getApplicableDiscountPercentage)
           .map(integer -> "Discount%: " + integer)
           .orElse("");
@@ -50,13 +50,9 @@ class Customer {
    }
 
 
-   public Optional<MemberCard> getMemberCardOpt() {
+   public Optional<MemberCard> getMemberCard() {
       return Optional.ofNullable(memberCard);
    }
-   public MemberCard getMemberCard() {
-      return memberCard;
-   }
-}
 
 class MemberCard {
    private final int fidelityPoints;
