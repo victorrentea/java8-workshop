@@ -11,12 +11,9 @@ import java.util.Optional;
 class DiscountService {
 
    public String getDiscountLine(Customer customer) {
-      Optional<Integer> percentage = getApplicableDiscountPercentage(customer.getMemberCard());
-      if (percentage.isPresent()) {
-         return "Discount%: " + percentage.get();
-      } else {
-         return "";
-      }
+      return getApplicableDiscountPercentage(customer.getMemberCard())
+          .map(integer -> "Discount%: " + integer)
+          .orElse("");
    }
 
    private Optional<Integer> getApplicableDiscountPercentage(MemberCard memberCard) {
