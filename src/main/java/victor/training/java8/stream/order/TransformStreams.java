@@ -201,20 +201,8 @@ public class TransformStreams {
 	 * i.e. SELECT PROD_ID, SUM(COUNT) FROM PROD GROUPING BY PROD_ID
 	 */
 	public Map<Product, Long> p06_getProductCount(Customer customer) {
-		
-//		List<OrderLine> allLines = new ArrayList<>();
-//
-//		for (Order order : customer.getOrders()) {
-//			allLines.addAll(order.getOrderLines());
-//		}
-
-		List<OrderLine> allLines = customer.getOrders().stream()
+		return customer.getOrders().stream()
 			.flatMap(order -> order.getOrderLines().stream())
-			.collect(toList());
-
-
-		return allLines.stream()
-//			.collect(groupingBy(OrderLine::getProduct, counting())); // nu asta
 			.collect(groupingBy(OrderLine::getProduct, summingLong(OrderLine::getCount)));
 		
 	}
