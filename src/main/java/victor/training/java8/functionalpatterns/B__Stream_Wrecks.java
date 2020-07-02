@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Predicate;
 
 // get the products frequently ordered during the past year
 
@@ -22,8 +23,10 @@ class ProductService {
 	// Not hidden (repo)
 	public List<Product> getFrequentOrderedProducts(List<Order> orders) {
 		// List<ProductOrderHistory> e mai sugestiv ca tipuri decat:
+		Predicate<Order> isRecent = order -> order.getCreationDate().isAfter(LocalDate.now().minusYears(1));
+
 		List<ProductOrderHistory> productCount = orders.stream()
-			.filter(order -> order.getCreationDate().isAfter(LocalDate.now().minusYears(1)))
+			.filter(isRecent)
 			.flatMap(order -> order.getOrderLines().stream())
 			.collect(groupingBy(OrderLine::getProduct, summingInt(OrderLine::getItemCount)))
 			.entrySet()
