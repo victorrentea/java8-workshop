@@ -181,16 +181,16 @@ public class TransformStreams {
 	 */
 	public Map<PaymentMethod, List<Order>> p05_getProductsByPaymentMethod(Customer customer) {
 
-		Map<PaymentMethod, List<Order>> map = new HashMap<>();
-		for (Order order : customer.getOrders()) {
-			if (!map.containsKey(order.getPaymentMethod())) {
-				map.put(order.getPaymentMethod(), new ArrayList<>());
-			}
-			map.get(order.getPaymentMethod()).add(order);
-		}
+//		Map<PaymentMethod, List<Order>> map = new HashMap<>();
+//		for (Order order : customer.getOrders()) {
+//			if (!map.containsKey(order.getPaymentMethod())) {
+//				map.put(order.getPaymentMethod(), new ArrayList<>());
+//			}
+//			map.get(order.getPaymentMethod()).add(order);
+//		}
 
 
-		return map;
+		return customer.getOrders().stream().collect(groupingBy(Order::getPaymentMethod));
 	}
 	
 	// -------------- MOVIE BREAK :p --------------------
