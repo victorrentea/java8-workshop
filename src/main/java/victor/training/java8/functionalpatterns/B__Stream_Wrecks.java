@@ -5,6 +5,7 @@ import static java.util.stream.Collectors.summingInt;
 import static java.util.stream.Collectors.toList;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -17,7 +18,17 @@ class ProductService {
 	// at most 1 year old oders, the count of their lines, the product ordered at least 10 times.
 	// Not hidden (repo)
 	public List<Product> getFrequentOrderedProducts(List<Order> orders) {
-		return null;
+		return orders.stream()
+				.filter(order -> order.getCreationDate().isAfter(LocalDate.now().minusYears(1)))
+				.map(Order::getOrderLines)
+				.flatMap(Collection::stream)
+				.collect(groupingBy(OrderLine::getProduct, summingInt(OrderLine::getItemCount)))
+				.entrySet()
+				.stream()
+				.filter(e -> e.getValue() >= 10)
+				.map(Entry::getKey)
+				.filter(p -> !productRepo.getHiddenProductIds().contains(p.getId()))
+				.collect(toList());
 	}
 }
 
