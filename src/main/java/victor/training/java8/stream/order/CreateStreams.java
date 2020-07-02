@@ -23,6 +23,14 @@ public class CreateStreams {
     */
    public List<OrderLine> p1_readOrderFromFile(File file) throws IOException {
 
+
+
+      try (Stream<String> lines = Files.lines(file.toPath())) {
+         if (lines.count() < 2) {
+            throw new IllegalArgumentException();
+         }
+      }
+
       try (Stream<String> lines = Files.lines(file.toPath())) {
          return lines
              .map(line -> line.split(";")) // Stream<String[]>

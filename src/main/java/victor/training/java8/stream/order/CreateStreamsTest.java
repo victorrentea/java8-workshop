@@ -33,7 +33,11 @@ public class CreateStreamsTest {
    }
 
    @Test(expected = IllegalArgumentException.class)
-   public void p1_readOrderFromFile_throws() throws IOException {
+   public void p1_readOrderFromFile_throwsIfTooSmall() throws IOException {
+      service.p1_readOrderFromFile(new File("test.toosmall.txt")); // look at stacktrace
+   }
+   @Test(expected = IllegalArgumentException.class)
+   public void p1_readOrderFromFile_throwsForInvalidLine() throws IOException {
       service.p1_readOrderFromFile(new File("test.invalid.txt")); // look at stacktrace
       // TODO uncomment to see the exception trace :S
    }
