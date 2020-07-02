@@ -23,10 +23,9 @@ class ProductService {
 	// Not hidden (repo)
 	public List<Product> getFrequentOrderedProducts(List<Order> orders) {
 		// List<ProductOrderHistory> e mai sugestiv ca tipuri decat:
-		Predicate<Order> isRecent = order -> order.getCreationDate().isAfter(LocalDate.now().minusYears(1));
 
 		List<ProductOrderHistory> productCount = orders.stream()
-			.filter(isRecent)
+			.filter(this::isRecent)
 			.flatMap(order -> order.getOrderLines().stream())
 			.collect(groupingBy(OrderLine::getProduct, summingInt(OrderLine::getItemCount)))
 			.entrySet()
@@ -39,6 +38,10 @@ class ProductService {
 				.map(ProductOrderHistory::getProduct)
 				.filter(p -> !productRepo.getHiddenProductIds().contains(p.getId()))
 				.collect(toList());
+	}
+
+	private boolean isRecent(Order order) {
+		return order.getCreationDate().isAfter(LocalDate.now().minusYears(1));
 	}
 }
 
