@@ -39,6 +39,7 @@ class ProductService {
 			.stream()
 			.map(e -> new ProductOrderHistory(e.getKey(), e.getValue()))
 			.collect(toList());
+		// TODO exercitiu cititorului: faceti ProductOrderHistory.totalOrderCount sa fie nefinal. si incercati sa colectati direct in instante de-astea: nu intr-un Map.
 	}
 
 	private boolean isRecent(Order order) {
