@@ -1,6 +1,7 @@
 package victor.training.java8.stream.order;
 
 import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
+import org.jooq.lambda.Unchecked;
 import victor.training.java8.stream.order.entity.OrderLine;
 import victor.training.java8.stream.order.entity.Product;
 
@@ -23,13 +24,7 @@ public class CreateStreams {
     * - Validate the created OrderLine. Throw ? :S
     */
    public List<OrderLine> p1_readOrderFromFile(File file) throws IOException {
-      Supplier<Stream<String>> streamFactory = () -> {
-         try {
-            return Files.lines(file.toPath());
-         } catch (IOException e) {
-           throw new RuntimeException(e);
-         }
-      };
+      Supplier<Stream<String>> streamFactory = Unchecked.supplier(() -> Files.lines(file.toPath()));
 
       return processFile(streamFactory);
 
