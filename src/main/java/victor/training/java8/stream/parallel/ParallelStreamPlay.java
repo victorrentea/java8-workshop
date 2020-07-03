@@ -15,6 +15,6 @@ public class ParallelStreamPlay {
       numbers.parallelStream()
           .filter(n -> n % 2 == 1)
           .map(n -> n * n)
-          .forEach(System.out::println);
+          .forEachOrdered(System.out::println);
    }
 }
