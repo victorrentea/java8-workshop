@@ -3,17 +3,18 @@ package victor.training.java8.stream.parallel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
 public class ParallelStreamPlay {
    private static final Logger log = LoggerFactory.getLogger(ParallelStreamPlay.class);
 
-   public static void main(String[] args) {
+   public static void main(String[] args) throws ExecutionException, InterruptedException {
       List<Integer> numbers = IntStream.range(1, 10_000) // IntStream
           .boxed() // Stream<Integer>
           .collect(toList());
@@ -70,5 +71,26 @@ public class ParallelStreamPlay {
 //          .collect(toList());
 
 //      System.out.println(list);
+
+
+      ForkJoinPool pool = new ForkJoinPool(100);
+
+      Stream<String> stream = numbers.parallelStream()
+          .map(ParallelStreamPlay::callRest);
+
+      List<String> results = pool.submit(() -> stream.collect(toList())).get(); //terminal operation should run in a custom ForkJoinPool
+      System.out.println(results);
+
+   }
+
+   public static String callRest(int i) {
+      log.info("Calling ws " + i);
+      // ai foarte greu acces la date de pe threadul care a startat executia.
+      try {
+         Thread.sleep(100);
+      } catch (InterruptedException e) {
+         e.printStackTrace();
+      }
+      return "data" + i;
    }
 }
