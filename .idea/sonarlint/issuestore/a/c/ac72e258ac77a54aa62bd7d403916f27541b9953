@@ -1,0 +1,167 @@
+
+I
+java:S1191"5Use classes from the Java API instead of Sun classes.(ºğ“´
+i	java:S117"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(•Äûÿÿÿÿ
+D
+java:S1128"0Remove this unused import 'java.nio.file.Files'.(‚ƒü
+I
+java:S1128"0Remove this unused import 'java.io.IOException'.(ªº»Úıÿÿÿÿ
+Q
+java:S1128"8Remove this unused import 'java.util.stream.Collectors'.(Óóº´úÿÿÿÿ
+=
+java:S1128")Remove this unused import 'java.io.File'.(†Ğ¥Å
+\
+java:S1128"HRemove this unused import 'org.springframework.context.annotation.Bean'.(‚î‰Ş
+O
+java:S1128";Remove this unused import 'sun.reflect.generics.tree.Tree'.(ºğ“´
+^
+java:S1854"JRemove this useless assignment to local variable "overloadCuFourDotsLong".(ó‚Ê°
+Z
+java:S1854"FRemove this useless assignment to local variable "overloadCuFourDots".(¿ëî©
+M
+java:S1854"9Remove this useless assignment to local variable "date1".(¨¤¿¦
+O
+java:S1854";Remove this useless assignment to local variable "supDate".(°Ä³’
+L
+java:S1854"8Remove this useless assignment to local variable "date".(è€¼
+P
+java:S1854"7Remove this useless assignment to local variable "f10".(Œ„¥…ûÿÿÿÿ
+Z
+java:S1854"ARemove this useless assignment to local variable "f9_haiCaMerge".(•Äûÿÿÿÿ
+R
+java:S1854"9Remove this useless assignment to local variable "apply".(ñ§±ğşÿÿÿÿ
+I
+java:S1854"6Remove this useless assignment to local variable "ft".(“úï.
+O
+java:S1854"6Remove this useless assignment to local variable "f5".(¸òëıÿÿÿÿ
+J
+java:S1854"6Remove this useless assignment to local variable "i1".(°èÃ†
+J
+java:S1854"6Remove this useless assignment to local variable "f4".(§Ûëë
+O
+java:S1854"6Remove this useless assignment to local variable "f3".(©¯Î›şÿÿÿÿ
+O
+java:S1854"6Remove this useless assignment to local variable "id".(Šó òüÿÿÿÿ
+O
+java:S1854"6Remove this useless assignment to local variable "f2".(Äûßùÿÿÿÿ
+P
+java:S1854"7Remove this useless assignment to local variable "aaa".(•â²œşÿÿÿÿ
+N
+java:S1854":Remove this useless assignment to local variable "parseF".(Ò„‰î
+P
+java:S1854"<Remove this useless assignment to local variable "dateTime".(âùÜ
+O
+java:S1854"6Remove this useless assignment to local variable "f1".(×‡Îöúÿÿÿÿ
+I
+java:S1854"5Remove this useless assignment to local variable "i".(Íùç§
+t
+java:S4276"[Refactor this code to use the more specialised Functional Interface 'ToIntFunction<String>'(×‡Îöúÿÿÿÿ
+t
+java:S4276"[Refactor this code to use the more specialised Functional Interface 'ToIntFunction<Object>'(Äûßùÿÿÿÿ
+k
+java:S4276"RRefactor this code to use the more specialised Functional Interface 'LongSupplier'(©¯Î›şÿÿÿÿ
+s
+java:S4276"_Refactor this code to use the more specialised Functional Interface 'UnaryOperator<BigDecimal>'(§Ûëë
+x
+java:S4276"_Refactor this code to use the more specialised Functional Interface 'ToIntFunction<BigDecimal>'(¸òëıÿÿÿÿ
+o
+java:S4276"[Refactor this code to use the more specialised Functional Interface 'ToLongFunction<Order>'(¡çë„
+l
+java:S4276"XRefactor this code to use the more specialised Functional Interface 'LongFunction<Date>'(¿ëî©
+a	java:S100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(‚ò
+O
+java:S1854"6Remove this useless assignment to local variable "f2".(Íºéÿÿÿÿÿ
+J
+java:S1854"6Remove this useless assignment to local variable "f1".(ô­¡Ä
+N
+java:S1854"5Remove this useless assignment to local variable "b".(à¶¡ˆøÿÿÿÿ
+f	java:S100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(öµœ±ÿÿÿÿÿ
+N
+java:S1854":Remove this useless assignment to local variable "horror".(Ù°¦ã
+f	java:S100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(šŒ–“øÿÿÿÿ
+`	java:S100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ü§
+J
+java:S1854"7Remove this useless assignment to local variable "add".(„ïÑ
+O
+java:S1854"6Remove this useless assignment to local variable "op".(Õğ•ûÿÿÿÿ
+I
+java:S1854"5Remove this useless assignment to local variable "f".(ú’î
+q
+java:S4276"]Refactor this code to use the more specialised Functional Interface 'BinaryOperator<Integer>'(ú’î
+p
+java:S4276"WRefactor this code to use the more specialised Functional Interface 'IntBinaryOperator'(Õğ•ûÿÿÿÿ
+s
+java:S4276"`Refactor this code to use the more specialised Functional Interface 'BinaryOperator<BigDecimal>'(„ïÑ
+a	java:S100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(äéİÕ
+f	java:S100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ºé†üÿÿÿÿ
+a	java:S100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¥öÀş
+a	java:S100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(©ò‘
+a	java:S100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÇÑş
+f	java:S100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(å¿ëÁüÿÿÿÿ
+P
+java:S1854"7Remove this useless assignment to local variable "two".(à™Õ‘øÿÿÿÿ
+:
+java:S1481"&Remove this unused "i" local variable.(Íùç§
+@
+java:S1481"'Remove this unused "f1" local variable.(×‡Îöúÿÿÿÿ
+A
+java:S1481"-Remove this unused "dateTime" local variable.(âùÜ
+?
+java:S1481"+Remove this unused "parseF" local variable.(Ò„‰î
+A
+java:S1481"(Remove this unused "aaa" local variable.(•â²œşÿÿÿÿ
+@
+java:S1481"'Remove this unused "f2" local variable.(Äûßùÿÿÿÿ
+@
+java:S1481"'Remove this unused "id" local variable.(Šó òüÿÿÿÿ
+@
+java:S1481"'Remove this unused "f3" local variable.(©¯Î›şÿÿÿÿ
+;
+java:S1481"'Remove this unused "f4" local variable.(§Ûëë
+;
+java:S1481"'Remove this unused "i1" local variable.(°èÃ†
+@
+java:S1481"'Remove this unused "f5" local variable.(¸òëıÿÿÿÿ
+:
+java:S1481"'Remove this unused "ft" local variable.(“úï.
+C
+java:S1481"*Remove this unused "apply" local variable.(ñ§±ğşÿÿÿÿ
+K
+java:S1481"2Remove this unused "f9_haiCaMerge" local variable.(•Äûÿÿÿÿ
+A
+java:S1481"(Remove this unused "f10" local variable.(Œ„¥…ûÿÿÿÿ
+=
+java:S1481")Remove this unused "date" local variable.(è€¼
+@
+java:S1481",Remove this unused "supDate" local variable.(°Ä³’
+>
+java:S1481"*Remove this unused "date1" local variable.(¨¤¿¦
+K
+java:S1481"7Remove this unused "overloadCuFourDots" local variable.(¿ëî©
+O
+java:S1481";Remove this unused "overloadCuFourDotsLong" local variable.(ó‚Ê°
+?
+java:S1481"&Remove this unused "b" local variable.(à¶¡ˆøÿÿÿÿ
+;
+java:S1481"'Remove this unused "f1" local variable.(ô­¡Ä
+@
+java:S1481"'Remove this unused "f2" local variable.(Íºéÿÿÿÿÿ
+?
+java:S1481"+Remove this unused "horror" local variable.(Ù°¦ã
+:
+java:S1481"&Remove this unused "f" local variable.(ú’î
+@
+java:S1481"'Remove this unused "op" local variable.(Õğ•ûÿÿÿÿ
+;
+java:S1481"(Remove this unused "add" local variable.(„ïÑ
+A
+java:S1481"(Remove this unused "two" local variable.(à™Õ‘øÿÿÿÿ
+O	java:S125"<This block of commented-out lines of code should be removed.(½“è
+T	java:S125"<This block of commented-out lines of code should be removed.(öâË¼úÿÿÿÿ
+O	java:S125"<This block of commented-out lines of code should be removed.(Õš­„
+T	java:S125"<This block of commented-out lines of code should be removed.(–ÚùŸúÿÿÿÿ
+O	java:S125"<This block of commented-out lines of code should be removed.(¾˜ÉÂ
+N	java:S125"<This block of commented-out lines of code should be removed.(¬”ö 
+O	java:S125"<This block of commented-out lines of code should be removed.(Îö¢
+O	java:S125"<This block of commented-out lines of code should be removed.(Æ¶ğ²
+T	java:S125"<This block of commented-out lines of code should be removed.(”¦ğéûÿÿÿÿ

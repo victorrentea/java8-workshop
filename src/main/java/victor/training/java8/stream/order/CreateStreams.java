@@ -1,5 +1,6 @@
 package victor.training.java8.stream.order;
 
+import io.vavr.control.Try;
 import org.jooq.lambda.Unchecked;
 import victor.training.java8.stream.order.entity.OrderLine;
 import victor.training.java8.stream.order.entity.Product;
@@ -37,11 +38,25 @@ public class CreateStreams {
       }
 
       try (Stream<String> lines = streamFactory.get()) {
-         return lines
+         List<Try<OrderLine>> allItems = lines
              .map(line -> line.split(";")) // Stream<String[]>
              .filter(cell -> "LINE".equals(cell[0]))
              .map(this::parseOrderLine) // Stream<OrderLine>
-             .filter(this::validateOrderLine)
+             .map(this::validateOrderLine) // Stream<Try<OrderLine>>
+             .collect(toList());
+
+         List<Throwable> throwables = allItems.stream()
+             .filter(Try::isFailure)
+             .map(Try::getCause)
+             .collect(toList());
+
+         if (!throwables.isEmpty()) {
+            System.err.println(throwables);
+         }
+
+         return allItems.stream()
+             .filter(Try::isSuccess)
+             .map(Try::get)
              .collect(toList());
       }
    }
@@ -50,10 +65,13 @@ public class CreateStreams {
       return new OrderLine(new Product(cells[1]), Integer.parseInt(cells[2]));
    }
 
-   private boolean validateOrderLine(OrderLine orderLine) {
-      return orderLine.getCount() >= 0 ;
-//         throw new IllegalArgumentException("Negative items");
-//      }
+   private Try<OrderLine> validateOrderLine(OrderLine orderLine) {
+
+      if (orderLine.getCount() >= 0) {
+         return Try.success(orderLine);
+      } else {
+         return Try.failure(new IllegalArgumentException("Negative items"));
+      }
    }
 
    public Stream<Integer> p2_createFibonacciStream() {
