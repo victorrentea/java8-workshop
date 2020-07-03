@@ -17,7 +17,7 @@ public class ParallelStreamPlay {
           .boxed() // Stream<Integer>
           .collect(toList());
 
-      numbers.parallelStream()
+      List<Integer> list = numbers.parallelStream()
           .filter(n -> {
              log.info("Filter " + n);
              return n % 2 == 1;
@@ -28,8 +28,11 @@ public class ParallelStreamPlay {
              log.info("Map " + n);
              return n * n;
           })
-          .forEach(x -> {
-             log.info("Out " + x);
-          });
+//          .forEach(x -> {
+//             log.info("Out " + x);
+//          });
+          .collect(toList());
+
+      System.out.println(list);
    }
 }
