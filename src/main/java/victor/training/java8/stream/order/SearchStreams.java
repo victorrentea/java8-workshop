@@ -90,7 +90,22 @@ public class SearchStreams {
 //		if (oneSpecialOffer.isPresent()) {
 //			metodaDacaE(oneSpecialOffer.get());
 //		}
-		oneSpecialOffer.ifPresent(so -> metodaDacaE(so));
+		oneSpecialOffer.ifPresent(so -> {
+			metodaDacaE(so);
+			metodaDacaE(so);
+			metodaDacaE(so);
+		});
+
+
+
+//		order.getOrderLines().stream().forEach(e -> {
+//			if (n-am gasit ) {
+//				fac cu elem
+//			} else {
+//
+//			}
+//
+//		});
 
 		return order.getOrderLines().stream().noneMatch(OrderLine::isSpecialOffer);
 	}

@@ -64,6 +64,7 @@ public class ParallelStreamPlay {
           .findAny() // oricare worker gaseste primu, ala e.
 //          .findFirst() // primul in ordinea initiala e intors
          .ifPresent(System.out::println);
+
 //          .forEach(x -> {
 //             log.info("Out " + x);
 //             list.add(x);
