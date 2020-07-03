@@ -22,6 +22,11 @@ public class ParallelStreamPlay {
       numbers.parallelStream()
           .filter(n -> {
              log.info("Filter " + n);
+             try {
+                Thread.sleep(1000); // MMOG
+             } catch (InterruptedException e) {
+                e.printStackTrace();
+             }
              return n % 2 == 1;
           })
 //          .distinct()
