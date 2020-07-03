@@ -1,11 +1,10 @@
 package victor.training.java8.stream;
 
-import lombok.Data;
 import lombok.ToString;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class StatfulStepInStream {
@@ -18,8 +17,24 @@ public class StatfulStepInStream {
       customers.stream()
           .peek(e -> System.out.println("Peek: " + e))
 //          .sorted(Comparator.comparing(Customer::getId))
-          .distinct()
-          .forEach(e -> System.out.println("Out: "+ e));
+//          .distinct()
+          .filter(new DistinctWithExtractor<>(Customer::getId))
+          .forEach(e -> System.out.println("Out: " + e));
+   }
+
+}
+
+class DistinctWithExtractor<T, E> implements Predicate<T> {
+   private final Function<T, E> distinctKeyExtractor;
+   private final Set<E> idsSeen = new HashSet<>();
+
+   public DistinctWithExtractor(Function<T, E> distinctKeyExtractor) {
+      this.distinctKeyExtractor = distinctKeyExtractor;
+   }
+
+   @Override
+   public boolean test(T c) {
+      return idsSeen.add(distinctKeyExtractor.apply(c));
    }
 }
 
