@@ -22,10 +22,14 @@ public class ParallelStreamPlay {
              log.info("Filter " + n);
              return n % 2 == 1;
           })
+//          .distinct()
+          .sorted()
           .map(n -> {
              log.info("Map " + n);
              return n * n;
           })
-          .forEach(System.out::println);
+          .forEach(x -> {
+             log.info("Out " + x);
+          });
    }
 }
