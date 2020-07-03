@@ -3,6 +3,7 @@ package victor.training.java8.stream.parallel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -17,22 +18,30 @@ public class ParallelStreamPlay {
           .boxed() // Stream<Integer>
           .collect(toList());
 
-      List<Integer> list = numbers.parallelStream()
+//      List<Integer> list = new ArrayList<>();
+      numbers.parallelStream()
           .filter(n -> {
              log.info("Filter " + n);
              return n % 2 == 1;
           })
+          .sequential()
 //          .distinct()
           .sorted()
           .map(n -> {
              log.info("Map " + n);
              return n * n;
           })
+          .parallel()
+          .filter(n -> n > 10)
+          .findAny() // oricare worker gaseste primu, ala e.
+//          .findFirst() // primul in ordinea initiala e intors
+         .ifPresent(System.out::println);
 //          .forEach(x -> {
 //             log.info("Out " + x);
+//             list.add(x);
 //          });
-          .collect(toList());
+//          .collect(toList());
 
-      System.out.println(list);
+//      System.out.println(list);
    }
 }
