@@ -16,6 +16,9 @@ public class Bar {
 
 class Beutor {
    private static final Logger log = LoggerFactory.getLogger(Beutor.class);
+
+   static ExecutorService barmani = Executors.newFixedThreadPool(2);
+
    private final Barman barman;
    public Beutor(Barman barman) {
       this.barman = barman;
@@ -23,14 +26,13 @@ class Beutor {
    public void bea() throws ExecutionException, InterruptedException {
       log.info("Vin la bar");
 
-      ExecutorService barmani = Executors.newFixedThreadPool(2);
 
       Future<Bere> futureBere = barmani.submit(barman::toarnaBere);
       Future<Vodka> futureVodka = barmani.submit(barman::toarnaVodka);
       log.info("A plecat fata cu comanda");
 
       Bere bere = futureBere.get();
-      // pana aici main doarme 1 sec
+      // pana aici main doarme 1 sec <--- problema
       Vodka vodka = futureVodka.get(); // lina asta o executa instantaneu, pentru ca deja e gata vodka, ca dureaza tot 1 sec sa o toarne
 
 
