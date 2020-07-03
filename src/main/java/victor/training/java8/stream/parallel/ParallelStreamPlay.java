@@ -14,7 +14,7 @@ public class ParallelStreamPlay {
    private static final Logger log = LoggerFactory.getLogger(ParallelStreamPlay.class);
 
    public static void main(String[] args) {
-      List<Integer> numbers = IntStream.range(1, 11) // IntStream
+      List<Integer> numbers = IntStream.range(1, 10_000) // IntStream
           .boxed() // Stream<Integer>
           .collect(toList());
 
@@ -31,7 +31,7 @@ public class ParallelStreamPlay {
              return n * n;
           })
           .parallel()
-          .sequential()
+//          .sequential()
           .filter(n -> n > 10)
           .findAny() // oricare worker gaseste primu, ala e.
 //          .findFirst() // primul in ordinea initiala e intors
