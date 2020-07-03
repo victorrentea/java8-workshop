@@ -1,2 +1,5 @@
 LINE;Chair;-2
+LINE;Creier;-2
+LINE;Carte;-2
+LINE;Ceapa;-2
 LINE;Table;1

@@ -1,12 +1,16 @@
 package victor.training.java8.functionalpatterns;
 
 import java.io.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import lombok.SneakyThrows;
 import org.jooq.lambda.Unchecked;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 
 import static org.jooq.lambda.Unchecked.consumer;
 
@@ -17,9 +21,15 @@ interface OrderRepo extends JpaRepository<Order, Long> { // Spring Data FanClub
 }
 // technical infrastructyre
 class Exporter {
+
 	public void export(String fileName, Consumer<Writer> contentWriter) {
+//		JdbcTemplate template;
+//		template.query("SELECT * FROM YSERS", (resultSet, i) -> resultSet.getString(1))
+
+
 		File file = new File("/common/folder/path/" + fileName);
 		try (FileWriter writer = new FileWriter(file)) {
+//			if (export==USERS)  { /user } ekse { /rder}
 			contentWriter.accept(writer); // exporterul iti 'imprumuta' writerul sa-ti faci tu treaba. Are el grija insa de deschidere, inchidere, erorir...
 		} catch (IOException e) {
 			// fac ceva inteligent

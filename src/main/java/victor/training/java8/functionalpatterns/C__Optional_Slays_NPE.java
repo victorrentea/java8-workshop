@@ -6,6 +6,7 @@ package victor.training.java8.functionalpatterns;
 
 // Get a discount line to print in UI
 
+import java.util.List;
 import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
@@ -19,7 +20,6 @@ class DiscountService {
           .orElse("");
 
    }
-
    private Optional<Integer> getApplicableDiscountPercentage(MemberCard memberCard) {
       if (memberCard.getFidelityPoints() > 100) {
          return Optional.of(5);

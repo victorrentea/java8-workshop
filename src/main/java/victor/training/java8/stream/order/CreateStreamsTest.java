@@ -36,10 +36,12 @@ public class CreateStreamsTest {
    public void p1_readOrderFromFile_throwsIfTooSmall() throws IOException {
       service.p1_readOrderFromFile(new File("test.toosmall.txt")); // look at stacktrace
    }
-   @Test(expected = IllegalArgumentException.class)
+   @Test/*(expected = IllegalArgumentException.class)*/
    public void p1_readOrderFromFile_throwsForInvalidLine() throws IOException {
-      service.p1_readOrderFromFile(new File("test.invalid.txt")); // look at stacktrace
-      // TODO uncomment to see the exception trace :S
+      List<OrderLine> orderLines = service.p1_readOrderFromFile(new File("test.invalid.txt"));// look at stacktrace
+      assertEquals(1, orderLines.size());
+      assertEquals("Table", orderLines.get(0).getProduct().getName());
+// TODO uncomment to see the exception trace :S
    }
 
    @Test

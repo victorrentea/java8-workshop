@@ -1,6 +1,5 @@
 package victor.training.java8.stream.order;
 
-import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
 import org.jooq.lambda.Unchecked;
 import victor.training.java8.stream.order.entity.OrderLine;
 import victor.training.java8.stream.order.entity.Product;
@@ -8,8 +7,6 @@ import victor.training.java8.stream.order.entity.Product;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.IntSummaryStatistics;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -44,7 +41,7 @@ public class CreateStreams {
              .map(line -> line.split(";")) // Stream<String[]>
              .filter(cell -> "LINE".equals(cell[0]))
              .map(this::parseOrderLine) // Stream<OrderLine>
-             .peek(this::validateOrderLine)
+             .filter(this::validateOrderLine)
              .collect(toList());
       }
    }
@@ -53,10 +50,10 @@ public class CreateStreams {
       return new OrderLine(new Product(cells[1]), Integer.parseInt(cells[2]));
    }
 
-   private void validateOrderLine(OrderLine orderLine) {
-      if (orderLine.getCount() < 0) {
-         throw new IllegalArgumentException("Negative items");
-      }
+   private boolean validateOrderLine(OrderLine orderLine) {
+      return orderLine.getCount() >= 0 ;
+//         throw new IllegalArgumentException("Negative items");
+//      }
    }
 
    public Stream<Integer> p2_createFibonacciStream() {
