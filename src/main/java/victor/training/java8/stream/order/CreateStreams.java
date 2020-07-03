@@ -66,12 +66,12 @@ public class CreateStreams {
    }
 
    private Try<OrderLine> validateOrderLine(OrderLine orderLine) {
-
-      if (orderLine.getCount() >= 0) {
-         return Try.success(orderLine);
-      } else {
-         return Try.failure(new IllegalArgumentException("Negative items"));
-      }
+      return Try.of(() -> {
+         if (orderLine.getCount() < 0) {
+            throw new IllegalArgumentException("Negative items");
+         }
+         return orderLine;
+      });
    }
 
    public Stream<Integer> p2_createFibonacciStream() {
