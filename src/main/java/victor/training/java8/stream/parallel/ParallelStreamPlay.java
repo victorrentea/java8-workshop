@@ -24,7 +24,6 @@ public class ParallelStreamPlay {
              log.info("Filter " + n);
              return n % 2 == 1;
           })
-          .sequential()
 //          .distinct()
           .sorted()
           .map(n -> {
@@ -32,6 +31,7 @@ public class ParallelStreamPlay {
              return n * n;
           })
           .parallel()
+          .sequential()
           .filter(n -> n > 10)
           .findAny() // oricare worker gaseste primu, ala e.
 //          .findFirst() // primul in ordinea initiala e intors
