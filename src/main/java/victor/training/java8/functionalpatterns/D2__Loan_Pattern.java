@@ -22,15 +22,16 @@ interface OrderRepo extends JpaRepository<Order, Long> { // Spring Data FanClub
 // technical infrastructyre
 class Exporter {
 
-	public void export(String fileName, Consumer<Writer> contentWriter) {
-//		JdbcTemplate template;
-//		template.query("SELECT * FROM YSERS", (resultSet, i) -> resultSet.getString(1))
+	@FunctionalInterface
+	interface ContentWriter {
+		void writeContent(Writer writer) throws IOException;
+	}
 
-
+	public void export(String fileName, ContentWriter contentWriter) {
 		File file = new File("/common/folder/path/" + fileName);
 		try (FileWriter writer = new FileWriter(file)) {
 //			if (export==USERS)  { /user } ekse { /rder}
-			contentWriter.accept(writer); // exporterul iti 'imprumuta' writerul sa-ti faci tu treaba. Are el grija insa de deschidere, inchidere, erorir...
+			contentWriter.writeContent(writer); // exporterul iti 'imprumuta' writerul sa-ti faci tu treaba. Are el grija insa de deschidere, inchidere, erorir...
 		} catch (IOException e) {
 			// fac ceva inteligent
 			// Terror-Driven Development: o loghezi de frica. din neincredere in colegi.
@@ -45,12 +46,8 @@ class OrderExportFormat {
 	private OrderRepo orderRepo;
 
 //	@SneakyThrows
-	public void writeContent(Writer writer) {
-		try {
-			writer.write("id;creation_date\n");
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+	public void writeContent(Writer writer) throws IOException {
+		writer.write("id;creation_date\n");
 		orderRepo.findByActiveTrue()
 			.map(order -> order.getId() + ";" + order.getCreationDate() + "\n")
 			.forEach(consumer(writer::write));
@@ -58,8 +55,8 @@ class OrderExportFormat {
 }
 class UserExportFormat {
 	private UserRepo userRepo;
-	@SneakyThrows
-	public void writeContent(Writer writer) {
+//	@SneakyThrows
+	public void writeContent(Writer writer) throws IOException {
 		writer.write("username;last_name\n");
 		userRepo.findAll().stream()
 			.map(user -> user.getUsername() + ";" + user.getLastName() + "\n")
@@ -67,11 +64,11 @@ class UserExportFormat {
 	}
 }
 class Client {
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		Exporter exporter = new Exporter();
 
 		// dintr-un @Test:
-		exporter.export("file.txt", consumer(writer -> writer.write("X")));
+		exporter.export("file.txt", writer -> writer.write("X"));
 		// TODO assert ca a fost creat un fisire file.txt cu continutul "X" in folderul tinta.
 
 		OrderExportFormat orderFormat = new OrderExportFormat();
