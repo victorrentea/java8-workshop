@@ -21,12 +21,34 @@ public class ParallelStreamPlay {
 //      List<Integer> list = new ArrayList<>();
       numbers.parallelStream()
           .filter(n -> {
-             log.info("Filter " + n);
-             try {
-                Thread.sleep(1000); // MMOG
-             } catch (InterruptedException e) {
-                e.printStackTrace();
-             }
+
+             // NU!
+//             log.info("Filter " + n); // daca esti mai catolic decat papa, .info va scrie un fisier
+
+
+             // NU
+//             try {
+//                Thread.sleep(1000); // MMOG
+//             } catch (InterruptedException e) {
+//                e.printStackTrace();
+//             }
+
+             // NU
+//             file.read() sau .write()  inputStream.read() de pe input socket HttpServletRequest
+
+             // NU
+//             restTemplate.get()
+
+             // NU:
+//             jdbc.query()
+//              repo.getById()
+
+             // NU
+//             syncronized calls
+
+             // Sa dormi intr-unul din cele N-1 (11 la mine) threaduri
+             // ==> blochezi toate .parallelStreamuril din TOT JVM.
+             // Prafu se alge daca faci lucruri non-CPU
              return n % 2 == 1;
           })
 //          .distinct()
