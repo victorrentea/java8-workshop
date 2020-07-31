@@ -1,5 +1,6 @@
 package victor.training.java8.functionalpatterns;
 
+import io.vavr.control.Try;
 import lombok.Data;
 import org.jooq.lambda.Unchecked;
 
