@@ -4,10 +4,9 @@ import lombok.SneakyThrows;
 import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
+
+import static java.util.concurrent.CompletableFuture.supplyAsync;
 
 @Slf4j
 public class Bar {
@@ -18,8 +17,10 @@ public class Bar {
 
       ExecutorService pool = Executors.newFixedThreadPool(2);
 
-      Future<Beer> futureBeer = pool.submit(barman::pourBeer);
-      Future<Rakia> futureRakia = pool.submit(barman::pourRakia);
+
+      CompletableFuture<Beer> futureBeer = supplyAsync(barman::pourBeer);
+      CompletableFuture<Rakia> futureRakia = supplyAsync(barman::pourRakia);
+
       log.debug("The waitress left with my order");
 
       // the http request thread is blocking here for 1 whole second
