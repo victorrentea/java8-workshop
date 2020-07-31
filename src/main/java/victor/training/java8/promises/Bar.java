@@ -22,6 +22,9 @@ public class Bar {
       Future<Rakia> futureRakia = pool.submit(barman::pourRakia);
       log.debug("The waitress left with my order");
 
+      // the http request thread is blocking here for 1 whole second
+      // not serving any other incoming request
+      // underuse
       Beer beer = futureBeer.get();
       Rakia rakia = futureRakia.get();
 
