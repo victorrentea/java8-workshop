@@ -1,2 +1,4 @@
 LINE;Chair;-2
+LINE;Chair;-2
+LINE;Table;1
 LINE;Table;1
