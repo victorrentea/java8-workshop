@@ -16,9 +16,8 @@ import java.util.stream.Stream;
 import static java.util.Arrays.*;
 import static java.util.Comparator.comparing;
 
-public class Java8Scars {
+public class StreamSupplier {
     public static void main(String[] args) {
-        toMapWithNullValues();
         supplierOfStream();
     }
 
@@ -35,16 +34,5 @@ public class Java8Scars {
             System.out.println("Longest line: " + lines.max(comparing(String::length)));
         }
     }
-
-    private static void toMapWithNullValues() {
-        List<Person> list = asList(new Person(1L, "John"), new Person(2L, null));
-        Map<Long, String> map = list.stream().collect(Collectors.toMap(Person::getId, Person::getName));
-        System.out.println(map);
-    }
 }
 
-@Data
-class Person {
-    private final Long id;
-    private final String name;
-}

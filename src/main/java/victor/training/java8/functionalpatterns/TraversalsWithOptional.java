@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
 
-public class OptionalAgainstNull {
+public class TraversalsWithOptional {
     public static void main(String[] args) {
         System.out.println(convertToName(new A(new B(new C("Gigel")))));
         System.out.println(convertToName(new A(new B())));
