@@ -2,7 +2,7 @@ package victor.training.java8.functionalpatterns;
 
 /* "I call it my billion-dollar mistake. 
  * It was the invention of the null reference in 1965..."
- *  -- Sir Charles Antony Richard  */
+ *  -- Sir Charles Antony Richard (aka Tony Hoare)  */
 
 // Get a discount line to print in UI
 
