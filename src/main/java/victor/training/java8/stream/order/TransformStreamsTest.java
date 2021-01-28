@@ -2,8 +2,6 @@ package victor.training.java8.stream.order;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.File;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -77,7 +75,16 @@ public class TransformStreamsTest {
 		assertEquals(expected, actual);
 	}
 	
-	
+//	@Test
+//	public void p04_mapOrdersById2() {
+//		Order order1 = new Order(1L);
+//
+//		Map<Long, Order> actual = service.p04_mapOrdersById(new Customer(order1, order1));
+//		Map<Long, Order> expected = Collections.singletonMap(1L, order1);
+//		assertEquals(expected, actual);
+//	}
+
+
 	@Test
 	public void p05_getProductsByPaymentMethod() {
 		Order order1 = new Order().setPaymentMethod(PaymentMethod.CARD);
