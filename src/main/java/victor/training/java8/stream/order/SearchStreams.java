@@ -4,43 +4,33 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.Predicate;
 
 import victor.training.java8.stream.order.entity.Customer;
 import victor.training.java8.stream.order.entity.Order;
 
 public class SearchStreams {
-	
+
 	/**
 	 * FIRST OF ALL: Add the following "Favourite" static imports:
 	 * Eclipse: Window > Preferences > type "Favo" > Favorites >
 	 * 					> New Type > Browse > and type the class name for:
 		java.util.stream.Collectors
 	 */
-	
+
 	/**
 	 * - shorten/clean it up
 	 */
-	public List<Order> p1_getActiveOrders(Customer customer) {	
-		return customer.getOrders().stream()
-				.filter(order -> order.getStatus() == Order.Status.ACTIVE)
-				.collect(toList());
+	public List<Order> p1_getActiveOrders(Customer customer) {
+		return customer.getOrders().stream().collect(toList());
 	}
-	
+
 	/**
-	 * @return the Order in the list with the given id  
+	 * @return the Order in the list with the given id
 	 * - ...Any or ...First ?
 	 * - what do you do when you don't find it ? null/throw/Optional ?
 	 */
 	public Order p2_getOrderById(List<Order> orders, long orderId) {
-		return orders.stream()
-				.filter(order -> order.getId() == orderId)
-				.findFirst()
-				.orElse(null);
-				// you do elseThrow if you want a custom exception.
-				// .orElseThrow(() -> new MyException("There is no Order in the provided list that matches the id provided: " + orderId));
-				// Better, keeps the reader focused:
-//				.orElseThrow(() -> new MyException(MYErrorCode.NO_ORDER, orderId));
+		return null; // orders.stream()
 	}
 	
 	/**
