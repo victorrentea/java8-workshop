@@ -10,9 +10,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
@@ -38,14 +38,23 @@ public class SearchStreamsTest {
 	@Test
 	public void p2_getOrderById() {
 		List<Order> orders = Arrays.asList(new Order(1L), new Order(2L), new Order(3L));
-		assertEquals(2L, (long) service.p2_getOrderById(orders, 2L).getId());
+		assertEquals(2L, (long) service.p2_getOrderById(orders, 2L).get().getId());
 	}
 	
 	@Test
 //	@Ignore
 	public void p2_getOrderById_whenIdNotFound() {
 		List<Order> orders = Arrays.asList(new Order(1L));
-		assertEquals(null, service.p2_getOrderById(orders, 1000L));
+		assertFalse(service.p2_getOrderById(orders, 1000L).isPresent());
+	}
+
+	void cancelOrder() {
+		Order o = f().orElseThrow(IllegalArgumentException::new);
+	}
+	Optional<Order> f(){
+		List<Order> orders = Arrays.asList(new Order(1L));
+		Optional<Order> o = service.p2_getOrderById(orders, 1000L);
+		return o;
 	}
 
 	@Test
@@ -78,14 +87,14 @@ public class SearchStreamsTest {
 		LocalDate yesterday = now().minusDays(1);
 		Order order1 = new Order().setTotalPrice(BigDecimal.ONE).setCreationDate(now());
 		Order order2 = new Order().setTotalPrice(BigDecimal.TEN).setCreationDate(yesterday);
-		assertEquals(order2, service.p5_getMaxPriceOrder(new Customer(order1, order2)));
+		assertEquals(order2, service.p5_getMaxPriceOrder(new Customer(order1, order2)).get());
 		// assertEquals(yesterday, service.p5_getMaxPriceOrder(new Customer(order1, order2)).get());
 	}
 	
 	@Test
 	public void p5_getMaxPriceOrder_whenNoOrders_returnsNothing() {
-		assertNull(service.p5_getMaxPriceOrder(new Customer()));
-		// assertFalse(service.p5_getMaxPriceOrder(new Customer()).isPresent());
+		Optional<Order> orderOpt = service.p5_getMaxPriceOrder(new Customer());
+		assertFalse(orderOpt.isPresent());
 	}
 	
 	@Test

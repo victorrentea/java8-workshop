@@ -19,5 +19,11 @@ public class Customer {
 	public Customer(Order... orders) {
 		this.orders = Arrays.asList(orders);
 	}
-	
+
+	/**
+	 * @return sommines null JAHAHAH
+	 */
+	public Long getAge() {
+		return null;
+	}
 }

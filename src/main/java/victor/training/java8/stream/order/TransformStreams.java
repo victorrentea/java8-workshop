@@ -32,23 +32,43 @@ import victor.training.java8.stream.order.entity.Order.PaymentMethod;
 
 public class TransformStreams {
 
+	interface MyOwn {
+		Integer stuff(Integer i);
+	}
+
 	/**
 	 * Transform all entities to DTOs.
 	 * Discussion:.. Make it cleanest!
 	 */
 	public List<OrderDto> p01_toDtos(List<Order> orders) {
-		
-		List<OrderDto> dtos = new ArrayList<>();
-		for (Order order : orders) {
-			OrderDto dto = new OrderDto();
-			dto.totalPrice = order.getTotalPrice(); 
-			dto.creationDate = order.getCreationDate();
-			dtos.add(dto);
-		}
-		return dtos;
-		
+
+		Function<String, Integer> f = s -> Integer.parseInt(s);
+		Function<String, Integer> f3 = Integer::parseInt;
+
+
+		Function<Integer, Integer> f5 =   Math::abs;
+		MyOwn o = Math::abs; // target typing.
+		MyOwn of = a -> Math.abs(a); // target typing.
+//		Object oo = (String a) -> Math.abs(a); // does not compile
+
+		Function<Double, Double> f6 =   Math::abs;
+
+
+		Function<Order, OrderDto> f1 = order -> convert(order);
+		Function<Order, OrderDto> f2 = this::convert;
+
+
+
+		return orders.stream().map(f2).collect(toList());
 	}
-	
+
+	private OrderDto convert(Order order) {
+		OrderDto dto = new OrderDto();
+		dto.totalPrice = order.getTotalPrice();
+		dto.creationDate = order.getCreationDate();
+		return dto;
+	}
+
 	/**
 	 * Note: Order.getPaymentMethod()
 	 */
