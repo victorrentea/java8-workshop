@@ -6,6 +6,7 @@ import java.io.Writer;
 import java.util.stream.Stream;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import victor.training.java8.advanced.model.Order;
 
 class OrderExporter {
    private OrderRepo orderRepo;

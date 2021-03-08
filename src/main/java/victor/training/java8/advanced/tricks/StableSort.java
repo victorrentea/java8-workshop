@@ -1,4 +1,4 @@
-package victor.training.java8.advanced;
+package victor.training.java8.advanced.tricks;
 
 import java.util.Arrays;
 import java.util.Collections;

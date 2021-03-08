@@ -1,7 +1,5 @@
 package victor.training.java8.stream.order;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -15,9 +13,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.MethodOrderer.MethodName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import victor.training.java8.stream.order.dto.OrderDto;
 import victor.training.java8.stream.order.entity.Customer;
@@ -26,7 +24,10 @@ import victor.training.java8.stream.order.entity.OrderLine;
 import victor.training.java8.stream.order.entity.Product;
 import victor.training.java8.stream.order.entity.Order.PaymentMethod;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@TestMethodOrder(MethodName.class)
+
 public class TransformStreamsTest {
 	
 	private TransformStreams service = new TransformStreams();

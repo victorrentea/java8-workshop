@@ -1,6 +1,5 @@
 package victor.training.java8.advanced;
 
-import static org.mockito.Mockito.mock;
 
 class Movie {
 	enum Type {

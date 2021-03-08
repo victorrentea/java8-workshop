@@ -1,9 +1,9 @@
 package victor.training.java8.stream.order;
 
-import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.MethodOrderer.Alphanumeric;
+import org.junit.jupiter.api.MethodOrderer.MethodName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import victor.training.java8.stream.order.entity.OrderLine;
 
 import java.io.File;
@@ -16,10 +16,9 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@TestMethodOrder(MethodName.class)
 public class CreateStreamsTest {
    private CreateStreams service = new CreateStreams();
 
@@ -33,9 +32,10 @@ public class CreateStreamsTest {
       assertEquals(1, orderLines.get(1).getCount());
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test
    public void p1_readOrderFromFile_throws() throws IOException {
-      service.p1_readOrderFromFile(new File("test.invalid.txt")); // look at stacktrace
+      assertThrows(IllegalArgumentException.class, () ->
+         service.p1_readOrderFromFile(new File("test.invalid.txt"))); // look at stacktrace
       // TODO uncomment to see the exception trace :S
    }
 
@@ -44,14 +44,6 @@ public class CreateStreamsTest {
       List<Integer> actual10 = service.p2_createFibonacciStream().limit(10).collect(toList());
       List<Integer> expected10 = Arrays.asList(1, 1, 2, 3, 5, 8, 13, 21, 34, 55);
       assertEquals(expected10, actual10);
-   }
-
-   @Test
-   public void p3_pseudoRandomStream() {
-      Stream<Integer> randomStream = service.p3_createPseudoRandomStream(10);
-      DescriptiveStatistics stats = new DescriptiveStatistics();
-      randomStream.forEach(stats::addValue);
-      System.out.println(stats.getVariance());
    }
 
    @Test

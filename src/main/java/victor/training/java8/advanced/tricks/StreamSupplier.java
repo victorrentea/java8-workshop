@@ -1,4 +1,4 @@
-package victor.training.java8.advanced;
+package victor.training.java8.advanced.tricks;
 
 import org.jooq.lambda.Unchecked;
 
