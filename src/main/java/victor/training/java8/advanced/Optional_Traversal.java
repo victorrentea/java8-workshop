@@ -1,24 +1,28 @@
 package victor.training.java8.advanced;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
 
-public class TraversalsWithOptional {
+public class Optional_Traversal {
     public static void main(String[] args) {
         System.out.println(convertToName(new A(new B(new C("Gigel")))));
         System.out.println(convertToName(new A(new B())));
         System.out.println(convertToName(new A()));
     }
-
     public static String convertToName(A a) {
         return a.getB().getC().getName();
     }
 
 }
 
+
 class A {
-    private final B b;
+    private B b;
     public A(B b) {
         this.b = b;
     }

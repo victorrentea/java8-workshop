@@ -3,6 +3,7 @@ package victor.training.java8.advanced;
 import victor.training.java8.advanced.model.Order;
 import victor.training.java8.advanced.model.OrderLine;
 import victor.training.java8.advanced.model.Product;
+import victor.training.java8.advanced.repo.ProductRepo;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.summingInt;
@@ -28,12 +29,9 @@ public class StreamWreck {
 				.filter(e -> e.getValue() >= 10)
 				.map(Entry::getKey)
 				.filter(p -> !p.isDeleted())
-				.filter(p -> !productRepo.getHiddenProductIds().contains(p.getId()))
+				.filter(p -> !productRepo.findByHiddenTrue().contains(p.getId()))
 				.collect(toList());
 	}
 }
 
 
-interface ProductRepo {
-	List<Long> getHiddenProductIds();
-}

@@ -3,7 +3,7 @@ package victor.training.java8.advanced;
 import victor.training.java8.advanced.model.Customer;
 import victor.training.java8.advanced.model.MemberCard;
 
-public class Optional {
+public class Optionals {
 	public static void main(String[] args) {
 		// test: 60, 10, no MemberCard
 		System.out.println(getDiscountLine(new Customer(new MemberCard(60))));

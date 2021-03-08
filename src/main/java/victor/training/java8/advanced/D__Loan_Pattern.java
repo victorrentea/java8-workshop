@@ -3,10 +3,8 @@ package victor.training.java8.advanced;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
-import java.util.stream.Stream;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import victor.training.java8.advanced.model.Order;
+import victor.training.java8.advanced.repo.OrderRepo;
 
 class OrderExporter {
    private OrderRepo orderRepo;
@@ -40,6 +38,3 @@ public class D__Loan_Pattern {
    }
 }
 
-interface OrderRepo extends JpaRepository<Order, Long> { // Spring Data FanClub
-   Stream<Order> findByActiveTrue(); // 1 Mln orders ;)
-}
