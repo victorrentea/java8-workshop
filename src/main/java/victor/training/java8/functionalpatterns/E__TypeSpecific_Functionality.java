@@ -41,6 +41,8 @@ class MoviePriceCalculator {
 		return 3;
 	}
 
+
+
 }
 
 // Utilizari: vine un mesaj pe vreo coada/ protocol si are un cod de Messagetype --> enum --> functie de handling
