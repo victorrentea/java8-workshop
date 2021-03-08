@@ -12,6 +12,7 @@ import io.vavr.Tuple3;
 import org.jooq.lambda.Unchecked;
 import org.jooq.lambda.fi.util.function.CheckedConsumer;
 import org.springframework.data.jpa.repository.JpaRepository;
+import victor.training.java8.functionalpatterns.FileExporter.ContentWriterFunction;
 
 // export all orders to a file
 
@@ -49,7 +50,7 @@ class FileExporter {
 	}
 }
 
-class OrderFormatWriter {
+class OrderFormatWriter /*implements ContentWriterFunction*/ {
 	private OrderRepo repo;
 
 	public void writeExportContents(Writer writer) throws IOException {
@@ -59,6 +60,11 @@ class OrderFormatWriter {
 			.map(o -> o.getId() + ";" + o.getCreationDate())
 			.forEach(Unchecked.consumer(writer::write));
 	}
+
+//	@Override
+//	public void writeContent(Writer writer) throws Exception {
+//
+//	}
 }
 class UserFormatWriter {
 	private UserRepo repo;
