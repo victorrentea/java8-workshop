@@ -31,7 +31,7 @@ class OrderExporter {
    }
 }
 
-public class D__Loan_Pattern {
+public class Loan_Pattern {
    public static void main(String[] args) throws Exception {
       new OrderExporter().exportFile();
       // TODO export users

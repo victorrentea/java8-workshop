@@ -16,12 +16,11 @@ public class OptionalRepoBootApp implements CommandLineRunner {
    }
    private final ProductRepo productRepo;
 
-   @Transactional
    public void run(String... args) throws Exception {
       productRepo.save(new Product("Tree"));
-      productRepo.streamAllByDeletedTrue().forEach(System.out::println);
       System.out.println(productRepo.findByNameContaining("re"));
       System.out.println(productRepo.findByNameContaining("rx"));
 
+//      productRepo.streamAllByDeletedTrue().forEach(System.out::println);
    }
 }
