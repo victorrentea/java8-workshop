@@ -1,10 +1,4 @@
-package victor.training.java8.functionalpatterns;
-
-/* "I call it my billion-dollar mistake. 
- * It was the invention of the null reference in 1965..."
- *  -- Sir Charles Antony Richard (aka Tony Hoare)  */
-
-// Get a discount line to print in UI
+package victor.training.java8.advanced;
 
 class DiscountService {
 	public String getDiscountLine(Customer customer) {
@@ -23,7 +17,8 @@ class DiscountService {
 		
 	// test: 60, 10, no MemberCard
 	public static void main(String[] args) {
-		
+		DiscountService service = new DiscountService();
+		System.out.println(service.getDiscountLine(new Customer(new MemberCard(60))));
 	}
 }
 

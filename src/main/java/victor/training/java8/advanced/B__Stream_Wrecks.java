@@ -1,4 +1,4 @@
-package victor.training.java8.functionalpatterns;
+package victor.training.java8.advanced;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.summingInt;

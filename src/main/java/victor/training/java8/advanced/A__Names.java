@@ -1,4 +1,4 @@
-package victor.training.java8.functionalpatterns;
+package victor.training.java8.advanced;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package victor.training.java8.functionalpatterns;
+package victor.training.java8.advanced.tricks;
 
 import lombok.Data;
 
@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 
-public class Traps {
+public class Trap_toMap_nullKey {
    @Data
    private static class Person {
       private final Long id;

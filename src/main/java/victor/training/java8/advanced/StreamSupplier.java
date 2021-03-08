@@ -1,19 +1,12 @@
-package victor.training.java8.functionalpatterns;
+package victor.training.java8.advanced;
 
-import lombok.Data;
 import org.jooq.lambda.Unchecked;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.util.Arrays.*;
 import static java.util.Comparator.comparing;
 
 public class StreamSupplier {

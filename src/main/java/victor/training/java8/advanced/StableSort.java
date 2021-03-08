@@ -1,11 +1,10 @@
-package victor.training.java8.functionalpatterns;
+package victor.training.java8.advanced;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.toList;
 
 public class StableSort {
    public static void main(String[] args) {

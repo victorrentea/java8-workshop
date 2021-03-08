@@ -1,4 +1,4 @@
-package victor.training.java8.functionalpatterns;
+package victor.training.java8.advanced;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -32,7 +32,7 @@ class OrderExporter {
    }
 }
 
-public class D2__Loan_Pattern {
+public class D__Loan_Pattern {
    public static void main(String[] args) throws Exception {
       new OrderExporter().exportFile();
       // TODO export users
