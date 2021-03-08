@@ -2,61 +2,43 @@ package victor.training.java8.functionalpatterns;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.Writer;
-import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import org.jooq.lambda.Unchecked;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-// export all orders to a file
+class OrderExporter {
+   private OrderRepo orderRepo;
+   private File exportFolder = new File("/apps/export"); // injected eg @Value
+
+   public File exportFile() {
+      File file = new File(exportFolder, "orders.csv");
+      try (Writer writer = new FileWriter(file)) {
+         writer.write("OrderID;Date\n");
+
+//			orderRepo.findByActiveTrue()
+//				.map(o -> o.getId() + ";" + o.getCreationDate())
+//				.forEach(writer::write);
+         System.out.println("File export completed: " + file.getAbsolutePath());
+         return file;
+      } catch (Exception e) {
+         // TODO send email notification
+         throw new RuntimeException("Error exporting data", e);
+      } finally {
+         if (!file.delete()) {
+            System.err.println("Could not delete export file: " + file.getAbsolutePath());
+         }
+      }
+   }
+}
+
+public class D2__Loan_Pattern {
+   public static void main(String[] args) throws Exception {
+      new OrderExporter().exportFile();
+      // TODO export users
+   }
+}
 
 interface OrderRepo extends JpaRepository<Order, Long> { // Spring Data FanClub
-	Stream<Order> findByActiveTrue(); // 1 Mln orders ;)
+   Stream<Order> findByActiveTrue(); // 1 Mln orders ;)
 }
-class OrderExporter {
-	
-	private OrderRepo repo;
-
-
-	@FunctionalInterface
-	interface CheckedConsumer<T> {
-		void accept(T t) throws  Throwable;
-	}
-
-			
-	public File exportFile(String fileName) throws Exception {
-		File file = new File("export/" + fileName);
-		try (Writer writer = new FileWriter(file)) {
-			writer.write("OrderID;Date\n");
-
-
-			repo.findByActiveTrue()
-				.map(o -> o.getId() + ";" + o.getCreationDate())
-//				.forEach(Unchecked.consumer(writer::write));
-				.forEach(convert(writer::write));
-			return file;
-		} catch (Exception e) {
-			// TODO send email notification
-			System.err.println("Gotcha!" + e); // TERROR-Driven Development
-			throw e;
-		}
-	}
-
-	static private <T> Consumer<T> convert(CheckedConsumer<T> throwing) {
-		return s -> {
-			try {
-				throwing.accept(s);
-			} catch (Throwable e) {
-				throw new RuntimeException(e);
-			}
-		};
-	}
-
-
-//	public static
-
-
-}
-
