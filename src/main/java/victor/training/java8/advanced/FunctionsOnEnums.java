@@ -3,23 +3,27 @@ package victor.training.java8.advanced;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 @Service
 class PriceCalculators {
-//   @Value("${extra.factor}")
-//   int factor = 2;
+   @Value("${extra.factor}")
+   int factor = 2;
 
-   public static int computeRegularMoviePrice(int days) {
+
+   public int computePrice(MovieType type, int days) {
+      return type.getPriceAlgo().apply(this, days);
+   }
+   public int computeRegularMoviePrice(int days) {
       return days + 1;
    }
-   public static int computeNewReleaseMoviePrice(int days) {
+   public int computeNewReleaseMoviePrice(int days) {
       return days * 2 ;
    }
-   public static int computeChildrenMoviePrice(int days) {
+   public int computeChildrenMoviePrice(int days) {
       return 5;
    }
-   public static int computEldersMoviePrice(int days) {
+   public int computEldersMoviePrice(int days) {
       return 5;
    }
 }
@@ -31,13 +35,13 @@ enum MovieType {
    ELDERS(PriceCalculators::computEldersMoviePrice)
    ;
 
-   private final Function<Integer, Integer> priceAlgo;
+   private final BiFunction<PriceCalculators, Integer, Integer> priceAlgo;
 
-   MovieType(Function<Integer, Integer> priceAlgo) {
+   MovieType(BiFunction<PriceCalculators, Integer, Integer> priceAlgo) {
       this.priceAlgo = priceAlgo;
    }
 
-   public Function<Integer, Integer> getPriceAlgo() {
+   public BiFunction<PriceCalculators, Integer, Integer> getPriceAlgo() {
       return priceAlgo;
    }
 }
@@ -45,13 +49,11 @@ enum MovieType {
 public class FunctionsOnEnums {
 
    public static void main(String[] args) {
-      System.out.println(computePrice(MovieType.REGULAR, 2));
-      System.out.println(computePrice(MovieType.NEW_RELEASE, 2));
-      System.out.println(computePrice(MovieType.CHILDREN, 2));
+      PriceCalculators priceCalculators = new PriceCalculators(); // inject from Spring
+      System.out.println(priceCalculators.computePrice(MovieType.REGULAR, 2));
+      System.out.println(priceCalculators.computePrice(MovieType.NEW_RELEASE, 2));
+      System.out.println(priceCalculators.computePrice(MovieType.CHILDREN, 2));
    }
 
-   public static int computePrice(MovieType type, int days) {
-      return type.getPriceAlgo().apply(days);
-   }
 
 }
