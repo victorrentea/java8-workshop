@@ -13,6 +13,7 @@ import static victor.training.java8.advanced.tricks.ConcurrencyUtil.sleepq;
 
 @Slf4j
 public class ParallelStreams {
+   static int i = 0;
    public static void main(String[] args) {
 //      Enemy.parallelRequest();
 
@@ -20,14 +21,19 @@ public class ParallelStreams {
 
       List<Integer> list = asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
 
-      List<Integer> result = list.stream()
+      List<Integer> result = list.parallelStream()
           .filter(i -> {
              log.debug("Filter " + i);
+//             if (i++ % 2 == 0) {
+//
+//             }
              return i % 2 == 0;
           })
+          .distinct()
+//          .peek(System.out::println)
           .map(i -> {
              log.debug("Map " + i);
-             sleepq(100); // do some 'paralellizable' work
+             sleepq(100); // do some 'paralellizable' CPU work: encryption, bitcoin, jasper report, XSLT transformation, new Thread -
              return i * 2;
           })
           .collect(toList());
@@ -35,8 +41,13 @@ public class ParallelStreams {
 
       long t1 = System.currentTimeMillis();
       log.debug("Took {} ms", t1 - t0);
+
+//      Prophecy: in java 23
+//      Point(int x, int y) = getPoint(); // return  Point record.
    }
 }
+
+
 
 // =========== far away, in a distant Package ...... =============
 @Slf4j

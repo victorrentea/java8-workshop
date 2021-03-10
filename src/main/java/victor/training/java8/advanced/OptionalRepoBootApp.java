@@ -8,6 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 import victor.training.java8.advanced.model.Product;
 import victor.training.java8.advanced.repo.ProductRepo;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.stream.Stream;
+
 @RequiredArgsConstructor
 @SpringBootApplication
 public class OptionalRepoBootApp implements CommandLineRunner {
@@ -28,6 +32,10 @@ public class OptionalRepoBootApp implements CommandLineRunner {
       // if you insist: @Transaction(readOnly=true) for hibernat!!
 
 
+      try (Stream<String> lines = new BufferedReader(new FileReader("a")).lines()) {
+
+         lines.forEach(System.out::println);
+      }
       // Honestly... if you are sweepimg millions of lines,....
       // why Spring Batch ?!
 

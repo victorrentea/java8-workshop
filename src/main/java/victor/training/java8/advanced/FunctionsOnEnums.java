@@ -1,5 +1,6 @@
 package victor.training.java8.advanced;
 
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +34,7 @@ enum MovieType {
    NEW_RELEASE(PriceCalculators::computeNewReleaseMoviePrice),
    CHILDREN(PriceCalculators::computeChildrenMoviePrice),
    ELDERS(PriceCalculators::computEldersMoviePrice)
+//   ,   XELDERS(null)
    ;
 
    private final BiFunction<PriceCalculators, Integer, Integer> priceAlgo;
