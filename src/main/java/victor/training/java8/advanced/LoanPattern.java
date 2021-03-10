@@ -10,6 +10,7 @@ import lombok.SneakyThrows;
 import org.jooq.lambda.Unchecked;
 import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.NoRepositoryBean;
 import victor.training.java8.advanced.CsvExporter.ContentWriter;
 import victor.training.java8.advanced.repo.OrderRepo;
 
@@ -44,16 +45,14 @@ class CsvExporter {
 }
 
 // garbage - infrastructural sh*t
-// separate class --------------------
+// ----- separate class -------------------------------------------------------------
 // the actual format.
 class OrderExportWriter {
    private OrderRepo orderRepo;
 
    @SneakyThrows
    public void writeContent(Consumer<List<String>> rowSink) {
-
       rowSink.accept(asList("OrderId", "Date"));
-
    }
 
    @SneakyThrows
@@ -66,6 +65,7 @@ class OrderExportWriter {
    }
 }
 
+@NoRepositoryBean
 interface UserRepo extends JpaRepository<User, Long> {
 }
 

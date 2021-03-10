@@ -1,8 +1,45 @@
 package victor.training.java8.advanced;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.util.function.Function;
+
+@Service
+class PriceCalculators {
+//   @Value("${extra.factor}")
+//   int factor = 2;
+
+   public static int computeRegularMoviePrice(int days) {
+      return days + 1;
+   }
+   public static int computeNewReleaseMoviePrice(int days) {
+      return days * 2 ;
+   }
+   public static int computeChildrenMoviePrice(int days) {
+      return 5;
+   }
+   public static int computEldersMoviePrice(int days) {
+      return 5;
+   }
+}
 
 enum MovieType {
-   REGULAR, NEW_RELEASE, CHILDREN
+   REGULAR(PriceCalculators::computeRegularMoviePrice),
+   NEW_RELEASE(PriceCalculators::computeNewReleaseMoviePrice),
+   CHILDREN(PriceCalculators::computeChildrenMoviePrice),
+   ELDERS(PriceCalculators::computEldersMoviePrice)
+   ;
+
+   private final Function<Integer, Integer> priceAlgo;
+
+   MovieType(Function<Integer, Integer> priceAlgo) {
+      this.priceAlgo = priceAlgo;
+   }
+
+   public Function<Integer, Integer> getPriceAlgo() {
+      return priceAlgo;
+   }
 }
 
 public class FunctionsOnEnums {
@@ -14,15 +51,7 @@ public class FunctionsOnEnums {
    }
 
    public static int computePrice(MovieType type, int days) {
-      switch (type) {
-         case REGULAR:
-            return days + 1;
-         case NEW_RELEASE:
-            return days * 2;
-         case CHILDREN:
-            return 5;
-      }
-      return 0; // Oups! Free movies!!
+      return type.getPriceAlgo().apply(days);
    }
 
 }

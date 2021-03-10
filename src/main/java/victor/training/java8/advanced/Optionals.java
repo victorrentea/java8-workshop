@@ -17,7 +17,7 @@ public class Optionals {
 
 	public static String getDiscountLine(Customer customer) {
 		return customer.getMemberCard()
-			.flatMap(Optionals::getApplicableDiscountPercentage)
+			.map(Optionals::getApplicableDiscountPercentage)
 			.map(per -> "Discount: " + per)
 			.orElse("");
 	}

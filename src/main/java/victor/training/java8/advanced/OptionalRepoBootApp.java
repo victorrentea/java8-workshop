@@ -16,11 +16,20 @@ public class OptionalRepoBootApp implements CommandLineRunner {
    }
    private final ProductRepo productRepo;
 
+   @Transactional(readOnly = true)
    public void run(String... args) throws Exception {
       productRepo.save(new Product("Tree"));
+//      productRepo.findById(1L).get();
       System.out.println(productRepo.findByNameContaining("re"));
       System.out.println(productRepo.findByNameContaining("rx"));
 
-//      productRepo.streamAllByDeletedTrue().forEach(System.out::println);
+
+      productRepo.streamAllByDeletedTrue().forEach(System.out::println);// dubios-- keeps a connection open
+      // if you insist: @Transaction(readOnly=true) for hibernat!!
+
+
+      // Honestly... if you are sweepimg millions of lines,....
+      // why Spring Batch ?!
+
    }
 }
