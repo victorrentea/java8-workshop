@@ -18,15 +18,16 @@ public class ParallelStreams {
 
       long t0 = System.currentTimeMillis();
 
-      List<Integer> list = asList(1, 2, 3, 4);
-      List<Integer> result = list.parallelStream()
+      List<Integer> list = asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+      List<Integer> result = list.stream()
           .filter(i -> {
              log.debug("Filter " + i);
-             return true;
+             return i % 2 == 0;
           })
           .map(i -> {
              log.debug("Map " + i);
-             sleepq(100); // do some work
+             sleepq(100); // do some 'paralellizable' work
              return i * 2;
           })
           .collect(toList());
