@@ -8,10 +8,10 @@ import victor.training.java8.advanced.repo.OrderRepo;
 
 class OrderExporter {
    private OrderRepo orderRepo;
-   private File exportFolder = new File("/apps/export"); // injected eg @Value
+   private File folder = new File("/apps/export"); // injected eg @Value
 
    public File exportFile() {
-      File file = new File(exportFolder, "orders.csv");
+      File file = new File(folder, "orders.csv");
       try (Writer writer = new FileWriter(file)) {
          writer.write("OrderID;Date\n");
 
