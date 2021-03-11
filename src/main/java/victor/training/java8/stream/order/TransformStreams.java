@@ -164,4 +164,6 @@ public class TransformStreams {
 			.mapToLong(order -> order.getTotalPrice().longValue())
 			.sum();
 	}
+
+//	 TODO exemplu cu reduce obligatoriu
 }
