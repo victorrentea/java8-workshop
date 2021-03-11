@@ -77,7 +77,8 @@ public class TransformStreamsTest {
 		Map<Long, Order> expected = Collections.singletonMap(1L, order1);
 		assertEquals(expected, actual);
 	}
-	
+
+
 	
 	@Test
 	public void p05_getProductsByPaymentMethod() {
@@ -102,10 +103,10 @@ public class TransformStreamsTest {
 				new OrderLine(chair, 1));
 		
 		Map<Product, Long> actual = service.p06_getProductCount(new Customer(order1, order2));
-		Map<Product, Long> expected = new HashMap<Product, Long>(){{
-			put(chair, 4L);
-			put(table, 1L);
-		}};
+		Map<Product, Long> expected = Map.of(
+			chair, 4L,
+			table, 1L
+		);
 		assertEquals(expected, actual);
 	}
 	

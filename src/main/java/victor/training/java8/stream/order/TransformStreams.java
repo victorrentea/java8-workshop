@@ -1,19 +1,13 @@
 package victor.training.java8.stream.order;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
-
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
+import java.util.*;
 import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import victor.training.java8.stream.order.dto.OrderDto;
 import victor.training.java8.stream.order.entity.Customer;
@@ -23,13 +17,10 @@ import victor.training.java8.stream.order.entity.OrderLine;
 import victor.training.java8.stream.order.entity.Product;
 import victor.training.java8.stream.order.entity.Order.PaymentMethod;
 
+import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.*;
+
 class OrderMapper {
-	public OrderDto toDto(Order order) {
-		OrderDto dto = new OrderDto();
-		dto.totalPrice = order.getTotalPrice();
-		dto.creationDate = order.getCreationDate();
-		return dto;
-	}
 }
 
 public class TransformStreams {
@@ -39,12 +30,19 @@ public class TransformStreams {
 	 * Transform all entities to DTOs.
 	 * Discussion:.. Make it cleanest!
 	 */
+
+	public void method(String s) {
+
+	}
 	public List<OrderDto> p01_toDtos(List<Order> orders) {
-		int a = Integer.parseInt("a");
+		int a = Integer.parseInt("1");
 
 		Object f0 = (Function<String,Integer>)((String s)-> Integer.parseInt(s)); // avoid
 		Function<String,Integer> f1 = s -> Integer.parseInt(s);
 		Function<String,Integer> f2 = Integer::parseInt;
+
+		String s = "aa";
+		method(s);
 
 		Order myOrder = new Order();
 		Status status = myOrder.getStatus();
@@ -53,15 +51,14 @@ public class TransformStreams {
 
 		Supplier<Status> f4 = myOrder::getStatus;
 
-		Function<Order, OrderDto> f5 = orderMapper::toDto;
-		BiFunction<OrderMapper, Order, OrderDto> f6 = OrderMapper::toDto;
+		Function<Order, OrderDto> f5 = order2 -> new OrderDto(order2);
+		BiFunction<OrderMapper, Order, OrderDto> f6 = (orderMapper1, order1) -> new OrderDto(order1);
 		OrderDto dto = f6.apply(orderMapper, myOrder);
 
 //		Function<Order, OrderDto> mapFunc = order -> orderMapper.toDto(order);
 
-
 		return orders.stream()
-			.map(orderMapper::toDto)
+			.map(OrderDto::new)
 			.collect(toList());
 	}
 
@@ -70,7 +67,7 @@ public class TransformStreams {
 	 * Note: Order.getPaymentMethod()
 	 */
 	public Set<PaymentMethod> p02_getUsedPaymentMethods(Customer customer) {
-		return null; 
+		return customer.getOrders().stream().map(Order::getPaymentMethod).collect(toSet());
 	}
 	
 	/**
@@ -81,19 +78,19 @@ public class TransformStreams {
 		return null; 
 	}
 	
-	
 	/**
 	 * @return a map order.id -> order
 	 */
 	public Map<Long, Order> p04_mapOrdersById(Customer customer) {
-		return null; 
+		 return customer.getOrders().stream().collect(toMap(
+		 	Order::getId, Function.identity(),(v1,v2) -> v1 ));
 	}
 	
 	/** 
 	 * Orders grouped by Order.paymentMethod
 	 */
 	public Map<PaymentMethod, List<Order>> p05_getProductsByPaymentMethod(Customer customer) {
-		return null; 
+		return customer.getOrders().stream().collect(groupingBy(Order::getPaymentMethod));
 	}
 	
 	// -------------- MOVIE BREAK :p --------------------
@@ -106,14 +103,13 @@ public class TransformStreams {
 	 * i.e. SELECT PROD_ID, SUM(COUNT) FROM PROD GROUPING BY PROD_ID
 	 */
 	public Map<Product, Long> p06_getProductCount(Customer customer) {
-		
-		List<OrderLine> allLines = new ArrayList<>();
-		
-		for (Order order : customer.getOrders()) {
-			allLines.addAll(order.getOrderLines());
-		}
-		return null; 
-		
+		List<OrderLine> allLines = customer.getOrders().stream()
+			.flatMap(order -> order.getOrderLines().stream())
+			.collect(toList());
+
+		return allLines.stream()
+			.collect(groupingBy(OrderLine::getProduct, summingLong(OrderLine::getCount)));
+
 	}
 	
 	/**
@@ -121,7 +117,15 @@ public class TransformStreams {
 	 * sorted by Product.name.
 	 */
 	public List<Product> p07_getAllOrderedProducts(Customer customer) {
-		return null; 
+		return customer.getOrders().stream()
+			.flatMap(order -> order.getOrderLines().stream())
+			.map(OrderLine::getProduct)
+			.distinct()
+			.sorted(comparing(Product::getName))
+			.collect(toList());
+//			.distinct() // collecting operators
+//			.sorted(createDate) // collecting operators ; trag tot d esus. OOM daca streamul era FFF mare (din tabela/fisier mare)
+//			.forEach(System.out::println);
 	}
 	
 	
@@ -132,14 +136,32 @@ public class TransformStreams {
 	 * Hint: Reuse the previous function.
 	 */
 	public String p08_getProductsJoined(Customer customer) {
-		return null; 
+		return p07_getAllOrderedProducts(customer)
+			.stream()
+			.map(Product::getName)
+			.collect(joining(","));
 	}
 	
 	/**
 	 * Sum of all Order.getTotalPrice(), truncated to Long.
 	 */
-	public Long p09_getApproximateTotalOrdersPrice(Customer customer) {
+	public Long p09_getApproximateTotalOrdersPrice_geek(Customer customer) {
 		// TODO +, longValue(), reduce()
-		return null;
+		BinaryOperator<BigDecimal> f = (b1, b2) -> b1.add(b2);
+		BiFunction<BigDecimal, BigDecimal,BigDecimal> f2 = (b1, b2) -> b1.add(b2);
+		BiFunction<BigDecimal, BigDecimal,BigDecimal> f3 = BigDecimal::add;
+		return customer.getOrders().stream()
+			.map(Order::getTotalPrice)
+			.reduce(BigDecimal.ZERO, BigDecimal::add)
+			.longValue();
+	}
+	public Long p09_getApproximateTotalOrdersPrice(Customer customer) {
+//		return customer.getOrders().stream()
+//			.map(Order::getTotalPrice)
+//			.mapToLong(BigDecimal::longValue)
+//			.sum();
+		return customer.getOrders().stream()
+			.mapToLong(order -> order.getTotalPrice().longValue())
+			.sum();
 	}
 }
