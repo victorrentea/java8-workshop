@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 // get the products frequently ordered during the past year
 
@@ -25,11 +26,13 @@ public class StreamWreck {
 		List<Long> hiddenIds = productRepo.findByHiddenTrue();
 		Predicate<Product> isNotHidden = p -> !hiddenIds.contains(p.getId());
 
-		return getProductCounts(orders)
-				.entrySet()
-				.stream()
-				.filter(e -> e.getValue() >= 10)
-				.map(Entry::getKey)
+		Stream<Product> frequentProducts = getProductCounts(orders)
+			.entrySet()
+			.stream()
+			.filter(e -> e.getValue() >= 10)
+			.map(Entry::getKey);
+
+		return frequentProducts
 				.filter(Product::isNotDeleted)
 				.filter(isNotHidden)
 				.collect(toList());
