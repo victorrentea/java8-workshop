@@ -3,6 +3,8 @@ package victor.training.java8.stream.order;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
@@ -165,5 +167,17 @@ public class TransformStreams {
 			.sum();
 	}
 
-//	 TODO exemplu cu reduce obligatoriu
+	public Long p09_getApproximateTotalOrdersPriceJuniorAttempt(Customer customer) {
+		AtomicLong totalPrice = new AtomicLong(0);
+		customer.getOrders().stream()
+			.map(order -> order.getTotalPrice().longValue())
+			.forEach(price -> {
+				totalPrice.addAndGet(price);
+			});
+		return totalPrice.longValue();
+	}
+
+
+
+
 }
