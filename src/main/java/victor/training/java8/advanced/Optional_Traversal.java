@@ -3,6 +3,7 @@ package victor.training.java8.advanced;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -16,7 +17,8 @@ public class Optional_Traversal {
       System.out.println(convertToName(new A(null)));
    }
 
-   public static String convertToName(A a) {
+   public static String convertToName(/*@NonNull*/ A a) {
+
       // '2000 style
 //      if (a != null &&
 //          a.getB() != null &&

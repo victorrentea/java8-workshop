@@ -21,6 +21,8 @@ public class OptionalRepoBootApp implements CommandLineRunner {
       System.out.println(productRepo.findByNameContaining("re"));
       System.out.println(productRepo.findByNameContaining("rx"));
 
+//      productRepo.findById(1L)
+
 //      productRepo.streamAllByDeletedTrue().forEach(System.out::println);
    }
 }
