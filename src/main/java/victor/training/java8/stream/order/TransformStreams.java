@@ -2,26 +2,15 @@ package victor.training.java8.stream.order;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.summingLong;
-import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
-import static java.util.stream.Collectors.toSet;
 
-import java.io.File;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.function.Function;
-import java.util.stream.Stream;
 
 import victor.training.java8.stream.order.dto.OrderDto;
 import victor.training.java8.stream.order.entity.Customer;
@@ -37,18 +26,18 @@ public class TransformStreams {
 	 * Discussion:.. Make it cleanest!
 	 */
 	public List<OrderDto> p01_toDtos(List<Order> orders) {
-		
-		List<OrderDto> dtos = new ArrayList<>();
-		for (Order order : orders) {
-			OrderDto dto = new OrderDto();
-			dto.totalPrice = order.getTotalPrice(); 
-			dto.creationDate = order.getCreationDate();
-			dtos.add(dto);
-		}
-		return dtos;
-		
+		return orders.stream()
+			.map(order -> toDto(order))
+			.collect(toList());
 	}
-	
+
+	private OrderDto toDto(Order order) {
+		OrderDto dto = new OrderDto();
+		dto.totalPrice = order.getTotalPrice();
+		dto.creationDate = order.getCreationDate();
+		return dto;
+	}
+
 	/**
 	 * Note: Order.getPaymentMethod()
 	 */
