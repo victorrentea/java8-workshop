@@ -11,32 +11,60 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import victor.training.java8.stream.order.dto.OrderDto;
 import victor.training.java8.stream.order.entity.Customer;
 import victor.training.java8.stream.order.entity.Order;
+import victor.training.java8.stream.order.entity.Order.Status;
 import victor.training.java8.stream.order.entity.OrderLine;
 import victor.training.java8.stream.order.entity.Product;
 import victor.training.java8.stream.order.entity.Order.PaymentMethod;
 
+class OrderMapper {
+	public OrderDto toDto(Order order) {
+		OrderDto dto = new OrderDto();
+		dto.totalPrice = order.getTotalPrice();
+		dto.creationDate = order.getCreationDate();
+		return dto;
+	}
+}
+
 public class TransformStreams {
+	private OrderMapper orderMapper;
 
 	/**
 	 * Transform all entities to DTOs.
 	 * Discussion:.. Make it cleanest!
 	 */
 	public List<OrderDto> p01_toDtos(List<Order> orders) {
+		int a = Integer.parseInt("a");
+
+		Object f0 = (Function<String,Integer>)((String s)-> Integer.parseInt(s)); // avoid
+		Function<String,Integer> f1 = s -> Integer.parseInt(s);
+		Function<String,Integer> f2 = Integer::parseInt;
+
+		Order myOrder = new Order();
+		Status status = myOrder.getStatus();
+
+		Function<Order, Status> f3 = Order::getStatus; // referi o metoda de instanta dar intr-un fel "static"
+
+		Supplier<Status> f4 = myOrder::getStatus;
+
+		Function<Order, OrderDto> f5 = orderMapper::toDto;
+		BiFunction<OrderMapper, Order, OrderDto> f6 = OrderMapper::toDto;
+		OrderDto dto = f6.apply(orderMapper, myOrder);
+
+//		Function<Order, OrderDto> mapFunc = order -> orderMapper.toDto(order);
+
+
 		return orders.stream()
-			.map(order -> toDto(order))
+			.map(orderMapper::toDto)
 			.collect(toList());
 	}
 
-	private OrderDto toDto(Order order) {
-		OrderDto dto = new OrderDto();
-		dto.totalPrice = order.getTotalPrice();
-		dto.creationDate = order.getCreationDate();
-		return dto;
-	}
 
 	/**
 	 * Note: Order.getPaymentMethod()
