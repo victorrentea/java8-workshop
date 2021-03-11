@@ -11,7 +11,9 @@ import static java.util.stream.Collectors.toList;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Predicate;
 
 // get the products frequently ordered during the past year
 
@@ -20,17 +22,28 @@ public class StreamWreck {
 	private ProductRepo productRepo;
 
 	public List<Product> getFrequentOrderedProducts(List<Order> orders) {
-		return orders.stream()
-				.filter(o -> o.getCreationDate().isAfter(LocalDate.now().minusYears(1)))
-				.flatMap(o -> o.getOrderLines().stream())
-				.collect(groupingBy(OrderLine::getProduct, summingInt(OrderLine::getItemCount)))
+		List<Long> hiddenIds = productRepo.findByHiddenTrue();
+		Predicate<Product> isNotHidden = p -> !hiddenIds.contains(p.getId());
+
+		return getProductCounts(orders)
 				.entrySet()
 				.stream()
 				.filter(e -> e.getValue() >= 10)
 				.map(Entry::getKey)
-				.filter(p -> !p.isDeleted())
-				.filter(p -> !productRepo.findByHiddenTrue().contains(p.getId()))
+				.filter(Product::isNotDeleted)
+				.filter(isNotHidden)
 				.collect(toList());
+	}
+
+	private Map<Product, Integer> getProductCounts(List<Order> orders) {
+		return orders.stream()
+			.filter(this::isRecent)
+			.flatMap(o -> o.getOrderLines().stream())
+			.collect(groupingBy(OrderLine::getProduct, summingInt(OrderLine::getItemCount)));
+	}
+
+	private boolean isRecent(Order o) {
+		return o.getCreationDate().isAfter(LocalDate.now().minusYears(1));
 	}
 }
 
