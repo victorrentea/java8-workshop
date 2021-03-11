@@ -177,6 +177,11 @@ public class TransformStreams {
 		return totalPrice.longValue();
 	}
 
+	// in general for each de evitat cand ai putea returna ceva in loc.
+
+	// programarea clasica (imperativa), de liceu = "FA AIA", SCHIMBA AIA
+	// programarea functioanla: CALCULEAZA SI INTOARCE.
+
 
 
 

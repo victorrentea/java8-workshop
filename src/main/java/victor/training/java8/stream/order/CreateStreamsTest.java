@@ -1,5 +1,6 @@
 package victor.training.java8.stream.order;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer.Alphanumeric;
 import org.junit.jupiter.api.MethodOrderer.MethodName;
 import org.junit.jupiter.api.Test;
@@ -34,8 +35,11 @@ public class CreateStreamsTest {
 
    @Test
    public void p1_readOrderFromFile_throws() throws IOException {
-      assertThrows(IllegalArgumentException.class, () ->
-         service.p1_readOrderFromFile(new File("test.invalid.txt"))); // look at stacktrace
+//      assertThrows(IllegalArgumentException.class, () ->
+
+      List<OrderLine> lines = service.p1_readOrderFromFile(new File("test.invalid.txt"));
+      Assertions.assertThat(lines).hasSize(3);
+      //); // look at stacktrace
       // TODO uncomment to see the exception trace :S
    }
 

@@ -1,2 +1,3 @@
+aa;;
 LINE;Chair;2
 LINE;Table;1
