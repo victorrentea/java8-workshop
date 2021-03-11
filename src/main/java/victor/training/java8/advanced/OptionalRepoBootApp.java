@@ -16,6 +16,7 @@ public class OptionalRepoBootApp implements CommandLineRunner {
    }
    private final ProductRepo productRepo;
 
+   @Transactional(readOnly = true)
    public void run(String... args) throws Exception {
       productRepo.save(new Product("Tree"));
       System.out.println(productRepo.findByNameContaining("re"));
@@ -23,6 +24,6 @@ public class OptionalRepoBootApp implements CommandLineRunner {
 
 //      productRepo.findById(1L)
 
-//      productRepo.streamAllByDeletedTrue().forEach(System.out::println);
+      productRepo.streamAllByDeletedTrue().forEach(System.out::println);
    }
 }

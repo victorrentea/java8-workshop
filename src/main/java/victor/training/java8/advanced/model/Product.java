@@ -15,7 +15,7 @@ public class Product {
    @GeneratedValue
    private Long id;
    private String name;
-   private boolean deleted;
+   private boolean deleted = true;
    private boolean hidden;
 
    public Product(String name) {
