@@ -1,9 +1,16 @@
 package victor.training.java8.advanced;
 
+import lombok.Data;
+import lombok.NonNull;
+import lombok.Value;
+import lombok.With;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+
+import static java.util.Collections.unmodifiableList;
 
 public class ImmutableObjectPlay {
 
@@ -12,7 +19,7 @@ public class ImmutableObjectPlay {
 
       list.add("1");
       ImmutableObject obj = new ImmutableObject("a", new BX("aa"), list);
-      obj.getList().add("Surpriza");
+//      obj.getList().add("Surpriza");
 
       System.out.println(obj);
 
@@ -20,40 +27,16 @@ public class ImmutableObjectPlay {
    }
 }
 
+@Value
 class ImmutableObject {
-   private final String s;
-   private final BX b;
-   private final List<String> list;
-
-   public ImmutableObject(String s, BX b, List<String> list) {
-      this.s = Objects.requireNonNull(s);
-      this.b = b;
-      this.list = list;
-   }
+   @NonNull
+   @With
+   String s;
+   BX b;
+   List<String> list;
 
    public List<String> getList() {
-      return Collections.unmodifiableList(list);
-   }
-
-   public String getS() {
-      return s;
-   }
-
-   public BX getB() {
-      return b;
-   }
-
-   @Override
-   public String toString() {
-      return "ImmutableObject{" +
-             "s='" + s + '\'' +
-             ", b=" + b +
-             ", list=" + list +
-             '}';
-   }
-
-   public ImmutableObject withS(String newS) {
-      return new ImmutableObject(newS, b, list);
+      return unmodifiableList(list);
    }
 }
 
