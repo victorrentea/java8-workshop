@@ -1,20 +1,29 @@
 package victor.training.java8.advanced;
 
+import java.math.BigDecimal;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class Currying {
 
    public static void main(String[] args) {
-      Function<Integer, Integer> add1 = partialApply(Integer::sum, 1);
-      System.out.println(add1.apply(2));
 
-      Function<Integer, Integer> max2 = partialApply(Integer::max, 2);
-      System.out.println(max2.apply(5));
-      System.out.println(max2.apply(1));
+      BiFunction<Integer, Integer, Integer> doiParam = Integer::sum;
+
+      Function<Integer, Integer> aduna1 = aplicaPartial(doiParam, 1);
+
+      System.out.println(aduna1.apply(2));
+
+      System.out.println(aduna1.apply(4));
+
+
+      Function<BigDecimal, BigDecimal> bigPlus1 = aplicaPartial(BigDecimal::multiply, BigDecimal.valueOf(2));
+
+      System.out.println(bigPlus1.apply(BigDecimal.TEN));
    }
 
-   public static Function<Integer, Integer> partialApply(BiFunction<Integer, Integer, Integer> f, int arg1) {
-      return arg2 -> f.apply(arg1, arg2);
+   private static <T,R> Function<T, R> aplicaPartial
+            (BiFunction<T, T, R> doiParam, T param1) {
+      return n -> doiParam.apply(param1,n);
    }
 }
