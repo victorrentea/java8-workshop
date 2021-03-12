@@ -8,6 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import victor.training.java8.advanced.model.Product;
 import victor.training.java8.advanced.repo.ProductRepo;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @SpringBootApplication
 public class OptionalRepoBootApp implements CommandLineRunner {

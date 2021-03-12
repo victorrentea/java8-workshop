@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 
-public class Trap_toMap_nullKey {
+public class Trap_toMap_nullValue {
    @Data
    private static class Person {
       private final Long id;
