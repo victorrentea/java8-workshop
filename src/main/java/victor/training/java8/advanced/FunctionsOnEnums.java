@@ -1,6 +1,7 @@
 package victor.training.java8.advanced;
 
 
+import java.util.Objects;
 import java.util.function.BiFunction;
 
 
@@ -32,7 +33,7 @@ enum MovieType {
    private final BiFunction<PriceCalculator, Integer, Integer> priceAlgo;
 
    MovieType(BiFunction<PriceCalculator, Integer, Integer> priceAlgo) {
-      this.priceAlgo = priceAlgo;
+      this.priceAlgo = /*Objects.requireNonNull(*/priceAlgo;
    }
 
    public BiFunction<PriceCalculator, Integer, Integer> getPriceAlgo() {
