@@ -27,16 +27,17 @@ public class ImmutableObjectPlay {
    }
 }
 
-@Value
-class ImmutableObject {
-   @NonNull
-   @With
-   String s;
-   BX b;
-   List<String> list;
+record ImmutableObject(String s, BX b, List<String> list) {
+   public ImmutableObject{
+      Objects.requireNonNull(s);
+   }
 
    public List<String> getList() {
       return unmodifiableList(list);
+   }
+
+   public ImmutableObject withS(String newS) {
+      return new ImmutableObject(newS, b, list);
    }
 }
 
