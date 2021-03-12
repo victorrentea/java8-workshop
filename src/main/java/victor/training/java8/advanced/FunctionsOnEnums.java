@@ -1,37 +1,40 @@
 package victor.training.java8.advanced;
 
 
-import java.text.SimpleDateFormat;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 
+//@Component
 class PriceCalculator {
-   public static int computeRegularPrice(int days) {
+//   @Value("${new.release.factor:2}")
+   private int factor = 2;
+
+   public int computeRegularPrice(int days) {
       return days + 1;
    }
-   public static int computeNewReleasePrice(int days) {
-      return days * 2;
+   public int computeNewReleasePrice(int days) {
+      return days * factor;
    }
-   public static int computeChildrenPrice(int days) {
+   public int computeChildrenPrice(int days) {
       return 5;
    }
 }
 
 // 1. Problema cand e multa logica OK - cu referinte la metode statice din enum
-// daca factorul "2" trebuie citit dintr-un fisier de proprietati ~ @Value
+// 2. daca factorul "2" trebuie citit dintr-un fisier de proprietati ~ @Value -- DONE
 enum MovieType {
    REGULAR(PriceCalculator::computeRegularPrice),
    NEW_RELEASE(PriceCalculator::computeNewReleasePrice) ,
    CHILDREN(PriceCalculator::computeChildrenPrice)
    ;
 
-   private final Function<Integer, Integer> priceAlgo;
+   private final BiFunction<PriceCalculator, Integer, Integer> priceAlgo;
 
-   MovieType(Function<Integer, Integer> priceAlgo) {
+   MovieType(BiFunction<PriceCalculator, Integer, Integer> priceAlgo) {
       this.priceAlgo = priceAlgo;
    }
 
-   public Function<Integer, Integer> getPriceAlgo() {
+   public BiFunction<PriceCalculator, Integer, Integer> getPriceAlgo() {
       return priceAlgo;
    }
 }
@@ -47,7 +50,9 @@ public class FunctionsOnEnums {
    }
 
    public static int computePrice(MovieType type, int days) {
-      return type.getPriceAlgo().apply(days);
+
+      PriceCalculator priceCalculator = new PriceCalculator(); // ma prefac c-o iau din spring @Autowired
+      return type.getPriceAlgo().apply(priceCalculator, days);
    }
 
 
