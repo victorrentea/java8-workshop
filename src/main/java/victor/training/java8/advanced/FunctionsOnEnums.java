@@ -25,7 +25,8 @@ class PriceCalculator {
 enum MovieType {
    REGULAR(PriceCalculator::computeRegularPrice),
    NEW_RELEASE(PriceCalculator::computeNewReleasePrice) ,
-   CHILDREN(PriceCalculator::computeChildrenPrice)
+   CHILDREN(PriceCalculator::computeChildrenPrice)/*,
+   BABACI(null)*/
    ;
 
    private final BiFunction<PriceCalculator, Integer, Integer> priceAlgo;
