@@ -21,23 +21,23 @@ class OrderExporter {
    @Value("${export.folder.out}")
    private File folder;
 
-   public File exportFile() {
+   public void exportFile() {
       File file = new File(folder, "orders.csv");
+      long t0 = System.currentTimeMillis();
       try (Writer writer = new FileWriter(file)) {
+         System.out.println("Starting export to: " + file.getAbsolutePath());
+
          writer.write("OrderID;Date\n");
 
 //			orderRepo.findByActiveTrue()
 //				.map(o -> o.getId() + ";" + o.getCreationDate())
 //				.forEach(writer::write);
          System.out.println("File export completed: " + file.getAbsolutePath());
-         return file;
       } catch (Exception e) {
          // TODO send email notification
          throw new RuntimeException("Error exporting data", e);
       } finally {
-         if (!file.delete()) {
-            System.err.println("Could not delete export file: " + file.getAbsolutePath());
-         }
+         System.out.println("Export finished in: " + (System.currentTimeMillis()-t0));
       }
    }
 }
@@ -45,16 +45,13 @@ class OrderExporter {
 @RequiredArgsConstructor
 @SpringBootApplication
 public class LoanPattern implements CommandLineRunner {
-   private final OrderExporter orderExporter;
-
    public static void main(String[] args) {
-       SpringApplication.run(LoanPattern.class, args);
+      SpringApplication.run(LoanPattern.class, args);
    }
 
-
-   @Override
+   private final OrderExporter orderExporter;
    public void run(String... args) throws Exception {
-
+      orderExporter.exportFile();
    }
 }
 
