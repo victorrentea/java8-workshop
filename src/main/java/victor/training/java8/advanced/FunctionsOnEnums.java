@@ -2,7 +2,31 @@ package victor.training.java8.advanced;
 
 
 enum MovieType {
-   REGULAR, NEW_RELEASE, CHILDREN
+   REGULAR{
+      public int computePrice(int days) {
+         // Problema cand e multa logica
+         return days + 1;
+      }
+   },
+   NEW_RELEASE {
+      public int computePrice(int days) {
+         // daca factorul "2" trebuie citit dintr-un fisier de proprietati ~ @Value
+         return days * 2;
+      }
+   },
+   CHILDREN {
+      public int computePrice(int days) {
+         return 5;
+      }
+   }
+   ,DE_BABACI {
+      public int computePrice(int days) {
+         return 1;
+      }
+   };
+   ;
+   public abstract int computePrice(int days);
+
 }
 
 public class FunctionsOnEnums {
@@ -14,15 +38,8 @@ public class FunctionsOnEnums {
    }
 
    public static int computePrice(MovieType type, int days) {
-      switch (type) {
-         case REGULAR:
-            return days + 1;
-         case NEW_RELEASE:
-            return days * 2;
-         case CHILDREN:
-            return 5;
-      }
-      return 0; // Oups! Free movies!!
+      return type.computePrice(days);
    }
+
 
 }
