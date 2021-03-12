@@ -5,6 +5,7 @@ import lombok.NonNull;
 import lombok.Value;
 import lombok.With;
 
+import javax.persistence.Entity;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -23,8 +24,27 @@ public class ImmutableObjectPlay {
 
       System.out.println(obj);
 
-      ImmutableObject alt = obj.withS("newS");
+      obj = obj.withS("newS");
    }
+}
+
+//@Entity
+class Person {
+   private FullName fullName;
+
+   public FullName getFullName() {
+      return fullName;
+   }
+
+   public void setFullName(FullName fullName) {
+      this.fullName = fullName;
+   }
+}
+
+@Value
+class FullName {
+   String firstName;
+   String lastName;
 }
 
 record ImmutableObject(String s, BX b, List<String> list) {
