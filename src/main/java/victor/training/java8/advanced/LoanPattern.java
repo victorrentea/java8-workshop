@@ -4,11 +4,22 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.stereotype.Service;
 import victor.training.java8.advanced.repo.OrderRepo;
 
+//@RefresScope
+@Service
 class OrderExporter {
+   @Autowired
    private OrderRepo orderRepo;
-   private File folder = new File("/apps/export"); // injected eg @Value
+   @Value("${export.folder.out}")
+   private File folder;
 
    public File exportFile() {
       File file = new File(folder, "orders.csv");
@@ -31,10 +42,19 @@ class OrderExporter {
    }
 }
 
-public class LoanPattern {
-   public static void main(String[] args) throws Exception {
-      new OrderExporter().exportFile();
-      // TODO export users
+@RequiredArgsConstructor
+@SpringBootApplication
+public class LoanPattern implements CommandLineRunner {
+   private final OrderExporter orderExporter;
+
+   public static void main(String[] args) {
+       SpringApplication.run(LoanPattern.class, args);
+   }
+
+
+   @Override
+   public void run(String... args) throws Exception {
+
    }
 }
 
