@@ -38,10 +38,19 @@ public class SearchStreams {
 	 */
 	public Optional<Order> p2_getOrderById(List<Order> orders, long orderId) {
 		return orders.stream()
-			.filter(order -> order.getId() == orderId)
+			.filter(order -> isaBoolean(orderId, order))
+			.filter(order -> doi())
 			.findFirst();
 	}
-	
+
+	private boolean doi() {
+		return true;
+	}
+
+	private boolean isaBoolean(long orderId, Order order) {
+		return order.getId() == orderId;
+	}
+
 	/**
 	 * @return true if customer has at least one order with status ACTIVE
 	 */
