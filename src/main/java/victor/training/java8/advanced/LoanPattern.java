@@ -13,7 +13,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Service;
 import victor.training.java8.advanced.repo.OrderRepo;
 
-//@RefresScope
 @Service
 class OrderExporter {
    @Autowired
@@ -52,6 +51,8 @@ public class LoanPattern implements CommandLineRunner {
    private final OrderExporter orderExporter;
    public void run(String... args) throws Exception {
       orderExporter.exportFile();
+
+      System.out.println("-------------------");
    }
 }
 
