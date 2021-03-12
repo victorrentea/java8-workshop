@@ -25,8 +25,8 @@ class PriceCalculator {
 enum MovieType {
    REGULAR(PriceCalculator::computeRegularPrice),
    NEW_RELEASE(PriceCalculator::computeNewReleasePrice) ,
-   CHILDREN(PriceCalculator::computeChildrenPrice)/*,
-   BABACI(null)*/
+   CHILDREN(PriceCalculator::computeChildrenPrice),
+   BABACI(null)
    ;
 
    private final BiFunction<PriceCalculator, Integer, Integer> priceAlgo;
@@ -54,6 +54,14 @@ public class FunctionsOnEnums {
 
       PriceCalculator priceCalculator = new PriceCalculator(); // ma prefac c-o iau din spring @Autowired
       return type.getPriceAlgo().apply(priceCalculator, days);
+   }
+   public static int computePrice_java15_in2023(MovieType type, int days) {
+      return switch (type) {
+         case REGULAR -> days + 1;
+         case NEW_RELEASE -> days * 2;
+         case CHILDREN -> 5;
+         case BABACI -> 0;
+      };
    }
 
 

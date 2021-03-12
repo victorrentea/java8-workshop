@@ -12,7 +12,7 @@
     <artifactId>java8-workshop</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <properties>
-        <java.version>11</java.version>
+        <!--<java.version>11</java.version>-->
     </properties>
 
     <dependencies>
@@ -64,6 +64,16 @@
     </dependencies>
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+
+                    <release>15</release>
+                    <compilerArgs>--enable-preview</compilerArgs>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
