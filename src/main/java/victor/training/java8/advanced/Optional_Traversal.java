@@ -1,10 +1,5 @@
 package victor.training.java8.advanced;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-
 import java.util.Objects;
 import java.util.Optional;
 
