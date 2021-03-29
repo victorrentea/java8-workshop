@@ -15,7 +15,10 @@ public class Optional_Traversal {
         System.out.println(convertToName(new A()));
     }
     public static String convertToName(A a) {
-        return a.getB().getC().getName();
+        return a.getBOpt()
+            .flatMap(B::getCOpt)
+            .map(C::getName)
+            .orElse("");
     }
 
 }

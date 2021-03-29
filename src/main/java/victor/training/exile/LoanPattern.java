@@ -1,25 +1,17 @@
-package victor.training.java8.advanced;
+package victor.training.exile;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.function.Consumer;
 
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.jooq.lambda.Unchecked;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
-import victor.training.java8.advanced.FileExporter.ContentWriter;
-import victor.training.java8.advanced.model.User;
 import victor.training.java8.advanced.repo.OrderRepo;
 import victor.training.java8.advanced.repo.UserRepo;
 
