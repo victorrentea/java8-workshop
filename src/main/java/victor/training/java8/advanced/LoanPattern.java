@@ -2,42 +2,77 @@ package victor.training.java8.advanced;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Writer;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.function.Consumer;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.SneakyThrows;
+import org.jooq.lambda.Unchecked;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
+import victor.training.java8.advanced.FileExporter.ContentWriter;
+import victor.training.java8.advanced.model.User;
 import victor.training.java8.advanced.repo.OrderRepo;
+import victor.training.java8.advanced.repo.UserRepo;
+
 
 @Service
-class OrderExporter {
-   @Autowired
-   private OrderRepo orderRepo;
+class FileExporter {
    @Value("${export.folder.out}")
    private File folder;
 
-   public void exportFile() {
-      File file = new File(folder, "orders.csv");
+   @FunctionalInterface
+   interface ContentWriter {
+      void writeContent(Writer writer) throws Exception;
+   }
+
+   public void exportFile(String fileName, ContentWriter contentWriter) {
+      File file = new File(folder, fileName);
       long t0 = System.currentTimeMillis();
       try (Writer writer = new FileWriter(file)) {
          System.out.println("Starting export to: " + file.getAbsolutePath());
 
-         writer.write("OrderID;Date\n");
-
-//			orderRepo.findByActiveTrue()
-//				.map(o -> o.getId() + ";" + o.getCreationDate())
-//				.forEach(writer::write);
+         contentWriter.writeContent(writer);
          System.out.println("File export completed: " + file.getAbsolutePath());
       } catch (Exception e) {
          // TODO send email notification
          throw new RuntimeException("Error exporting data", e);
       } finally {
-         System.out.println("Export finished in: " + (System.currentTimeMillis()-t0));
+         System.out.println("Export finished in: " + (System.currentTimeMillis() - t0));
       }
+   }
+
+}
+@Service
+@RequiredArgsConstructor
+class OrderExportContentWriter {
+   private final OrderRepo orderRepo;
+   public void writeOrders(Writer writer) throws IOException {
+      writer.write("OrderID;Date\n");
+
+      orderRepo.findByActiveTrue()
+          .map(o -> o.getId() + ";" + o.getCreationDate())
+          .forEach(Unchecked.consumer(writer::write));
+   }
+}
+@Service
+@RequiredArgsConstructor
+class UserExportContentWriter {
+   private final UserRepo userRepo;
+   public void writerUsers(Writer writer) throws IOException {
+      writer.write("USerId;Full Name\n");
+
+      userRepo.findAll().stream()
+          .map(user -> user.getId()  + ";" + user.getFullName())
+          .forEach(Unchecked.consumer(writer::write));
    }
 }
 
@@ -48,11 +83,22 @@ public class LoanPattern implements CommandLineRunner {
       SpringApplication.run(LoanPattern.class, args);
    }
 
-   private final OrderExporter orderExporter;
+   private final FileExporter fileExporter;
+   private final OrderExportContentWriter orderExportContentWriter;
+   private final UserExportContentWriter userExportContentWriter;
+
+//   private User fromResultSet(ResultSet rs) {
+//      return null;
+//   }
    public void run(String... args) throws Exception {
-      orderExporter.exportFile();
+//      new JdbcTemplate().query("SELECT * FROM USERS", (rs, rowNum) -> fromResultSet(rs));
+
+
+      fileExporter.exportFile("orders.csv", orderExportContentWriter::writeOrders);
 
       System.out.println("-------------------");
+//       TODO CR: also export users, "the same way you exported the orders"
+      fileExporter.exportFile("users.csv", userExportContentWriter::writerUsers);
    }
 }
 
