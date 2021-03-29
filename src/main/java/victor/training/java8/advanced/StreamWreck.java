@@ -10,6 +10,7 @@ import static java.util.stream.Collectors.summingInt;
 import static java.util.stream.Collectors.toList;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -22,7 +23,12 @@ public class StreamWreck {
 	public List<Product> getFrequentOrderedProducts(List<Order> orders) {
 		return orders.stream()
 				.filter(o -> o.getCreationDate().isAfter(LocalDate.now().minusYears(1)))
-				.flatMap(o -> o.getOrderLines().stream())
+
+				.map(Order::getOrderLines)
+				.flatMap(Collection::stream)
+
+//				.flatMap(o -> o.getOrderLines().stream())
+
 				.collect(groupingBy(OrderLine::getProduct, summingInt(OrderLine::getItemCount)))
 				.entrySet()
 				.stream()
@@ -32,6 +38,20 @@ public class StreamWreck {
 				.filter(p -> !productRepo.findByHiddenTrue().contains(p.getId()))
 				.collect(toList());
 	}
+	public void method(List<Order> orders) {
+//		List<String> productName = orders.stream()
+//			.map(Order::getOrderLines)
+//			.flatMap(Collection::stream)
+//			.map(OrderLine::getProduct)
+//			.map(Product::getName)
+//			.collect(toList());
+			List<String> productName = orders.stream()
+			.flatMap(order -> order.getOrderLines().stream())
+			.map(orderLine -> orderLine.getProduct().getName())
+			.collect(toList());
+	}
 }
+
+
 
 

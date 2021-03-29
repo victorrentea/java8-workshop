@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.function.Function;
 
 import lombok.RequiredArgsConstructor;
 import org.jooq.lambda.Unchecked;
@@ -12,6 +13,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Service;
+import victor.training.java8.advanced.model.User;
 import victor.training.java8.advanced.repo.OrderRepo;
 import victor.training.java8.advanced.repo.UserRepo;
 
@@ -62,8 +64,10 @@ class UserExportContentWriter {
    public void writerUsers(Writer writer) throws IOException {
       writer.write("USerId;Full Name\n");
 
+      Function<User, String> f = user -> user.getId() + ";" + user.getFullName();
+//      Object f2 = (User user) -> user.getId() + ";" + user.getFullName();
       userRepo.findAll().stream()
-          .map(user -> user.getId()  + ";" + user.getFullName())
+          .map(f)
           .forEach(Unchecked.consumer(writer::write));
    }
 }

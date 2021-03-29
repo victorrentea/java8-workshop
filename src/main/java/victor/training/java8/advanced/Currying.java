@@ -6,15 +6,23 @@ import java.util.function.Function;
 public class Currying {
 
    public static void main(String[] args) {
-      Function<Integer, Integer> add1 = partialApply(Integer::sum, 1);
-      System.out.println(add1.apply(2));
 
-      Function<Integer, Integer> max2 = partialApply(Integer::max, 2);
-      System.out.println(max2.apply(5));
-      System.out.println(max2.apply(1));
+      int sum = sum(1,2);
+
+      Function<Integer, Integer> sumWith1 = partiallyApply(Currying::sum, 1);
+      System.out.println(sumWith1.apply(2));
+      System.out.println(sumWith1.apply(3));
+
+      Function<Integer, Integer> maxWith0 = partiallyApply(Integer::max, 0);
+      System.out.println(maxWith0.apply(-5));
+      System.out.println(maxWith0.apply(5));
    }
 
-   public static Function<Integer, Integer> partialApply(BiFunction<Integer, Integer, Integer> f, int arg1) {
-      return arg2 -> f.apply(arg1, arg2);
+   private static <A,B,R> Function<A, R> partiallyApply(BiFunction<B, A, R> function, B firstArg) {
+      return secondArg -> function.apply(firstArg, secondArg);
+   }
+
+   private static Integer sum(Integer a, Integer b) {
+      return a + b;
    }
 }
