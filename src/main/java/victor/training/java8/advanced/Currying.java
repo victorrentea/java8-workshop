@@ -12,9 +12,12 @@ public class Currying {
 
       int sum = sum(1,2);
 
-      Function<Integer, Integer> sumWith1 = partiallyApply(Currying::sum, 1);
+      BiFunction<Integer, Integer, Integer> ss = Currying::sum;
+      Function<Integer, Integer> sumWith1 = partiallyApply(ss, 1);
       System.out.println(sumWith1.apply(2));
       System.out.println(sumWith1.apply(3));
+
+//      val sum1 = sum 1 _
 
       Function<Integer, Integer> maxWith0 = partiallyApply(Integer::max, 0);
       System.out.println(maxWith0.apply(-5));

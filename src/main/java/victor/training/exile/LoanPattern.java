@@ -74,7 +74,7 @@ class UserExportContentWriter {
 
 @RequiredArgsConstructor
 @SpringBootApplication
-public class LoanPattern implements CommandLineRunner {
+public class   LoanPattern implements CommandLineRunner {
    public static void main(String[] args) {
       SpringApplication.run(LoanPattern.class, args);
    }

@@ -2,53 +2,69 @@ package victor.training.java8.stream.order;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.summingLong;
-import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
-import static java.util.stream.Collectors.toSet;
 
-import java.io.File;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.stream.Stream;
+import java.util.function.Supplier;
 
 import victor.training.java8.stream.order.dto.OrderDto;
 import victor.training.java8.stream.order.entity.Customer;
 import victor.training.java8.stream.order.entity.Order;
+import victor.training.java8.stream.order.entity.Order.Status;
 import victor.training.java8.stream.order.entity.OrderLine;
 import victor.training.java8.stream.order.entity.Product;
 import victor.training.java8.stream.order.entity.Order.PaymentMethod;
 
-public class TransformStreams {
+class OrderMapper {
+}
 
+public class TransformStreams {
+	public String instanceMethod() {
+		return "";
+	}
+
+	private OrderMapper mapper;
 	/**
 	 * Transform all entities to DTOs.
 	 * Discussion:.. Make it cleanest!
 	 */
 	public List<OrderDto> p01_toDtos(List<Order> orders) {
-		
-		List<OrderDto> dtos = new ArrayList<>();
-		for (Order order : orders) {
-			OrderDto dto = new OrderDto();
-			dto.totalPrice = order.getTotalPrice(); 
-			dto.creationDate = order.getCreationDate();
-			dtos.add(dto);
-		}
-		return dtos;
-		
+
+		Function<String, Integer> f2 = s -> Integer.parseInt(s);
+		Function<String, Integer> f2bis = Integer::parseInt;
+
+		Supplier<Long> f3 = System::currentTimeMillis;
+
+		Order anOrder = new Order();
+		Supplier<Status> f4 = anOrder::getStatus;
+		Supplier<Customer> f5 = anOrder::getCustomer;
+
+		Function<Order, Status> f6 = Order::getStatus;
+
+//		Function<Order, OrderDto> f1 = this::toDto;
+
+		Supplier<String> f7 = this::instanceMethod;
+		Function<TransformStreams, String> f8 = TransformStreams::instanceMethod;
+
+		BiFunction<TransformStreams, List<Order>, List<OrderDto>> f9 = TransformStreams::p01_toDtos;
+
+		BiFunction<OrderMapper, Order, OrderDto> bif = (orderMapper, order1) -> new OrderDto(order1);
+
+		return orders.stream()
+			.map(OrderDto::new)
+			.collect(toList());
 	}
-	
+
+
+
 	/**
 	 * Note: Order.getPaymentMethod()
 	 */

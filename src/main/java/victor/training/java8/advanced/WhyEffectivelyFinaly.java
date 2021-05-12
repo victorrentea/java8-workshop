@@ -10,32 +10,35 @@ public class WhyEffectivelyFinaly {
    public static void main(String[] args) {
 
       List<Integer> numbers = IntStream.range(0, 10).boxed().collect(Collectors.toList());
+//
+//      int sum = 0;
+      AtomicInteger ii = new AtomicInteger();
 
+      numbers.stream().forEach(number -> {
+//         sum += number;
+         ii.addAndGet(number);
+      });
 
-      AtomicInteger integer = new AtomicInteger();
-      Integer sum = numbers.stream()
-          .filter(n -> n % 2 == 1)
+      System.out.println(ii);
 
-          .mapToInt(n -> n).sum(); // FP
+      int sum = numbers.stream().mapToInt(i -> i).sum();
+      System.out.println(sum);
 
-//          .reduce(0, Integer::sum); // FP
-
-//          .forEach(n -> integer.addAndGet(n)); // hacking around the effectively final and changing on the heap
-
-//          .forEach(n -> sum += n); // not compiling
-
-      System.out.println(integer.get());
-
-      Supplier<Integer> seqSupplier = method();
-      // the stack of method () WAS DESTROYED at this line
-      System.out.println(seqSupplier.get());
-      System.out.println(seqSupplier.get());
-      System.out.println(seqSupplier.get());
-   }
-
-   public static Supplier<Integer> method() {
-       int x = 0;
-       return () -> x; // ++ on what varaible ? !!
+//      Supplier<Integer> inc = createIncrementer();
+//      inc.get();
+//      inc.get();
+//      inc.get();
+//      inc.get();
+//   }
+//
+//   public static Supplier<Integer> createIncrementer() {
+//      int x = 0;
+//      return new Supplier<Integer>() {
+//         @Override
+//         public Integer get() {
+//            return x + 1;
+//         }
+//      };
    }
 
 }
