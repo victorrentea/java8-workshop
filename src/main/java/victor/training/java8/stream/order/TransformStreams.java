@@ -64,6 +64,12 @@ public class TransformStreams {
 
 		return orders.stream()
 			.map(OrderDto::new)
+//			.map(o -> {  <-- headless function : avoid !
+//				OrderDto dto = new OrderDto();
+//				dto.totalPrice = order.getTotalPrice();
+//				dto.creationDate = order.getCreationDate();
+//				return dto;
+//			})
 			.collect(toList());
 		//		return orders.stream().map(this::convert).collect(toList());
 	}
