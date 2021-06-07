@@ -7,7 +7,7 @@ public class Optional_Chain {
 	static MyMapper mapper = new MyMapper();
    public static void main(String[] args) {
 		Parcel parcel = new Parcel();
-		parcel.setDelivery(new Delivery(null));
+		parcel.setDelivery(new Delivery(new Address(new ContactPerson("John"))));
 
 		DeliveryDto dto = mapper.convert(parcel);
       System.out.println(dto);
@@ -20,7 +20,7 @@ class MyMapper {
       dto.recipientPerson = parcel.getDelivery()
           .flatMap(delivery -> delivery.getAddress().getContactPerson())
           .map(contactPerson -> contactPerson.getName().toUpperCase())
-          .orElse("");
+          .orElse(null);
       return dto;
    }
 }
