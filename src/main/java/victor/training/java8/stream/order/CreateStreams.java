@@ -22,11 +22,6 @@ public class CreateStreams {
     * - Validate the created OrderLine. Throw ? :S
     */
    public List<OrderLine> p1_readOrderFromFile(File file) throws IOException {
-//      try (FileReader reader = new FileReader(file)) {
-//
-//      }
-      //
-
 
       try (Stream<String> lines = Files.lines(file.toPath())) {
          return lines
