@@ -1,9 +1,11 @@
 package victor.training.java8.advanced;
 
 import lombok.Data;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.lambda.Unchecked;
 import org.springframework.data.jpa.repository.JpaRepository;
+import victor.training.java8.advanced.repo.UserRepo;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -20,19 +22,27 @@ interface OrderRepo extends JpaRepository<Order, Long> { // Spring Data FanClub
 	Stream<Order> findByActiveTrue(); // 1 Mln orders ;)
 }
 
+
+class ExportCLient {
+	public static void main(String[] args) throws Exception {
+		FileExporter exporter = new FileExporter();
+		exporter.exportFile("order.csv", new OrderExportContent()::writeOrderContent);
+		exporter.exportFile("users.csv", new UserExportContent()::writeUserContent);
+	}
+}
 @Slf4j
-class OrderExporter {
-	
-	private OrderRepo repo;
-			
-	public File exportFile(String fileName) throws IOException {
+class FileExporter {
+	@FunctionalInterface
+	public interface ContentWriter {
+		void writeContent(Writer writer) throws Exception;
+	}
+
+	public File exportFile(String fileName, ContentWriter contentWriter) throws Exception {
+//	public File exportFile(String fileName, Consumer<Writer> contentWriter) throws IOException {
 		File file = new File("export/" + fileName);
 		try (Writer writer = new FileWriter(file)) {
-			writer.write("OrderID;Date\n");
+			contentWriter.writeContent(writer);
 
-			repo.findByActiveTrue()
-				.map(o -> o.getId() + ";" + o.getCreationDate())
-				.forEach(Unchecked.consumer(writer::write));
 			return file;
 		} catch (Exception e) {
 			// TODO send email notification
@@ -40,7 +50,27 @@ class OrderExporter {
 			throw e;
 		}
 	}
+}
+class OrderExportContent {
+	private OrderRepo repo;
+//	@SneakyThrows
+	public void writeOrderContent(Writer writer) throws IOException {
+		writer.write("OrderID;Date\n");
+		repo.findByActiveTrue()
+			.map(o -> o.getId() + ";" + o.getCreationDate())
+			.forEach(Unchecked.consumer(writer::write));
+	}
 
+}
+class UserExportContent {
+	private UserRepo userRepo;
+//	@SneakyThrows
+	public void writeUserContent(Writer writer) throws IOException {
+		writer.write("username;fullname\n");
+		userRepo.findAll().stream()
+			.map(u -> u.getId() + ";" + u.getFullName())
+			.forEach(Unchecked.consumer(writer::write));
+	}
 }
 
 interface ConsumerChecked<T> {
