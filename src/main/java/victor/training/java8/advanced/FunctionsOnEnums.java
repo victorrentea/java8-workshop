@@ -2,8 +2,38 @@ package victor.training.java8.advanced;
 
 
 enum MovieType {
-   REGULAR, NEW_RELEASE, CHILDREN
+   REGULAR, NEW_RELEASE, CHILDREN,
+   DE_BABACI
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 public class FunctionsOnEnums {
 

@@ -7,7 +7,7 @@ public class Optional_Chain {
 	static MyMapper mapper = new MyMapper();
    public static void main(String[] args) {
 		Parcel parcel = new Parcel();
-		parcel.setDelivery(new Delivery(new Address(new ContactPerson("John"))));
+		parcel.setDelivery(new Delivery(new Address(null)));
 
 		DeliveryDto dto = mapper.convert(parcel);
       System.out.println(dto);

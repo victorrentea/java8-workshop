@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public interface ProductRepo extends JpaRepository<Product, Long> {
-   List<Product> findByHiddenTrue();
+   List<Long> findByHiddenTrue();
 
    Product findByNameContaining(String namePart);
 
