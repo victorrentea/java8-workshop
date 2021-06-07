@@ -4,7 +4,9 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import victor.training.java8.stream.order.entity.Customer;
 import victor.training.java8.stream.order.entity.Order;
@@ -28,19 +30,17 @@ public class SearchStreams {
 	}
 	
 	/**
-	 * @return the Order in the list with the given id  
+	 * @return the Order in the list with the given id
 	 * - ...Any or ...First ?
 	 * - what do you do when you don't find it ? null/throw/Optional ?
 	 */
 	public Order p2_getOrderById(List<Order> orders, long orderId) {
-		return orders.stream()
-				.filter(order -> order.getId() == orderId)
-				.findFirst()
-				.orElse(null);
-				// you do elseThrow if you want a custom exception.
-				// .orElseThrow(() -> new MyException("There is no Order in the provided list that matches the id provided: " + orderId));
-				// Better, keeps the reader focused:
-//				.orElseThrow(() -> new MyException(MYErrorCode.NO_ORDER, orderId));
+		Optional<Order> first = orders.stream()
+			.filter(order -> order.getId().equals(orderId))
+			.findFirst();
+
+//		return first.orElse(null);
+		return first.orElseThrow(()->  new RuntimeException("N-am gasit !"));
 	}
 	
 	/**
