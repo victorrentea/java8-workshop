@@ -139,7 +139,12 @@ public class TransformStreams {
 	 * sorted by Product.name.
 	 */
 	public List<Product> p07_getAllOrderedProducts(Customer customer) {
-		return null; 
+		return customer.getOrders().stream()
+			.flatMap(order -> order.getOrderLines().stream())
+			.map(OrderLine::getProduct)
+			.distinct()
+			.sorted(Comparator.comparing(Product::getName))
+			.collect(toList());
 	}
 	
 	
@@ -150,7 +155,9 @@ public class TransformStreams {
 	 * Hint: Reuse the previous function.
 	 */
 	public String p08_getProductsJoined(Customer customer) {
-		return null; 
+		return p07_getAllOrderedProducts(customer).stream()
+			.map(Product::getName)
+			.collect(joining(","));
 	}
 	
 	/**
@@ -158,6 +165,42 @@ public class TransformStreams {
 	 */
 	public Long p09_getApproximateTotalOrdersPrice(Customer customer) {
 		// TODO +, longValue(), reduce()
-		return null;
+//		BinaryOperator<BigDecimal> bigDecimalBinaryOperator = (prevSumBD, currentPrice) -> prevSumBD.add(currentPrice);
+//		BinaryOperator<BigDecimal> bigDecimalBinaryOperator = BigDecimal::add;
+//		BiFunction<BigDecimal, BigDecimal, BigDecimal> bigDecimalBinaryOperatoF = BigDecimal::add;
+		return customer.getOrders().stream()
+			.map(Order::getTotalPrice)
+			.reduce(BigDecimal.ZERO, BigDecimal::add)
+			.longValue(); // right-fold (FP)
+//			.mapToLong(BigDecimal::longValue)
+//			.sum();
 	}
+
+	public Long p09_getApproximateTotalOrdersPrice_PRAF(Customer customer) {
+		long sum = 0L;
+		customer.getOrders().stream()
+			.map(Order::getTotalPrice)
+//			.forEach(repo::save)
+//			.forEach(System.out::println);
+			.forEach(price -> {
+//				sum += price.longValue(); /// NU COMPILEAZA
+				System.out.println("Cand s-o facut lambda, suma era " + sum);
+			});
+
+		return sum;
+	}
+	
+	// cod absurd:
+//
+//	public Supplier<Integer> imposibil() {
+//		int i = 0;
+//		return ()->i++;
+//	}
+//
+//	public void method() {
+//		Supplier<Integer> supplier = imposibil();
+//
+//		System.out.println(supplier.get());
+//		System.out.println(supplier.get());
+//	}
 }

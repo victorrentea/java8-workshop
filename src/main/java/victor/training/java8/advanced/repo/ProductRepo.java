@@ -11,5 +11,5 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
 
    Product findByNameContaining(String namePart);
 
-   Stream<Product> streamAllByDeletedTrue();
+   Stream<Product> streamAllByDeletedTrue(); // jde-milioane
 }
