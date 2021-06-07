@@ -18,11 +18,9 @@ class MyMapper {
    public DeliveryDto convert(Parcel parcel) {
       DeliveryDto dto = new DeliveryDto();
       dto.recipientPerson = parcel.getDelivery()
-          .map(Delivery::getAddress)
-          .flatMap(Address::getContactPerson)
-          .map(ContactPerson::getName)
-          .map(String::toUpperCase)
-         .orElse("");
+          .flatMap(delivery -> delivery.getAddress().getContactPerson())
+          .map(contactPerson -> contactPerson.getName().toUpperCase())
+          .orElse("");
       return dto;
    }
 }
