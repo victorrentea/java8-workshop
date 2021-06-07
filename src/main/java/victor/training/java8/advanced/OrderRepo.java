@@ -2,6 +2,7 @@ package victor.training.java8.advanced;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.jooq.lambda.Unchecked;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.io.File;
@@ -29,21 +30,9 @@ class OrderExporter {
 		try (Writer writer = new FileWriter(file)) {
 			writer.write("OrderID;Date\n");
 
-			ConsumerChecked<String> ss = s-> writer.write(s);
-
-			Consumer<String> consumer = str -> {
-				try {
-					writer.write(str);
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}
-			};
-
-			consumer = convertFunction(ss);
-
 			repo.findByActiveTrue()
 				.map(o -> o.getId() + ";" + o.getCreationDate())
-				.forEach(convertFunction(s -> writer.write(s)));
+				.forEach(Unchecked.consumer(writer::write));
 			return file;
 		} catch (Exception e) {
 			// TODO send email notification
@@ -52,9 +41,6 @@ class OrderExporter {
 		}
 	}
 
-	private <T> Consumer<T> convertFunction(ConsumerChecked<T> original) {
-		return null;
-	}
 }
 
 interface ConsumerChecked<T> {
@@ -84,3 +70,15 @@ class OrderLine {
 interface ProductRepo {
 	List<Long> getHiddenProductIds();
 }
+
+
+
+//	public static <T> Consumer<T> convertFunction(ConsumerChecked<T> original) {
+////		return t -> {
+////			try {
+////				original.accept(t);
+////			} catch (Exception e) {
+////				throw new RuntimeException(e);
+////			}
+////		};
+//	}
