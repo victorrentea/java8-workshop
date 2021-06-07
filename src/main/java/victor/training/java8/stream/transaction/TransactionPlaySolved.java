@@ -189,35 +189,5 @@ public class TransactionPlaySolved {
 	}
 	
 	
-	
-	@Test
-	public void advanced_sum_using_consumer() {
-		List<Integer> numere = Arrays.asList(1, 3, 6, 8,9);
-		// SOLUTION(
-		MySmartConsumerIBM summer = new MySmartConsumerIBM();
-		
-		numere.stream().forEach(summer);
-		System.out.println("Suma = " +summer.getSum());
-		
-		int sum = 0;
-		for (int n : numere) {
-			sum += n;
-		}
-		// SOLUTION)
-	}
-	
-	// SOLUTION(
-	private static class MySmartConsumerIBM implements Consumer<Integer> {
-		int sum = 0;
 
-		@Override
-		public void accept(Integer n) {
-			sum += n;
-		}
-		
-		public int getSum() {
-			return sum;
-		}
-	}
-	// SOLUTION)
 }
