@@ -69,6 +69,7 @@ public class SearchStreams {
 	 */
 	public boolean p4_canBeReturned(Order order) {
 		return order.getOrderLines().stream()
+//			.noneMatch(orderLine -> orderLine.isSpecialOffer());
 			.noneMatch(OrderLine::isSpecialOffer);
 	}
 	

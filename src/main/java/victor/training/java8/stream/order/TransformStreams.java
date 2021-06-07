@@ -13,16 +13,12 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.function.Function;
+import java.util.*;
+import java.util.function.*;
 import java.util.stream.Stream;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import victor.training.java8.stream.order.dto.OrderDto;
 import victor.training.java8.stream.order.entity.Customer;
 import victor.training.java8.stream.order.entity.Order;
@@ -30,25 +26,55 @@ import victor.training.java8.stream.order.entity.OrderLine;
 import victor.training.java8.stream.order.entity.Product;
 import victor.training.java8.stream.order.entity.Order.PaymentMethod;
 
+@Service
 public class TransformStreams {
+	@Autowired
+	OrderMapper orderMapper;
 
 	/**
 	 * Transform all entities to DTOs.
 	 * Discussion:.. Make it cleanest!
 	 */
 	public List<OrderDto> p01_toDtos(List<Order> orders) {
-		
-		List<OrderDto> dtos = new ArrayList<>();
-		for (Order order : orders) {
-			OrderDto dto = new OrderDto();
-			dto.totalPrice = order.getTotalPrice(); 
-			dto.creationDate = order.getCreationDate();
-			dtos.add(dto);
-		}
-		return dtos;
-		
+
+		Function<Order, OrderDto> convertFunc = order -> orderMapper.convert(order);
+		Function<Order, OrderDto> convertFunc2 = orderMapper::convert;
+
+		BiFunction<OrderMapper, Order, OrderDto> convertReferitaStatic =  OrderMapper::convert;
+//		convertReferitaStatic.apply(orderMapper, orders);
+
+		Order order = new Order();
+		Supplier<Boolean> active = order::isActive;// f():Boolean
+
+		// target typing: acceeasi expresie lambda/meth ref inseamna alte lucruri in fct de tipul variabilei in care o pui
+		Function<Order, Boolean> active1 = Order::isActive; // f(Order):Boolean
+		Predicate<Order> active2 = Order::isActive; // f(Order):Boolean
+
+//		Object a = Order::isActive; // nu compileaza pentru ca Java nu stie CE tip vrei sa obtii.
+		Object a = (Predicate<Order>)Order::isActive; // nu compileaza pentru ca Java nu stie CE tip vrei sa obtii.
+
+
+		BiFunction<Integer, Integer, String> sumToStr = (i1, i2) -> i1 + i2 + "";
+
+		Supplier<Double> randSup = Math::random;
+
+		Consumer<BigDecimal> tocatorDeBani = bd -> System.out.println(bd);
+
+
+		Function<String, Integer> parse = s -> Integer.parseInt(s); // String ->Integer
+		Function<String, Integer> parse2 = Integer::parseInt; // String ->Integer
+
+		Supplier<Date> dateSupplier = Date::new;
+		Function<Long, Date> dateFunc = Date::new;
+
+		return orders.stream()
+			.map(OrderDto::new)
+			.collect(toList());
+		//		return orders.stream().map(this::convert).collect(toList());
 	}
-	
+
+
+
 	/**
 	 * Note: Order.getPaymentMethod()
 	 */
