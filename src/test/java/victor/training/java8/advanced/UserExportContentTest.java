@@ -12,6 +12,8 @@ import victor.training.java8.advanced.repo.UserRepo;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -23,11 +25,15 @@ class UserExportContentTest {
 
    @Mock
    private UserRepo userRepo;
-
    @Test
    void writeUserContent() throws IOException {
+      Map<Integer, String> integerStringMap = Map.of(1, "One", 2, "Two");
       Mockito.when(userRepo.findAll())
-          .thenReturn(Arrays.asList(new User().setId(1L).setFullName("John Doe")));
+          .thenReturn(List.of(
+              new User().setId(1L).setFullName("John Doe"),
+              new User().setId(1L).setFullName("John Doe")
+
+          ));
       StringWriter writer = new StringWriter();
 
       userExportContent.writeUserContent(writer);

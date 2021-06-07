@@ -49,7 +49,7 @@ class Delivery {
    }
 
 	public void setAddress(Address address) {
-		this.address = address; // TODO null safe
+      this.address = Objects.requireNonNull(address); // TODO null safe
 	}
 
 	public Address getAddress() {

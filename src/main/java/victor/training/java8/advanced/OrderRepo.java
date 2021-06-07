@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.lambda.Unchecked;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import victor.training.java8.advanced.repo.UserRepo;
 
 import java.io.File;
@@ -98,6 +99,13 @@ class OrderLine {
 }
 
 interface ProductRepo {
+	@Query("""
+           SELECT a,b,c FROM x 
+           FROM
+           JOIN
+           WHERE .....
+           AND
+           """)
 	List<Long> getHiddenProductIds();
 }
 
