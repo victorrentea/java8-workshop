@@ -21,6 +21,12 @@ public class OptionalRepoBootApp implements CommandLineRunner {
       System.out.println(productRepo.findByNameContaining("re"));
       System.out.println(productRepo.findByNameContaining("rx"));
 
+      // Optional Abuse
+      Product p = productRepo.findById(13L).get();
+      Product p2 = productRepo.findById(13L).orElseThrow(() -> new IllegalArgumentException("Dragutz"));
+      Product p3 = productRepo.findExactlyOneById(13L); // mai convenabil pt ca nu ma obliga peste tot sa fac .get()
+
+
 //      productRepo.streamAllByDeletedTrue().forEach(System.out::println);
    }
 }

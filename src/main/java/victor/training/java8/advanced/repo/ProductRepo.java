@@ -12,4 +12,6 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
    Product findByNameContaining(String namePart);
 
    Stream<Product> streamAllByDeletedTrue();
+
+   Product findExactlyOneById(long l);
 }
