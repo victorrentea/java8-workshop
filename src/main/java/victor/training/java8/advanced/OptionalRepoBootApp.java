@@ -19,14 +19,12 @@ public class OptionalRepoBootApp implements CommandLineRunner {
    public void run(String... args) throws Exception {
       productRepo.save(new Product("Tree"));
       System.out.println(productRepo.findByNameContaining("re"));
-      System.out.println(productRepo.findByNameContaining("rx"));
+//      System.out.println(productRepo.findByNameContaining("rx")); // finds nothing
 
-      // Optional Abuse
-//      Product p = productRepo.findById(13L).get();
-//      Product p2 = productRepo.findById(13L).orElseThrow(() -> new IllegalArgumentException("Dragutz"));
-//      Product p3 = productRepo.findExactlyOneById(13L); // mai convenabil pt ca nu ma obliga peste tot sa fac .get()
+      // Optional Abuse?
+      // Product p = productRepo.findById(13L);
 
-
-//      productRepo.streamAllByDeletedTrue().forEach(System.out::println);
+      // Streaming queries
+      // productRepo.streamAllByDeletedTrue().forEach(System.out::println);
    }
 }

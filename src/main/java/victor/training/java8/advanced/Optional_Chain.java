@@ -25,7 +25,7 @@ class MyMapper {
           parcel.getDelivery()!=null &&
           parcel.getDelivery().getAddress()!=null &&
           parcel.getDelivery().getAddress().getContactPerson()!=null &&
-          parcel.getDelivery().getAddress().getContactPerson().getName()!=null) {
+          parcel.getDelivery().getAddress().getContactPerson().getName()!=null) { // null terror
          dto.recipientPerson = parcel.getDelivery().getAddress().getContactPerson().getName().toUpperCase();
       } else {
          dto.recipientPerson = "<NOT SET>";

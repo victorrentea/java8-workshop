@@ -27,7 +27,7 @@ public class ParallelStreams {
           })
           .map(i -> {
              log.debug("Map " + i);
-             sleepq(100); // do some 'paralellizable' work
+             sleepq(100); // do some 'paralellizable' I/O work (DB, REST, SOAP)
              return i * 2;
           })
           .collect(toList());

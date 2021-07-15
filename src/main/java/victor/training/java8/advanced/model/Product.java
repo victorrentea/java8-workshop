@@ -1,18 +1,21 @@
 package victor.training.java8.advanced.model;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-@Data
+import static lombok.AccessLevel.PRIVATE;
+
+@Getter
+@Setter
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = PRIVATE)
 public class Product {
    @Id
    @GeneratedValue
+   @EqualsAndHashCode.Exclude
    private Long id;
    private String name;
    private boolean deleted;
