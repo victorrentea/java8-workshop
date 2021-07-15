@@ -8,6 +8,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.test.annotation.Timed;
+import victor.training.java8.advanced.CsvExporter.ContentWriter;
 import victor.training.java8.advanced.repo.OrderRepo;
 import victor.training.java8.advanced.repo.UserRepo;
 
@@ -25,6 +27,7 @@ class CsvExporter {
    public interface ContentWriter {
       void writeContent(Writer writer) throws Exception;
    }
+//   @Timed("export")
    public void exportFile(String fileName, ContentWriter contentWriter) {
       File file = new File(folder, fileName);
       long t0 = System.currentTimeMillis();
@@ -79,12 +82,25 @@ public class LoanPattern implements CommandLineRunner {
    }
 
    public void run(String... args) throws Exception {
-      csvExporter.exportFile("orders.csv", orderExportContent::writeContent);
+      measure(() -> csvExporter.exportFile("orders.csv", orderExportContent::writeContent));
+//      csvExporter.exportFile("orders.csv", orderExportContent::writeContent);
       csvExporter.exportFile("users.csv", userExportContent::writeContent);
 
 
       System.out.println("-------------------");
    }
+
+   private void measure(Runnable runnable) {
+      long t0 = System.currentTimeMillis();
+      try {
+         runnable.run();
+      } finally {
+         long t1 = System.currentTimeMillis();
+         System.out.println("Delta = " + (t1-t0));
+      }
+   }
+
+
 }
 
 interface ConsumerThrowing<T> {

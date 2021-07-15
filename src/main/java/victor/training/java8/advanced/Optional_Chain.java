@@ -1,5 +1,13 @@
 package victor.training.java8.advanced;
 
+import lombok.NonNull;
+
+import javax.persistence.Embeddable;
+import java.util.Optional;
+
+import static java.util.Objects.requireNonNull;
+import static java.util.Optional.ofNullable;
+
 public class Optional_Chain {
 	static MyMapper mapper = new MyMapper();
    public static void main(String[] args) {
@@ -14,24 +22,27 @@ public class Optional_Chain {
 class MyMapper {
    public DeliveryDto convert(Parcel parcel) {
       DeliveryDto dto = new DeliveryDto();
-      dto.recipientPerson = parcel.getDelivery().getAddress().getContactPerson().getName().toUpperCase();
+      dto.recipientPerson = parcel.getDelivery()
+          .flatMap(delivery -> delivery.getAddress().getContactPerson())
+          .map(contactPerson -> contactPerson.getName().toUpperCase())
+          .orElse("NOT SET");
       return dto;
    }
 
-   public DeliveryDto convertSafeJava7(Parcel parcel) {
-      DeliveryDto dto = new DeliveryDto();
-      if (
-          parcel!=null &&
-          parcel.getDelivery()!=null &&
-          parcel.getDelivery().getAddress()!=null &&
-          parcel.getDelivery().getAddress().getContactPerson()!=null &&
-          parcel.getDelivery().getAddress().getContactPerson().getName()!=null) {
-         dto.recipientPerson = parcel.getDelivery().getAddress().getContactPerson().getName().toUpperCase();
-      } else {
-         dto.recipientPerson = "<NOT SET>";
-      }
-      return dto;
-   }
+//   public DeliveryDto convertSafeJava7(Parcel parcel) {
+//      DeliveryDto dto = new DeliveryDto();
+//      if (
+//          parcel != null &&
+//          parcel.getDelivery() != null &&
+//          parcel.getDelivery().getAddress() != null &&
+//          parcel.getDelivery().getAddress().getContactPerson() != null &&
+//          parcel.getDelivery().getAddress().getContactPerson().getName() != null
+//      )
+//         dto.recipientPerson = parcel.getDelivery().getAddress().getContactPerson().getName().toUpperCase();
+//       else
+//         dto.recipientPerson = "NOT SET";
+//      return dto;
+//   }
 
 
 }
@@ -43,8 +54,8 @@ class DeliveryDto {
 class Parcel {
    private Delivery delivery; // NULL until a delivery is scheduled
 
-   public Delivery getDelivery() {
-      return delivery;
+   public Optional<Delivery> getDelivery() {
+      return ofNullable(delivery);
    }
 	public Parcel setDelivery(Delivery delivery) {
       this.delivery = delivery;
@@ -56,12 +67,12 @@ class Parcel {
 class Delivery {
    private Address address; // 'NOT NULL' IN DB
 
-   public Delivery(Address address) {
-      this.address = address;
+   public Delivery(@NonNull Address address) {
+      setAddress(address);
    }
 
-	public void setAddress(Address address) {
-		this.address = address; // TODO null safe
+	public void setAddress(@NonNull Address address) {
+      this.address = address;
 	}
 
 	public Address getAddress() {
@@ -80,16 +91,18 @@ class Address {
       return this;
    }
 
-   public ContactPerson getContactPerson() {
-      return contactPerson;
+   public Optional<ContactPerson> getContactPerson() {
+      return ofNullable(contactPerson);
    }
 }
 
+@Embeddable
 class ContactPerson {
-   private final String name; // 'NOT NULL' in DB
+   private String name; // 'NOT NULL' in DB
 
+   private ContactPerson() {} // just for hibernate
    public ContactPerson(String name) {
-      this.name = name;
+      this.name = requireNonNull(name);
    }
 
    public String getName() {

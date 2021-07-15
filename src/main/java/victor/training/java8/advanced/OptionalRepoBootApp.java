@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.transaction.annotation.Transactional;
 import victor.training.java8.advanced.model.Product;
 import victor.training.java8.advanced.repo.ProductRepo;
@@ -15,6 +16,12 @@ public class OptionalRepoBootApp implements CommandLineRunner {
        SpringApplication.run(OptionalRepoBootApp.class, args);
    }
    private final ProductRepo productRepo;
+
+//   @Bean
+//   public TimedAspect timedAspect() {
+//      return new TimedAspect(meterRegistry);
+//   }
+
 
    public void run(String... args) throws Exception {
       productRepo.save(new Product("Tree"));
