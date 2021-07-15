@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import victor.training.java8.advanced.model.Order;
 import victor.training.java8.advanced.repo.OrderRepo;
 
+import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.time.LocalDate;
@@ -24,7 +25,7 @@ public class OrderExportContentTest {
    @InjectMocks OrderExportContent content;
 
    @Test
-   void writeContent() {
+   void writeContent() throws IOException {
       Mockito.when(orderRepo.findByActiveTrue())
           .thenReturn(Stream.of(
               new Order().setId(1L)

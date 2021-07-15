@@ -10,6 +10,6 @@ class CsvExporterTest {
    @Test
    void exportFile() {
       new CsvExporter().exportFile("file.txt",
-          Unchecked.consumer(writer -> writer.write("sample")));
+          writer -> writer.write("sample"));
    }
 }
