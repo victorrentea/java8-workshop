@@ -3,8 +3,10 @@ package victor.training.java8.advanced;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
+import java.util.function.Consumer;
 
 import lombok.RequiredArgsConstructor;
+import org.jooq.lambda.Unchecked;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -28,9 +30,9 @@ class OrderExporter {
 
          writer.write("OrderID;Date\n");
 
-//			orderRepo.findByActiveTrue()
-//				.map(o -> o.getId() + ";" + o.getCreationDate())
-//				.forEach(writer::write);
+         orderRepo.findByActiveTrue()
+				.map(o -> o.getId() + ";" + o.getCreationDate())
+				.forEach(Unchecked.consumer(writer::write));
          System.out.println("File export completed: " + file.getAbsolutePath());
       } catch (Exception e) {
          // TODO send email notification
@@ -39,6 +41,20 @@ class OrderExporter {
          System.out.println("Export finished in: " + (System.currentTimeMillis()-t0));
       }
    }
+
+   public static <T> Consumer<T> convert(ConsumerThrowing<T> f) {
+      return s -> {
+         try {
+            f.accept(s);
+         } catch (Exception e) {
+            throw new RuntimeException(e);
+         }
+      };
+   }
+
+}
+interface ConsumerThrowing<T> {
+   void accept(T t) throws Exception;
 }
 
 @RequiredArgsConstructor
