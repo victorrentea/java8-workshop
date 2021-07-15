@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -18,15 +19,20 @@ public class SplitLoop {
     private final NotifyStuff notifyStuff;
 
     private String computeStats(List<Employee> employees) {
-        long averageAge = 0;
-        double averageSalary = 0;
+
+        long averageAge = employees.stream()
+            .filter(employee -> !employee.isConsultant())
+            .mapToLong(Employee::getAge).sum();
+
+//        (long) employees.stream().filter(Predicate.not(Employee::isConsultant))
+//            .mapToLong(Employee::getAge).average().getAsDouble();
+
+        double averageSalary = employees.stream().mapToDouble(Employee::getSalary).sum();
+
         for (Employee employee : employees) {
-            if (!employee.isConsultant())
-            averageAge += employee.getAge();
-            averageSalary += employee.getSalary();
             notifyStuff.notifyForEmployee(employee.getId());
         }
-        averageAge = averageAge / employees.stream().filter(e -> !e.isConsultant()).count();
+//        averageAge = averageAge / employees.stream().filter(e -> !e.isConsultant()).count();
         averageSalary = averageSalary / employees.size();
         return "avg age = " + averageAge + "; avg sal = " + averageSalary;
     }
