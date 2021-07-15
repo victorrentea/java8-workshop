@@ -71,7 +71,7 @@ class UserExportContent {
 }
 
 @RequiredArgsConstructor
-@SpringBootApplication
+//@SpringBootApplication
 public class LoanPattern implements CommandLineRunner {
    private final CsvExporter csvExporter;
    private final OrderExportContent orderExportContent;
