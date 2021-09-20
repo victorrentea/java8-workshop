@@ -45,7 +45,7 @@ class OrderMapper {
 }
 @RequiredArgsConstructor
 public class TransformStreams {
-	private final OrderMapper orderMapper;
+	private OrderMapper orderMapper;
 
 	/**
 	 * Transform all entities to DTOs.
