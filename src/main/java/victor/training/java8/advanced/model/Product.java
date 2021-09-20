@@ -18,7 +18,7 @@ public class Product {
    @EqualsAndHashCode.Exclude
    private Long id;
    private String name;
-   private boolean deleted;
+   private boolean deleted; // logical deletion
    private boolean hidden;
 
    public Product(String name) {

@@ -2,7 +2,6 @@ package victor.training.java8.advanced;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import victor.training.java8.advanced.tricks.ConcurrencyUtil;
 
 import java.util.List;
 import java.util.stream.IntStream;
@@ -41,12 +40,10 @@ public class ParallelStreams {
 // =========== far away, in a distant Package ...... =============
 @Slf4j
 class Enemy {
-   @SneakyThrows
    public static void parallelRequest() {
       Thread thread = new Thread(Enemy::optimized);
       thread.setDaemon(true); // to exit program
       thread.start();
-      Thread.sleep(100);
    }
    public static void optimized() {
       int result = IntStream.range(1, 1000)

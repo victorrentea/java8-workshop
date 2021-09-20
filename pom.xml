@@ -11,9 +11,6 @@
     <groupId>victor</groupId>
     <artifactId>java8-workshop</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <properties>
-        <java.version>11</java.version>
-    </properties>
 
     <dependencies>
         <dependency>
@@ -53,6 +50,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>1.18.18</version>
         </dependency>
 
 
@@ -68,15 +66,15 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-           <!-- <plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <release>15</release>
-                    <compilerArgs>&#45;&#45;enable-preview</compilerArgs>
+                    <release>16</release>
+                    <compilerArgs>--enable-preview</compilerArgs>
                 </configuration>
-            </plugin>-->
+            </plugin>
         </plugins>
     </build>
 </project>
