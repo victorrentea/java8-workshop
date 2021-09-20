@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import victor.training.java8.advanced.repo.OrderRepo;
 
+import java.io.IOException;
 import java.io.Writer;
 
 //format logic
@@ -15,8 +16,7 @@ import java.io.Writer;
 public class OrderContentWriter {
    private final OrderRepo orderRepo;
 
-   @SneakyThrows
-   public void writeContent(Writer writer) {
+   public void writeContent(Writer writer) throws IOException {
       writer.write("OrderID;Date\n");
       orderRepo.findByActiveTrue()
           .map(order -> order.getId() + ";" + order.getCreationDate())

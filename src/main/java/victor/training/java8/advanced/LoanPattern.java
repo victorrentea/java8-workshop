@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import victor.training.java8.advanced.CSVExporter.ExportContentWriter;
 import victor.training.java8.advanced.repo.UserRepo;
 
 @RequiredArgsConstructor
@@ -22,8 +23,6 @@ public class LoanPattern implements CommandLineRunner {
    private UserRepo userRepo;
 
    public void run(String... args) throws Exception {
-
-      csvExporter.exportFile("nume", );
 
       csvExporter.exportFile("orders", orderContentWriter::writeContent);
 

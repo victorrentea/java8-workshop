@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import victor.training.java8.advanced.repo.UserRepo;
 
+import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,8 +15,7 @@ public class UserContentWriter {
    @Autowired
    private UserRepo userRepo;
 
-   @SneakyThrows
-   public void writeContent(Writer writer) {
+   public void writeContent(Writer writer) throws IOException {
       writer.write("Username;fullname\n");
       List<String> lines = userRepo.findAll().stream()
           .map(user -> user.getUsername() + ";" + user.getFullName() + "\n")

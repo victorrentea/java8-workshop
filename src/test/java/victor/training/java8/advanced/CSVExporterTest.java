@@ -11,7 +11,7 @@ class CSVExporterTest {
    void exportFile() {
       CSVExporter exporter = new CSVExporter();
 
-      exporter.exportFile("a", Unchecked.consumer(writer -> writer.write("dummy")));
+      exporter.exportFile("a", writer -> writer.write("dummy"));
 //      exporter.exportFile("a", writer -> {throw new IllegalArgumentException("intentionat");});
       // TIDO verifia ca in folderul corect este un fisier care .... contine "dummy"
    }

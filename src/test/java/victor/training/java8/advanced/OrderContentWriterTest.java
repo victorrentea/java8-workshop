@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import victor.training.java8.advanced.model.Order;
 import victor.training.java8.advanced.repo.OrderRepo;
 
+import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.time.LocalDate;
@@ -29,7 +30,7 @@ class OrderContentWriterTest {
 
 
    @Test
-   public void writeContent() {
+   public void writeContent() throws IOException {
       Order order = new Order()
           .setId(13L)
           .setCreationDate(of(2021, 1, 1));
