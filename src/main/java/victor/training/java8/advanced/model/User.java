@@ -22,4 +22,8 @@ public class User {
    private Integer ticketsRaised;
    @Enumerated(STRING)
    private Language language;
+
+   public boolean isInactive() {
+      return !active;
+   }
 }
