@@ -1,5 +1,7 @@
 package victor.training.java8.advanced.model;
 
+import java.util.Optional;
+
 // @Entity - The HOLY ENTITY !
 public class Customer {
    private MemberCard memberCard;
@@ -11,7 +13,7 @@ public class Customer {
       this.memberCard = profile;
    }
 
-   public MemberCard getMemberCard() {
-      return memberCard;
+   public Optional<MemberCard> getMemberCard() {
+      return Optional.ofNullable(memberCard);
    }
 }

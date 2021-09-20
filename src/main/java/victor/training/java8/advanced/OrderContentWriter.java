@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import org.jooq.lambda.Unchecked;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import victor.training.java8.advanced.model.Order;
 import victor.training.java8.advanced.repo.OrderRepo;
 
 import java.io.IOException;
@@ -17,6 +18,11 @@ public class OrderContentWriter {
    private final OrderRepo orderRepo;
 
    public void writeContent(Writer writer) throws IOException {
+
+
+//      Order order = orderRepo.findById(13l).get();//.orElseThrow(() -> new IllegalArgumentException("Nu am gasit Order id " + 13));
+
+
       writer.write("OrderID;Date\n");
       orderRepo.findByActiveTrue()
           .map(order -> order.getId() + ";" + order.getCreationDate())
