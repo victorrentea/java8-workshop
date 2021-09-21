@@ -10,9 +10,18 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 public interface ProductRepo extends JpaRepository<Product, Long> {
-   Iterator<Product> findByHiddenTrue();
-//@Query(value = "SELECT p.id FROM PRODUCTS p WHERE p.name LIKE ?1", nativeQuery = true) // JPQL ~HQL --> SQL --> WHERE rulat de DB
-@Query("SELECT p FROM Product p WHERE p.name LIKE ?1") // JPQL ~HQL --> SQL --> WHERE rulat de DB
+   List<Product> findByHiddenTrue();
+
+//@Query(value = """
+//                SELECT p.id
+//               FROM PRODUCTS p WHERE p.name LIKE ?1
+//               """
+//    , nativeQuery = true) // JPQL ~HQL --> SQL --> WHERE rulat de DB
+
+   //   @Query("""
+//            SELECT p
+//            FROM Product p
+//            WHERE p.name LIKE ?1""") // JPQL ~HQL --> SQL --> WHERE rulat de DB
    Optional<Long> findByNameContaining2(String namePart);
 
 
