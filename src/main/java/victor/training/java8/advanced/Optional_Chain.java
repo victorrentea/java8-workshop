@@ -1,5 +1,10 @@
 package victor.training.java8.advanced;
 
+import java.util.Objects;
+import java.util.Optional;
+
+import static java.util.Optional.ofNullable;
+
 public class Optional_Chain {
 	static MyMapper mapper = new MyMapper();
    public static void main(String[] args) {
@@ -14,22 +19,17 @@ public class Optional_Chain {
 class MyMapper {
    public DeliveryDto convert(Parcel parcel) {
       DeliveryDto dto = new DeliveryDto();
-      dto.recipientPerson = parcel.getDelivery().getAddress().getContactPerson().getName().toUpperCase();
-      return dto;
-   }
+      dto.recipientPerson = parcel.getDelivery()
+          .flatMap(delivery -> delivery.getAddress().getContactPerson())
+          .map(cp -> cp.getName().toUpperCase())
+          .orElse("NOT SET");
 
-   public DeliveryDto convertSafeJava7(Parcel parcel) {
-      DeliveryDto dto = new DeliveryDto();
-      if (
-          parcel!=null &&
-          parcel.getDelivery()!=null &&
-          parcel.getDelivery().getAddress()!=null &&
-          parcel.getDelivery().getAddress().getContactPerson()!=null &&
-          parcel.getDelivery().getAddress().getContactPerson().getName()!=null) {
-         dto.recipientPerson = parcel.getDelivery().getAddress().getContactPerson().getName().toUpperCase();
-      } else {
-         dto.recipientPerson = "<NOT SET>";
-      }
+//      dto.recipientPerson = parcel.getDelivery()
+//          .map(Delivery::getAddress)
+//          .flatMap(Address::getContactPerson)
+//          .map(ContactPerson::getName)
+//          .map(String::toUpperCase)
+//          .orElse("NOT SET");
       return dto;
    }
 
@@ -43,9 +43,10 @@ class DeliveryDto {
 class Parcel {
    private Delivery delivery; // NULL until a delivery is scheduled
 
-   public Delivery getDelivery() {
-      return delivery;
+   public Optional<Delivery> getDelivery() {
+      return ofNullable(delivery);
    }
+
 	public Parcel setDelivery(Delivery delivery) {
       this.delivery = delivery;
       return this;
@@ -57,11 +58,11 @@ class Delivery {
    private Address address; // 'NOT NULL' IN DB
 
    public Delivery(Address address) {
-      this.address = address;
+      setAddress(address);
    }
 
 	public void setAddress(Address address) {
-		this.address = address; // TODO null safe
+      this.address = Objects.requireNonNull(address); // TODO null safe
 	}
 
 	public Address getAddress() {
@@ -80,8 +81,8 @@ class Address {
       return this;
    }
 
-   public ContactPerson getContactPerson() {
-      return contactPerson;
+   public Optional<ContactPerson> getContactPerson() {
+      return ofNullable(contactPerson);
    }
 }
 
@@ -89,7 +90,7 @@ class ContactPerson {
    private final String name; // 'NOT NULL' in DB
 
    public ContactPerson(String name) {
-      this.name = name;
+      this.name = Objects.requireNonNull(name);
    }
 
    public String getName() {
