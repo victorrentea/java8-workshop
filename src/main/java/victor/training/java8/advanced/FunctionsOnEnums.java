@@ -4,13 +4,15 @@ package victor.training.java8.advanced;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.util.EnumMap;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
 enum MovieType {
    REGULAR(FunctionsOnEnums::computeRegularPrice),
    NEW_RELEASE(FunctionsOnEnums::computeNewReleasePrice),
-   CHILDREN(FunctionsOnEnums::computeChildrenPrice);
+   CHILDREN(FunctionsOnEnums::computeChildrenPrice),
+   ELDERS(null);
 
    public final BiFunction<FunctionsOnEnums, Integer, Integer> priceFunction;
 
@@ -20,7 +22,6 @@ enum MovieType {
 }
 
 public class FunctionsOnEnums {
-
    public static void main(String[] args) {
      new FunctionsOnEnums().play();
    }
@@ -32,18 +33,12 @@ public class FunctionsOnEnums {
    }
 
    public int computePrice(MovieType type, int days) {
-//      switch (type) {
-//         case REGULAR:
-//            return computeRegularPrice(days);
-//         case NEW_RELEASE:
-//            return computeNewReleasePrice(days);
-//         case CHILDREN:
-//            return computeChildrenPrice(days);
-//         default:
-//            throw new IllegalStateException("Unexpected value: " + type);
-//      }
-
-      return type.priceFunction.apply(this, days);
+      return switch (type) {
+         case REGULAR -> computeRegularPrice(days);
+         case NEW_RELEASE -> computeNewReleasePrice(days);
+         case CHILDREN -> computeChildrenPrice(days);
+         case ELDERS -> 0;
+      };
    }
 
 //   @Value("${}")
