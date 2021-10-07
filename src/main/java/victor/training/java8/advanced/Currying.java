@@ -1,20 +1,22 @@
 package victor.training.java8.advanced;
 
+import org.aspectj.weaver.patterns.TypePatternQuestions.Question;
+
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class Currying {
 
    public static void main(String[] args) {
-      Function<Integer, Integer> add1 = partialApply(Integer::sum, 1);
-      System.out.println(add1.apply(2));
 
-      Function<Integer, Integer> max2 = partialApply(Integer::max, 2);
-      System.out.println(max2.apply(5));
-      System.out.println(max2.apply(1));
+      Function<Integer, Integer> f10 = partialApply(Integer::sum, 10);
+
+      System.out.println(f10.apply(2));
+
    }
 
-   public static Function<Integer, Integer> partialApply(BiFunction<Integer, Integer, Integer> f, int arg1) {
-      return arg2 -> f.apply(arg1, arg2);
+   private static  <T1, T2, R>  Function<T2, R> partialApply(BiFunction<T1, T2, R> f, T1 arg0) {
+      return arg1 -> f.apply(arg0, arg1);
    }
+
 }
