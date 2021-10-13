@@ -24,7 +24,7 @@ public class StreamWreck {
 
 	public List<Product> getFrequentOrderedProducts(List<Order> orders) {
 		List<Product> frequentProducts = getRecentOrderedProducts(orders).entrySet().stream()
-			.filter(e -> e.getValue() >= 10)
+			.filter(e -> met(e)) // fixme
 			.map(Entry::getKey)
 			.collect(toList());
 
@@ -35,6 +35,12 @@ public class StreamWreck {
 				.filter(p -> !hiddenProducts.contains(p))
 				.toList();
 
+	}
+
+	private boolean met(Entry<Product, Integer> e) {
+		////
+		///
+		return e.getValue() >= 10;
 	}
 
 	private Map<Product, Integer> getRecentOrderedProducts(List<Order> orders) {
