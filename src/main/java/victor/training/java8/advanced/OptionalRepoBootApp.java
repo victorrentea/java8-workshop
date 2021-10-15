@@ -13,7 +13,7 @@ import victor.training.java8.advanced.repo.custom.CustomJpaRepositoryFactoryBean
 import javax.persistence.EntityManager;
 
 @RequiredArgsConstructor
-//@EnableJpaRepositories(repositoryFactoryBeanClass = CustomJpaRepositoryFactoryBean.class)
+@EnableJpaRepositories(repositoryFactoryBeanClass = CustomJpaRepositoryFactoryBean.class)
 @SpringBootApplication
 public class OptionalRepoBootApp implements CommandLineRunner {
    public static void main(String[] args) {
@@ -24,12 +24,14 @@ public class OptionalRepoBootApp implements CommandLineRunner {
    @Transactional(readOnly=true)
    public void run(String... args) throws Exception {
       productRepo.save(new Product("Tree").setDeleted(true));
+
       System.out.println(productRepo.findByNameContaining("re"));
-//      System.out.println(productRepo.findByNameContaining("rx")); // finds nothing
+
+      System.out.println(productRepo.findByNameContaining("rx")); // finds nothing
 
       // Optional Abuse?
-      // Product p = productRepo.findById(13L);
-
+       Product p = productRepo.findById(13L).get();
+      Product direct = productRepo.getExactlyOne(13L);
 
       // Streaming queries
        productRepo.streamAllByDeletedTrue()
