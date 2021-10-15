@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import victor.training.java8.advanced.repo.OrderRepo;
+import victor.training.java8.advanced.repo.UserRepo;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -25,23 +27,17 @@ import java.util.function.Consumer;
 //@RefresScope
 @Service
 class OrderExporter {
-   @Autowired
-   private OrderRepo orderRepo;
+   // GUNOI
    @Value("${export.folder.out}")
    private File folder;
 
-   public void exportFile() {
-      File file = new File(folder, "orders.csv");
+   public void exportFile(String fileName, Consumer<Writer> contentWriter) {
+      File file = new File(folder, fileName);
       long t0 = System.currentTimeMillis();
       try (Writer writer = new FileWriter(file)) {
          System.out.println("Starting export to: " + file.getAbsolutePath());
 
-         writer.write("OrderID;Date\n");
-
-         orderRepo.findByActiveTrue()
-             .map(o -> o.getId() + ";" + o.getCreationDate() + "\n")
-             .forEach(Unchecked.consumer(writer::write));
-//             .forEach(imbraca(writer::write));
+         contentWriter.accept(writer);
 
          System.out.println("File export completed: " + file.getAbsolutePath());
       } catch (Exception e) {
@@ -50,6 +46,31 @@ class OrderExporter {
       } finally {
          System.out.println("Export finished in: " + (System.currentTimeMillis() - t0));
       }
+   }
+
+}
+
+@Component
+class ExportContentWriters {
+   @Autowired
+   private OrderRepo orderRepo;
+   @Autowired
+   private UserRepo userRepo;
+   // FORMAT LOGIC CRITIC PT APP CARE PRIMESC PRIMESC ACESTE FISIER
+   @SneakyThrows
+   public void writeOrderContent(Writer writer)  {
+      writer.write("OrderID;Date\n");
+      orderRepo.findByActiveTrue()
+          .map(o -> o.getId() + ";" + o.getCreationDate() + "\n")
+          .forEach(Unchecked.consumer(writer::write));
+   }
+
+   @SneakyThrows
+   public void writeUserContent(Writer writer)  {
+      writer.write("username;fullname\n");
+      userRepo.findAll().stream()
+          .map(u -> u.getUsername() + ";"+u.getFullName() + "\n")
+          .forEach(Unchecked.consumer(writer::write));
    }
 
    public static <T> Consumer<T> imbraca(ConsumerCareArunca<T> consumerOrig) {
@@ -62,7 +83,6 @@ class OrderExporter {
          }
       };
    }
-
    private void writeSafely(Writer writer, String s) {
       try {
          writer.write(s);
@@ -80,9 +100,11 @@ public class LoanPattern implements CommandLineRunner {
    }
 
    private final OrderExporter orderExporter;
+   private final ExportContentWriters exportContentWriters;
 
    public void run(String... args) throws Exception {
-      orderExporter.exportFile();
+      orderExporter.exportFile("orders.csv", exportContentWriters::writeOrderContent);
+      orderExporter.exportFile("users.csv", exportContentWriters::writeUserContent);
    }
 }
 
