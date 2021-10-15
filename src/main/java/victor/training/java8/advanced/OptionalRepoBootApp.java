@@ -4,11 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.Transactional;
 import victor.training.java8.advanced.model.Product;
 import victor.training.java8.advanced.repo.ProductRepo;
+import victor.training.java8.advanced.repo.custom.CustomJpaRepositoryFactoryBean;
 
 @RequiredArgsConstructor
+//@EnableJpaRepositories(repositoryFactoryBeanClass = CustomJpaRepositoryFactoryBean.class)
 @SpringBootApplication
 public class OptionalRepoBootApp implements CommandLineRunner {
    public static void main(String[] args) {

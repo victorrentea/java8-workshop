@@ -7,33 +7,41 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 
 
 public class Order {
-
-	public enum Status {
-		DRAFT, ACTIVE, INACTIVE
+   public enum Status {
+		DRAFT, ACTIVE, INACTIVE;
 	}
-	
+
+
 	public enum PaymentMethod {
 		CARD,
 		CASH_ON_SITE,
-		CASH_ON_DELIVERY
+		CASH_ON_DELIVERY;
 	}
-	
 	private Long id;
+
 	private Status status;
 	private List<OrderLine> orderLines;
 	private LocalDate creationDate;
 	private BigDecimal totalPrice;
 	private PaymentMethod paymentMethod;
-	
 	private LocalDate deliveryDueDate;
-	private Customer customer;
 
+	private Customer customer;
 	public Order() {
 	}
-	
+
+	//1
+	public static final Predicate<Order> isActive = order -> order.status == Status.ACTIVE;
+
+	//2 preferam
+	public boolean isActive() {
+		return status == Status.ACTIVE;
+	}
+
 	public Order(Status status) {
 		this.status = status;
 	}

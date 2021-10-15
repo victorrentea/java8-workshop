@@ -41,7 +41,7 @@ public class SearchStreamsTest {
 //	@Ignore
 	public void p2_getOrderById_whenIdNotFound() {
 		List<Order> orders = Arrays.asList(new Order(1L));
-		assertEquals(null, service.p2_getOrderById(orders, 1000L));
+		assertThrows(RuntimeException.class, () -> service.p2_getOrderById(orders, 1000L));
 	}
 
 	@Test

@@ -1,27 +1,26 @@
 package victor.training.java8.stream.order;
 
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.*;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.summingLong;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 
-import java.io.File;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.nio.file.Files;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BiFunction;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import victor.training.java8.stream.order.dto.OrderDto;
 import victor.training.java8.stream.order.entity.Customer;
 import victor.training.java8.stream.order.entity.Order;
@@ -34,7 +33,7 @@ class Person {
 	private String name;
 	private int age;
 }
-class Wine{}
+@Component
 class OrderMapper {
 	public OrderDto toDto(Order order) {
 		OrderDto dto = new OrderDto();
@@ -43,83 +42,66 @@ class OrderMapper {
 		return dto;
 	}
 }
+
+@Service
 @RequiredArgsConstructor
 public class TransformStreams {
-	private OrderMapper orderMapper;
+	private OrderMapper orderMapper = new OrderMapper();
 
 	/**
 	 * Transform all entities to DTOs.
 	 * Discussion:.. Make it cleanest!
 	 */
 	public List<OrderDto> p01_toDtos(List<Order> orders) {
-		
-		List<OrderDto> dtos = new ArrayList<>();
-//		for (Order order : orders) {
-//			dtos.add(toDto(order));
-//		}
+
+		// caz1: referi metoda de instanta prin numele Clasei . tipic in .filter
+		BiFunction<OrderMapper, Order, OrderDto> f2 = OrderMapper::toDto; // metoda de instanta referita prin numele clasei (fara o instanta disponibila)
+		OrderDto dto = f2.apply(orderMapper, new Order());
+
+		// caz2: referi metoda de instanta dintr-o instanta pe care o ai deja: tipic in .map
 		Function<Order, OrderDto> f = orderMapper::toDto;
+		Function<Order, OrderDto> ff = this::toDto;
+		OrderDto dto2 = f.apply(new Order());
 
+		// caz3: referi metoda statica
+		Function<String,Integer> f3 = Integer::parseInt;
+		Function<String, LocalDateTime> f4 = LocalDateTime::parse;
+		Function<CharSequence , LocalDateTime> f5 = LocalDateTime::parse;
 
-		Function<String, Integer> f1 = s-> Integer.parseInt(s);
-		Function<String, Integer> f1b = Integer::parseInt;
+		// caz 4: referi consturctor
+		Supplier<Date> wth = Date::new;
+		System.out.println(wth);
 
-		Function<List<?>, Integer> f3 = list -> list.size();
-		Function<List<?>, Integer> f3b = List::size;
-		Integer apply = f3.apply(orders);
+		Supplier<Date> wth2 = new Supplier<Date>() {
+			@Override
+			public Date get() {
+				return new Date();
+			}
+		};
+		System.out.println(wth2);
 
-
-		// Function, Consumer, Supplier, Predicate,
-		Supplier<Integer> f4 = () -> orders.size();
-		Integer integer = f4.get();
-
-		Consumer<Wine> beutor =  wine -> bea(wine) ;
-		Consumer<Wine> beutorb =  this::bea ;
-		beutor.accept(new Wine());
-
-		Person person = new Person();
-
-		Supplier<String> f5 = () -> person.getName();
-		Supplier<String> f5b = person::getName;
-
-		Function<Person, String> f6 = pp -> pp.getName();
-		Function<Person, String> f6b = Person::getName;
-		String apply1 = f6b.apply(person);
-
-		Date date = new Date();
-		Supplier<Date> f7 = () -> new Date();
-		Supplier<Date> f7b = Date::new;
-		Function<Long, Date> f7c = Date::new;
-
-
-
-		// target typing : pt orice lambda sau ::, compilatorul trebuie sa stie la ce TIP atribui acea expresie
-//		Object o1 = Date::new;
-//		Object o2 = () -> new Date();
-
-		BiFunction<OrderMapper, Order, OrderDto> f8 =  OrderMapper :: toDto;// f( OrderMapper, Order  ):OrderDto
-
-
-		// cand referi o metoda de instanta fara sa referi vreo existenta existenta( eg Person::getName) atunci
-		// primul param din functia extrasa va trebui sa fie obiectul pe care invoci acea metoda de instanta
-
-		dtos = orders.stream().map(orderMapper::toDto).collect(toList());
-//		dtos = orders.stream().map(this::toDto).collect(toList());
-//		dtos = orders.stream().map(order -> toDto(order)).collect(toList());
+		List<OrderDto> dtos = orders.stream()
+			.map(this::toDto)
+//			.map(mapper::toDto)
+			.collect(toList());
 		return dtos;
-		
-	}
-	void bea(Wine wine) {
-		System.out.println("Gal gal!");
 	}
 
-
+	public OrderDto toDto(Order order) {
+		OrderDto dto = new OrderDto();
+		dto.totalPrice = order.getTotalPrice();
+		dto.creationDate = order.getCreationDate();
+		return dto;
+	}
 
 
 	/**
 	 * Note: Order.getPaymentMethod()
 	 */
 	public Set<PaymentMethod> p02_getUsedPaymentMethods(Customer customer) {
-		return null; 
+		return customer.getOrders().stream()
+			.map(Order::getPaymentMethod)
+			.collect(toSet());
 	}
 	
 	/**
@@ -127,7 +109,9 @@ public class TransformStreams {
 	 * Note: Order.getCreationDate()
 	 */
 	public SortedSet<LocalDate> p03_getOrderDatesAscending(Customer customer) {
-		return null; 
+		return customer.getOrders().stream()
+			.map(Order::getCreationDate)
+			.collect(toCollection(TreeSet::new));
 	}
 	
 	
@@ -135,14 +119,16 @@ public class TransformStreams {
 	 * @return a map order.id -> order
 	 */
 	public Map<Long, Order> p04_mapOrdersById(Customer customer) {
-		return null; 
+		return customer.getOrders().stream()
+			.collect(toMap(Order::getId, identity()));
 	}
 	
 	/** 
 	 * Orders grouped by Order.paymentMethod
 	 */
 	public Map<PaymentMethod, List<Order>> p05_getProductsByPaymentMethod(Customer customer) {
-		return null; 
+		return customer.getOrders().stream()
+			.collect(groupingBy(Order::getPaymentMethod));
 	}
 	
 	// -------------- MOVIE BREAK :p --------------------
@@ -155,13 +141,10 @@ public class TransformStreams {
 	 * i.e. SELECT PROD_ID, SUM(COUNT) FROM PROD GROUPING BY PROD_ID
 	 */
 	public Map<Product, Long> p06_getProductCount(Customer customer) {
-		
-		List<OrderLine> allLines = new ArrayList<>();
-		
-		for (Order order : customer.getOrders()) {
-			allLines.addAll(order.getOrderLines());
-		}
-		return null; 
+		return customer.getOrders().stream()
+			.flatMap(order -> order.getOrderLines().stream())
+			.collect(groupingBy(OrderLine::getProduct, summingLong(OrderLine::getCount)));
+		// SUM(LINE.COUNT)    ...  GROUPING BY LINE.PRODUCT_ID
 		
 	}
 	
@@ -170,7 +153,12 @@ public class TransformStreams {
 	 * sorted by Product.name.
 	 */
 	public List<Product> p07_getAllOrderedProducts(Customer customer) {
-		return null; 
+		 return customer.getOrders().stream()
+			.flatMap(order -> order.getOrderLines().stream())
+			 .map(OrderLine::getProduct)
+			 .distinct()
+			 .sorted(Comparator.comparing(Product::getName))
+			 .collect(toList());
 	}
 	
 	
@@ -181,7 +169,9 @@ public class TransformStreams {
 	 * Hint: Reuse the previous function.
 	 */
 	public String p08_getProductsJoined(Customer customer) {
-		return null; 
+		return p07_getAllOrderedProducts(customer).stream()
+			.map(Product::getName)
+			.collect(joining(","));
 	}
 	
 	/**
@@ -189,6 +179,30 @@ public class TransformStreams {
 	 */
 	public Long p09_getApproximateTotalOrdersPrice(Customer customer) {
 		// TODO +, longValue(), reduce()
-		return null;
+		return customer.getOrders().stream()
+			.mapToLong(order-> order.getTotalPrice().longValue()).sum();
+//			.map(Order::getTotalPrice).collect(summingLong(BigDecimal::intValue));
+//			.map(Order::getTotalPrice).reduce(BigDecimal.ZERO, BigDecimal::add).longValue();
+
+		// NU:
+//		AtomicLong sum = new AtomicLong();
+//		customer.getOrders().forEach(order -> {
+//			sum.addAndGet(order.getTotalPrice().longValue());
+//		});
+//		return sum.get();
 	}
+//	// joc absurd
+//	public static Supplier<Integer> method() {
+//		long acc = 0; // stack
+//		return () -> {
+//			return ++ acc; // in jS merge. limbaj js a fost dezvoltat in 10 zile lucratoare.
+//		};
+//	}
+//
+//	public static void main(String[] args) {
+//		Supplier<Integer> s = method();
+//		s.get();
+//		s.get();
+//		s.get();
+//	}
 }
