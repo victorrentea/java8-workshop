@@ -13,15 +13,16 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.time.LocalDate;
-import java.util.*;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import victor.training.java8.stream.order.dto.OrderDto;
 import victor.training.java8.stream.order.entity.Customer;
 import victor.training.java8.stream.order.entity.Order;
@@ -29,23 +30,7 @@ import victor.training.java8.stream.order.entity.OrderLine;
 import victor.training.java8.stream.order.entity.Product;
 import victor.training.java8.stream.order.entity.Order.PaymentMethod;
 
-@Data
-class Person {
-	private String name;
-	private int age;
-}
-class Wine{}
-class OrderMapper {
-	public OrderDto toDto(Order order) {
-		OrderDto dto = new OrderDto();
-		dto.totalPrice = order.getTotalPrice();
-		dto.creationDate = order.getCreationDate();
-		return dto;
-	}
-}
-@RequiredArgsConstructor
 public class TransformStreams {
-	private OrderMapper orderMapper;
 
 	/**
 	 * Transform all entities to DTOs.
@@ -54,66 +39,15 @@ public class TransformStreams {
 	public List<OrderDto> p01_toDtos(List<Order> orders) {
 		
 		List<OrderDto> dtos = new ArrayList<>();
-//		for (Order order : orders) {
-//			dtos.add(toDto(order));
-//		}
-		Function<Order, OrderDto> f = orderMapper::toDto;
-
-
-		Function<String, Integer> f1 = s-> Integer.parseInt(s);
-		Function<String, Integer> f1b = Integer::parseInt;
-
-		Function<List<?>, Integer> f3 = list -> list.size();
-		Function<List<?>, Integer> f3b = List::size;
-		Integer apply = f3.apply(orders);
-
-
-		// Function, Consumer, Supplier, Predicate,
-		Supplier<Integer> f4 = () -> orders.size();
-		Integer integer = f4.get();
-
-		Consumer<Wine> beutor =  wine -> bea(wine) ;
-		Consumer<Wine> beutorb =  this::bea ;
-		beutor.accept(new Wine());
-
-		Person person = new Person();
-
-		Supplier<String> f5 = () -> person.getName();
-		Supplier<String> f5b = person::getName;
-
-		Function<Person, String> f6 = pp -> pp.getName();
-		Function<Person, String> f6b = Person::getName;
-		String apply1 = f6b.apply(person);
-
-		Date date = new Date();
-		Supplier<Date> f7 = () -> new Date();
-		Supplier<Date> f7b = Date::new;
-		Function<Long, Date> f7c = Date::new;
-
-
-
-		// target typing : pt orice lambda sau ::, compilatorul trebuie sa stie la ce TIP atribui acea expresie
-//		Object o1 = Date::new;
-//		Object o2 = () -> new Date();
-
-		BiFunction<OrderMapper, Order, OrderDto> f8 =  OrderMapper :: toDto;// f( OrderMapper, Order  ):OrderDto
-
-
-		// cand referi o metoda de instanta fara sa referi vreo existenta existenta( eg Person::getName) atunci
-		// primul param din functia extrasa va trebui sa fie obiectul pe care invoci acea metoda de instanta
-
-		dtos = orders.stream().map(orderMapper::toDto).collect(toList());
-//		dtos = orders.stream().map(this::toDto).collect(toList());
-//		dtos = orders.stream().map(order -> toDto(order)).collect(toList());
+		for (Order order : orders) {
+			OrderDto dto = new OrderDto();
+			dto.totalPrice = order.getTotalPrice();
+			dto.creationDate = order.getCreationDate();
+			dtos.add(dto);
+		}
 		return dtos;
 		
 	}
-	void bea(Wine wine) {
-		System.out.println("Gal gal!");
-	}
-
-
-
 
 	/**
 	 * Note: Order.getPaymentMethod()

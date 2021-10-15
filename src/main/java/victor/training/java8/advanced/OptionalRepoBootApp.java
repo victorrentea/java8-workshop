@@ -11,7 +11,7 @@ import victor.training.java8.advanced.repo.ProductRepo;
 import victor.training.java8.advanced.repo.custom.CustomJpaRepositoryFactoryBean;
 
 @RequiredArgsConstructor
-//@EnableJpaRepositories(repositoryFactoryBeanClass = CustomJpaRepositoryFactoryBean.class)
+@EnableJpaRepositories(repositoryFactoryBeanClass = CustomJpaRepositoryFactoryBean.class)
 @SpringBootApplication
 public class OptionalRepoBootApp implements CommandLineRunner {
    public static void main(String[] args) {
