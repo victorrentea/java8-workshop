@@ -20,13 +20,10 @@ public class SplitLoopToStream {
       int totalTickets = 0;
       for (User user : users) {
          allUsernames.add(user.getUsername());
+      }
+      for (User user : users) {
          if (!user.getActive()) {
             insertAlertInactive(user.getId());
-            continue;
-         }
-         totalTickets += user.getTicketsRaised();
-         if (user.getLanguage() == null) {
-            noLanguageCount++;
          }
       }
       double noLanguagePercent = 100d * noLanguageCount / users.size();
