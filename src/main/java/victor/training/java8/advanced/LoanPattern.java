@@ -31,13 +31,18 @@ class OrderExporter {
    @Value("${export.folder.out}")
    private File folder;
 
-   public void exportFile(String fileName, Consumer<Writer> contentWriter) {
+
+   @FunctionalInterface
+   interface ContentWriter {
+      void writeToFile(Writer writer) throws Exception;
+   }
+   public void exportFile(String fileName, ContentWriter contentWriter) {
       File file = new File(folder, fileName);
       long t0 = System.currentTimeMillis();
       try (Writer writer = new FileWriter(file)) {
          System.out.println("Starting export to: " + file.getAbsolutePath());
 
-         contentWriter.accept(writer);
+         contentWriter.writeToFile(writer);
 
          System.out.println("File export completed: " + file.getAbsolutePath());
       } catch (Exception e) {
@@ -47,7 +52,6 @@ class OrderExporter {
          System.out.println("Export finished in: " + (System.currentTimeMillis() - t0));
       }
    }
-
 }
 
 @Component
@@ -57,16 +61,14 @@ class ExportContentWriters {
    @Autowired
    private UserRepo userRepo;
    // FORMAT LOGIC CRITIC PT APP CARE PRIMESC PRIMESC ACESTE FISIER
-   @SneakyThrows
-   public void writeOrderContent(Writer writer)  {
+   public void writeOrderContent(Writer writer) throws IOException {
       writer.write("OrderID;Date\n");
       orderRepo.findByActiveTrue()
           .map(o -> o.getId() + ";" + o.getCreationDate() + "\n")
           .forEach(Unchecked.consumer(writer::write));
    }
 
-   @SneakyThrows
-   public void writeUserContent(Writer writer)  {
+   public void writeUserContent(Writer writer) throws IOException {
       writer.write("username;fullname\n");
       userRepo.findAll().stream()
           .map(u -> u.getUsername() + ";"+u.getFullName() + "\n")
@@ -94,7 +96,7 @@ class ExportContentWriters {
 
 @RequiredArgsConstructor
 @SpringBootApplication
-public class LoanPattern implements CommandLineRunner {
+public class LoanPattern /*implements CommandLineRunner*/ {
    public static void main(String[] args) {
       SpringApplication.run(LoanPattern.class, args);
    }

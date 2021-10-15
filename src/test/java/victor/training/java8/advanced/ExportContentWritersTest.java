@@ -11,6 +11,7 @@ import victor.training.java8.advanced.model.Order;
 import victor.training.java8.advanced.repo.OrderRepo;
 
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.time.LocalDate;
@@ -26,7 +27,7 @@ private OrderRepo orderRepo;
 private ExportContentWriters target;
 
    @Test
-   void writeOrderContent() {
+   void writeOrderContent() throws IOException {
       Order order = new Order().setId(13L).setCreationDate(LocalDate.parse("2021-10-15"));
       Mockito.when(orderRepo.findByActiveTrue()).thenReturn(Stream.of(order));
 
