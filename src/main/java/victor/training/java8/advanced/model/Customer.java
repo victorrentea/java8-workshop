@@ -1,8 +1,15 @@
 package victor.training.java8.advanced.model;
 
+import com.sun.istack.NotNull;
+
+import java.util.Optional;
+
+import static java.util.Optional.ofNullable;
+
 // @Entity - The HOLY ENTITY !
 public class Customer {
-   private MemberCard memberCard;
+   private String name; // NOT NULL in db
+   private MemberCard memberCard; // reflection
 
    public Customer() {
    }
@@ -11,7 +18,16 @@ public class Customer {
       this.memberCard = profile;
    }
 
-   public MemberCard getMemberCard() {
-      return memberCard;
+   public String getName() {
+      return name;
    }
+
+   public Optional<MemberCard> getMemberCard() {
+      return ofNullable(memberCard);
+   }
+
+//   {
+//      Customer c = new Customer();
+//      repo.save(c)
+//   }
 }
