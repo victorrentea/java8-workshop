@@ -30,8 +30,8 @@ public class OptionalRepoBootApp implements CommandLineRunner {
       System.out.println(productRepo.findByNameContaining("rx")); // finds nothing
 
       // Optional Abuse?
-       Product p = productRepo.findById(13L).get();
-      Product direct = productRepo.getExactlyOne(13L);
+//       Product p = productRepo.findById(13L).get();
+//      Product direct = productRepo.getExactlyOne(13L);
 
       // Streaming queries
        productRepo.streamAllByDeletedTrue()
