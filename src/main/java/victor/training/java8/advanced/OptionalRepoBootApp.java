@@ -33,6 +33,8 @@ public class OptionalRepoBootApp implements CommandLineRunner {
       Product product = productRepo.findById(productId).get();
 
 
+
+      // PLEASE DON'T USE IT UNLESS EXPORTING 10k elements. More? ===> Spring Batch
       productRepo.streamAllByDeletedTrue()
           // avoids Hirnate piling up copies of all entities given to you
           .peek(e -> entityManager.detach(e)) // side effects BEAH but necessary for adults (performance)

@@ -20,4 +20,7 @@ public class Order {
    private Customer customer;
    private Boolean active;
 
+   public boolean isAfter(LocalDate date) {
+      return creationDate.isAfter(date);
+   }
 }

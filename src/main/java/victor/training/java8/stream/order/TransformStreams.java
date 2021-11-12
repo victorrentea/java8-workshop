@@ -38,15 +38,22 @@ public class TransformStreams {
 	 */
 	public List<OrderDto> p01_toDtos(List<Order> orders) {
 		
-		List<OrderDto> dtos = new ArrayList<>();
-		for (Order order : orders) {
-			OrderDto dto = new OrderDto();
-			dto.totalPrice = order.getTotalPrice();
-			dto.creationDate = order.getCreationDate();
-			dtos.add(dto);
-		}
-		return dtos;
+//		List<OrderDto> dtos = new ArrayList<>();
+//		for (Order order : orders) {
+//			OrderDto dto = new OrderDto();
+//			dto.totalPrice = order.getTotalPrice();
+//			dto.creationDate = order.getCreationDate();
+//			dtos.add(dto);
+//		}
+		return orders.stream().map(this::toDto).toList(); //.collect(toList());
 		
+	}
+
+	private OrderDto toDto(Order order) {
+		OrderDto dto = new OrderDto();
+		dto.totalPrice = order.getTotalPrice();
+		dto.creationDate = order.getCreationDate();
+		return dto;
 	}
 
 	/**

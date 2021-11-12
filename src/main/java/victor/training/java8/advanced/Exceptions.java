@@ -1,14 +1,9 @@
 package victor.training.java8.advanced;
 
-import io.vavr.control.Try;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toList;
 
 public class Exceptions {
 
@@ -17,9 +12,23 @@ public class Exceptions {
    public List<LocalDate> parseDates(List<String> dateStrList) {
       DateTimeFormatter pattern = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-      List<LocalDate> dates = dateStrList.stream()
-          .map(text -> LocalDate.parse(text, pattern))
-          .collect(toList());
+      int errors = 0;
+      List<LocalDate> dates = new ArrayList<>();
+      for (String text : dateStrList) {
+         try {
+            dates.add(LocalDate.parse(text, pattern));
+         } catch (Exception e) {
+            errors++;
+         }
+      }
+
+      if (errors > dateStrList.size() / 2) {
+         throw new IllegalArgumentException();
+      }
+
+//      List<LocalDate> dates = dateStrList.stream()
+//          .map(text -> LocalDate.parse(text, pattern))
+//          .collect(toList());
 
       return dates;
    }
