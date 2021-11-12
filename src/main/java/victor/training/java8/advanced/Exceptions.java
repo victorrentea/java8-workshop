@@ -1,5 +1,7 @@
 package victor.training.java8.advanced;
 
+import io.vavr.control.Try;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -13,31 +15,26 @@ public class Exceptions {
    public List<LocalDate> parseDates(List<String> dateStrList) {
       DateTimeFormatter pattern = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+      // MONAD as Optional, Stream, Flux, Mono, $ , Observable, CompletableFuture
+//      Try<LocalDate> t = Try.of(() -> LocalDate.parse("text", pattern));
+//      t.flatMap(date -> Try.of( () -> "a"));
 
-      final int[] errors = {0}; // FIELD !?!!?
-      List<LocalDate> dates = dateStrList.stream()
-          .map(text -> {
 
-             try {
-                return LocalDate.parse(text, pattern);
-             } catch (Exception e) {
-                errors[0]++;
-             }
-          })
+      int errors = 0;
+      List<Try<LocalDate>> tries = dateStrList.stream()
+          .map(text -> Try.of(() -> LocalDate.parse(text, pattern)))
           .collect(Collectors.toList());
-      //         try {
-      //         } catch (Exception e) {
-      //            errors++;
-      //         }
 
-      if (errors[0] > dateStrList.size() / 2) {
+      // practical usages :
+      /// MUST when you iterate 2GB of data and extract  a total of 10KB + erorrs.
+      // ? beeing geek <<
+
+      // >> Reactive Programming / CompletableFutures
+
+      if (tries.stream().filter(Try::isFailure).count() > dateStrList.size() / 2) {
          throw new IllegalArgumentException();
       }
 
-//      List<LocalDate> dates = dateStrList.stream()
-//          .map(text -> LocalDate.parse(text, pattern))
-//          .collect(toList());
-
-      return dates;
+      return tries.stream().filter(Try::isSuccess).map(Try::get).toList();
    }
 }
