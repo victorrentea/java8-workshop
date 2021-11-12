@@ -14,7 +14,18 @@ public class Sealed {
           new Circle(5),
           new Square(5));
 
-      double totalPerimeter = shapes.stream().mapToDouble(Shape::perimeter).sum();
+//      double totalPerimeter = shapes.stream().mapToDouble(Shape::perimeter).sum();
+      double totalPerimeter = shapes.stream().mapToDouble(shape -> {
+
+         if (shape instanceof Circle circle) {
+            return circle.radius() * Math.PI * 2;
+         } else if (shape instanceof Square square) {
+            return square.edge() * 4;
+         } else {
+            throw new IllegalArgumentException("WTH!?");
+         }
+
+      }).sum();
 
 
       System.out.println("Total perimeter: " + totalPerimeter); // TODO
@@ -24,23 +35,18 @@ public class Sealed {
 }
 
 interface Shape {
-   double perimeter();
 }
+//record Rectangle(int widhth, int height) implements  Shape {
+//}
 record Circle(int radius) implements  Shape {
-   @Override
-   public double perimeter() {
-      return radius * Math.PI * 2;
-   }
 }
 record Square(int edge) implements  Shape {
-   @Override
-   public double perimeter() {
-      return edge * 4;
-   }
 }
 
+//1: shared code between subtypes.
+class AsciiHelper {
 
-
+}
 
 
 
