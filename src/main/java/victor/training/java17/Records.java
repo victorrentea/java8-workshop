@@ -18,26 +18,34 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class Records {
 
+   // Hibernate != records  at best @Embeddable
+   // Mongo stores records OK
+   // Jackson (JSON) will support records
+
 
    // TODO Use-case: Tuples (see Stream Wreck)
-   public Map<Long, List<Tuple2<String, Integer>>> extremeFP() {
+   public Map<CustomerId, List<Tuple2<ProductName, Integer>>> extremeFP() {
       Long customerId = 1L;
       Integer product1Count = 2;
       Integer product2Count = 4;
-      return Map.of(customerId, List.of(
-          Tuple.tuple("Table", product1Count),
-          Tuple.tuple("Chair", product2Count)
+      return Map.of(new CustomerId(customerId), List.of(
+          Tuple.tuple(new ProductName("Table"), product1Count),
+          Tuple.tuple(new ProductName("Chair"), product2Count)
       ));
    }
 
+   record ProductName(String name) {}
+   record CustomerId(Long id) {}
+
    @Test
    void lackOfAbstractions() {
-      Map<Long, List<Tuple2<String, Integer>>> map = extremeFP();
+      // customerId -> [{productName->count}]
+      Map<CustomerId, List<Tuple2<ProductName, Integer>>> map = extremeFP();
       // Joke: try "var" above :)
 
-      for (Long cid : map.keySet()) { // code smell
-         String pl = map.get(cid).stream().map(t -> t.v2 + " of " + t.v1).collect(joining());
-         System.out.println("cid=" + cid + " bought " + pl);
+      for (CustomerId customerId : map.keySet()) { // code smell
+         String pl = map.get(customerId).stream().map(t -> t.v2 + " of " + t.v1.name).collect(joining(" and "));
+         System.out.println("cid=" + customerId.id + " bought " + pl);
       }
    }
 
@@ -62,11 +70,6 @@ public class Records {
 //      obj.list().add(1);
    }
 }
-
-// methods: add extra, overriding generated
-// constructor:
-// inheritance:
-
 record AnotherSuper(int x) {
 }
 
