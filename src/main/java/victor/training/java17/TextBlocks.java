@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.test.web.servlet.MockMvc;
 import victor.training.java8.advanced.model.Order;
 
-import java.awt.PageAttributes.MediaType;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -28,7 +27,6 @@ public class TextBlocks {
    @Test
    void test() throws Exception {
       mockMvc.perform(post("/product/search")
-              .contentType("application/json")
               .content("{\"name\":\"somth\"}") // add one more criteria
           )
           .andExpect(status().isOk()) // 200

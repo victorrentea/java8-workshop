@@ -1,9 +1,11 @@
 package victor.training.java17;
 
+import com.google.common.collect.ImmutableList;
 import org.jooq.lambda.tuple.Tuple;
 import org.jooq.lambda.tuple.Tuple2;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -41,7 +43,7 @@ public class Records {
    @Test
    void immutables() {
       List<Integer> numbers = IntStream.range(1, 10).boxed().toList();
-      Immutable obj = new Immutable("John", new Other("halo"), numbers);
+      Immutable obj = new Immutable("John", new Other("halo"), ImmutableList.copyOf(numbers));
 
       String original = obj.toString();
       System.out.println(obj);
@@ -55,6 +57,7 @@ public class Records {
 
    private static void unkownFierceCode(Immutable obj) {
       // TODO what can go wrong here ?
+      obj.getList().clear();
    }
 }
 
@@ -66,9 +69,9 @@ public class Records {
 class Immutable {
    private final String name;
    private final Other other;
-   private final List<Integer> list;
+   private final ImmutableList<Integer> list; // hibenrate says NO
 
-   public Immutable(String name, Other other, List<Integer> list) {
+   public Immutable(String name, Other other, ImmutableList<Integer> list) {
       this.name = name;
       this.other = other;
       this.list = list;
@@ -82,7 +85,12 @@ class Immutable {
       return other;
    }
 
-   public List<Integer> getList() {
+   // 90%
+//   public List<Integer> getList() {
+//      return Collections.unmodifiableList(list);
+//   }
+
+   public ImmutableList<Integer> getList() {
       return list;
    }
 
@@ -93,12 +101,10 @@ class Immutable {
       Immutable immutable = (Immutable) o;
       return Objects.equals(name, immutable.name) && Objects.equals(other, immutable.other) && Objects.equals(list, immutable.list);
    }
-
    @Override
    public int hashCode() {
       return Objects.hash(name, other, list);
    }
-
    @Override
    public String toString() {
       return "Immutable{" +
@@ -110,7 +116,7 @@ class Immutable {
 }
 
 class Other {
-   private String data;
+   private final String data;
 
    public Other(String data) {
       this.data = data;
@@ -120,10 +126,10 @@ class Other {
       return data;
    }
 
-   public Other setData(String data) {
-      this.data = data;
-      return this;
-   }
+//   public Other setData(String data) {
+//      this.data = data;
+//      return this;
+//   }
 
    @Override
    public String toString() {
