@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Exceptions {
 
@@ -12,17 +13,24 @@ public class Exceptions {
    public List<LocalDate> parseDates(List<String> dateStrList) {
       DateTimeFormatter pattern = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-      int errors = 0;
-      List<LocalDate> dates = new ArrayList<>();
-      for (String text : dateStrList) {
-         try {
-            dates.add(LocalDate.parse(text, pattern));
-         } catch (Exception e) {
-            errors++;
-         }
-      }
 
-      if (errors > dateStrList.size() / 2) {
+      final int[] errors = {0}; // FIELD !?!!?
+      List<LocalDate> dates = dateStrList.stream()
+          .map(text -> {
+
+             try {
+                return LocalDate.parse(text, pattern);
+             } catch (Exception e) {
+                errors[0]++;
+             }
+          })
+          .collect(Collectors.toList());
+      //         try {
+      //         } catch (Exception e) {
+      //            errors++;
+      //         }
+
+      if (errors[0] > dateStrList.size() / 2) {
          throw new IllegalArgumentException();
       }
 
