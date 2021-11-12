@@ -1,6 +1,8 @@
 package victor.training.java17;
 
 import org.junit.jupiter.api.Test;
+import victor.training.java17.Shape.Circle;
+import victor.training.java17.Shape.Square;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,45 +19,47 @@ public class Sealed {
 //      double totalPerimeter = shapes.stream().mapToDouble(Shape::perimeter).sum();
       double totalPerimeter = shapes.stream().mapToDouble(shape -> {
 
-         if (shape instanceof Circle circle) {
-            return circle.radius() * Math.PI * 2;
-         } else if (shape instanceof Square square) {
-            return square.edge() * 4;
-         } else {
-            throw new IllegalArgumentException("WTH!?");
-         }
-
+//         if (shape instanceof Circle circle) {
+//            return circle.radius() * Math.PI * 2;
+//         } else if (shape instanceof Square square) {
+//            return square.edge() * 4;
+//         } else {
+//            throw new IllegalArgumentException("WTH!?");
+//         }
+         return switch (shape) {
+            case Circle circle -> circle.radius() * Math.PI * 2;
+            case Square square -> square.edge() * 4;
+         };
       }).sum();
-
 
       System.out.println("Total perimeter: " + totalPerimeter); // TODO
 
+//      Circle(radius) = method();
    }
 
+   public Circle method() {
+      return null;
+   }
 }
-
-interface Shape {
-}
-//record Rectangle(int widhth, int height) implements  Shape {
+//interface Optional<> {
+//    record Of(value) {}
+//    record Empty {}
 //}
-record Circle(int radius) implements  Shape {
-}
-record Square(int edge) implements  Shape {
+
+sealed interface Shape {
+   //record Rectangle(int widhth, int height) implements  Shape {
+//}
+   record Circle(int radius) implements Shape {
+   }
+
+   record Square(int edge) implements Shape {
+   }
 }
 
 //1: shared code between subtypes.
 class AsciiHelper {
 
 }
-
-
-
-
-
-
-
-
-
 
 
 // ======== HAZARD AREA: VISITOR PATTERN ==========
