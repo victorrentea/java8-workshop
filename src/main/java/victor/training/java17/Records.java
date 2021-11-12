@@ -1,17 +1,18 @@
 package victor.training.java17;
 
 import com.google.common.collect.ImmutableList;
+import lombok.NonNull;
+import lombok.Value;
 import org.jooq.lambda.tuple.Tuple;
 import org.jooq.lambda.tuple.Tuple2;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.joining;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,7 +29,7 @@ public class Records {
           Tuple.tuple("Chair", product2Count)
       ));
    }
-   
+
    @Test
    void lackOfAbstractions() {
       Map<Long, List<Tuple2<String, Integer>>> map = extremeFP();
@@ -43,7 +44,7 @@ public class Records {
    @Test
    void immutables() {
       List<Integer> numbers = IntStream.range(1, 10).boxed().toList();
-      Immutable obj = new Immutable("John", new Other("halo"), ImmutableList.copyOf(numbers));
+      Immutable17 obj = new Immutable17("John", new Other("halo"), ImmutableList.copyOf(numbers));
 
       String original = obj.toString();
       System.out.println(obj);
@@ -55,9 +56,10 @@ public class Records {
       assertThat(original).describedAs("State should not change!").isEqualTo(obj.toString());
    }
 
-   private static void unkownFierceCode(Immutable obj) {
+   private static void unkownFierceCode(Immutable17 obj) {
       // TODO what can go wrong here ?
-      obj.getList().clear();
+//      obj.list().clear();
+//      obj.list().add(1);
    }
 }
 
@@ -65,6 +67,45 @@ public class Records {
 // constructor:
 // inheritance:
 
+record AnotherSuper(int x) {
+}
+
+interface SomeInterface {
+   String name();
+}
+
+record Immutable17(
+    String name,
+    Other other,
+    ImmutableList<Integer> list) /*extends AnotherSuper*/ implements SomeInterface {
+
+   public Immutable17 {
+      Objects.requireNonNull(name);
+   }
+
+   public Immutable17(String name, Other other) {
+      this(name, other, ImmutableList.copyOf(emptyList()));
+   }
+
+   public void extraMethod() {
+      // if you find yourself adding a LOT of methods to a record >>> make it a class.
+   }
+
+   @Override
+   public String name() {
+      return name.toUpperCase();
+   }
+}
+
+
+@Value // big fan of
+// almost an enemy of @Data
+class ImmutableLombok {
+   @NonNull
+   String name;
+   Other other;
+   ImmutableList<Integer> list;
+}
 
 class Immutable {
    private final String name;
@@ -72,7 +113,10 @@ class Immutable {
    private final ImmutableList<Integer> list; // hibenrate says NO
 
    public Immutable(String name, Other other, ImmutableList<Integer> list) {
-      this.name = name;
+//      if (name == null) {
+//         throw new IllegalArgumentException();
+//      }
+      this.name = Objects.requireNonNull(name);
       this.other = other;
       this.list = list;
    }
@@ -101,10 +145,12 @@ class Immutable {
       Immutable immutable = (Immutable) o;
       return Objects.equals(name, immutable.name) && Objects.equals(other, immutable.other) && Objects.equals(list, immutable.list);
    }
+
    @Override
    public int hashCode() {
       return Objects.hash(name, other, list);
    }
+
    @Override
    public String toString() {
       return "Immutable{" +
@@ -115,26 +161,6 @@ class Immutable {
    }
 }
 
-class Other {
-   private final String data;
+record Other(String data) {
 
-   public Other(String data) {
-      this.data = data;
-   }
-
-   public String getData() {
-      return data;
-   }
-
-//   public Other setData(String data) {
-//      this.data = data;
-//      return this;
-//   }
-
-   @Override
-   public String toString() {
-      return "Other{" +
-             "data='" + data + '\'' +
-             '}';
-   }
 }
