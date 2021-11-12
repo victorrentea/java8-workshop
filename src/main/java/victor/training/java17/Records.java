@@ -7,6 +7,7 @@ import org.jooq.lambda.tuple.Tuple;
 import org.jooq.lambda.tuple.Tuple2;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -38,14 +39,27 @@ public class Records {
    record CustomerId(Long id) {}
    record ProductBoughtCount(ProductName productName, int count) {}
 
+   class UserFactoryForGarbageData {}
    @Test
    void lackOfAbstractions() {
+      var user1 = new UserFactoryForGarbageData();  // OK
+
+      // the same, no gain
+      Map<String, List<Long>> user2var = new HashMap<>();
+      var user2 = new HashMap<String, List<Long>>();
+
+      // NEVER ! CODE REVIEW CRASH
+//      var map = extremeFP(); // var never in production . only in tests
+
       // customerId -> [{productName->count}]
       Map<CustomerId, List<ProductBoughtCount>> map = extremeFP();
       // Joke: try "var" above :)
 
-      for (CustomerId customerId : map.keySet()) { // code smell
-         String pl = map.get(customerId).stream().map(t -> t.count + " of " + t.productName.name).collect(joining(" and "));
+      for (CustomerId customerId : map.keySet()) { // code smell  <<<<
+         List<ProductBoughtCount> value = map.get(customerId);
+         String pl = value.stream()
+             .map(t -> t.count + " of " + t.productName.name)
+             .collect(joining(" and "));
          System.out.println("cid=" + customerId.id + " bought " + pl);
       }
    }
