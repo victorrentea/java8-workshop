@@ -5,7 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import victor.training.java8.advanced.tricks.ConcurrencyUtil;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
@@ -13,14 +16,16 @@ import static victor.training.java8.advanced.tricks.ConcurrencyUtil.sleepq;
 
 @Slf4j
 public class ParallelStreams {
-   public static void main(String[] args) {
+   public static void main(String[] args) throws ExecutionException, InterruptedException {
 //      Enemy.parallelRequest();
 
       long t0 = System.currentTimeMillis();
 
       List<Integer> list = asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
 
-      List<Integer> result = list.stream()
+      // ever single parallelStream on the JVM works on a shared common pool
+      // size of that pool = N cpu - 1  = 12 threads
+      Stream<Integer> stream = list.parallelStream()
           .filter(i -> {
              log.debug("Filter " + i);
              return i % 2 == 0;
@@ -29,9 +34,24 @@ public class ParallelStreams {
              log.debug("Map " + i);
              sleepq(100); // do some 'paralellizable' I/O work (DB, REST, SOAP)
              return i * 2;
-          })
-          .collect(toList());
+          });
+
+      ForkJoinPool pool = new ForkJoinPool(10);
+
+
+      List<Integer> result = pool.submit(   () -> stream.collect(toList())   ).get() ;
+
+
+
+
       log.debug("Got result: " + result);
+
+
+
+
+      // once upon a time you had
+
+
 
       long t1 = System.currentTimeMillis();
       log.debug("Took {} ms", t1 - t0);
