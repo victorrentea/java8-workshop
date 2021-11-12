@@ -92,6 +92,3 @@ public class FunctionsOnEnums {
 }
 
 
-class NoMatchingCase extends RuntimeException {
-
-}
