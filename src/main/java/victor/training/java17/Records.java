@@ -24,27 +24,28 @@ public class Records {
 
 
    // TODO Use-case: Tuples (see Stream Wreck)
-   public Map<CustomerId, List<Tuple2<ProductName, Integer>>> extremeFP() {
+   public Map<CustomerId, List<ProductBoughtCount>> extremeFP() {
       Long customerId = 1L;
       Integer product1Count = 2;
       Integer product2Count = 4;
       return Map.of(new CustomerId(customerId), List.of(
-          Tuple.tuple(new ProductName("Table"), product1Count),
-          Tuple.tuple(new ProductName("Chair"), product2Count)
+          new ProductBoughtCount(new ProductName("Table"), product1Count),
+          new ProductBoughtCount(new ProductName("Chair"), product2Count)
       ));
    }
 
    record ProductName(String name) {}
    record CustomerId(Long id) {}
+   record ProductBoughtCount(ProductName productName, int count) {}
 
    @Test
    void lackOfAbstractions() {
       // customerId -> [{productName->count}]
-      Map<CustomerId, List<Tuple2<ProductName, Integer>>> map = extremeFP();
+      Map<CustomerId, List<ProductBoughtCount>> map = extremeFP();
       // Joke: try "var" above :)
 
       for (CustomerId customerId : map.keySet()) { // code smell
-         String pl = map.get(customerId).stream().map(t -> t.v2 + " of " + t.v1.name).collect(joining(" and "));
+         String pl = map.get(customerId).stream().map(t -> t.count + " of " + t.productName.name).collect(joining(" and "));
          System.out.println("cid=" + customerId.id + " bought " + pl);
       }
    }
