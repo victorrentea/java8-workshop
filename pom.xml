@@ -25,37 +25,25 @@
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <version>3.16.1</version>
-        </dependency>
 
         <!-- Try<> -->
         <dependency>
             <groupId>io.vavr</groupId>
             <artifactId>vavr</artifactId>
-            <version>0.10.3</version>
+            <version>0.10.4</version>
         </dependency>
         <!-- Unchecked, Function13 -->
         <dependency>
             <groupId>org.jooq</groupId>
             <artifactId>jool</artifactId>
-            <version>0.9.12</version>
+            <version>0.9.14</version>
         </dependency>
 
-        <!--<dependency>
-            <groupId>commons-math</groupId>
-            <artifactId>commons-math</artifactId>
-            <version>1.2</version>
-        </dependency>
--->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.22</version>
         </dependency>
-
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
