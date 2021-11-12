@@ -11,6 +11,7 @@ import static lombok.AccessLevel.PRIVATE;
 @Getter
 @Setter
 @Entity
+@ToString
 @NoArgsConstructor(access = PRIVATE)
 public class Product {
    @Id
