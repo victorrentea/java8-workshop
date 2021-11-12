@@ -34,7 +34,11 @@ class ExportFormatsTest {
 
       String actual = writer.toString();
 
-      Assertions.assertThat(actual).isEqualTo("OrderID;Date\n" +
-                                              "1;2021-11-12\n");
+      String tenKB = "x".repeat(5_000);
+
+      Assertions.assertThat(actual).isEqualTo("""
+          OrderID;Date
+          1;2021-11-12
+          """);
    }
 }
