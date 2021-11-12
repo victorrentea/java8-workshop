@@ -3,8 +3,6 @@ package victor.training.java17;
 import com.google.common.collect.ImmutableList;
 import lombok.NonNull;
 import lombok.Value;
-import org.jooq.lambda.tuple.Tuple;
-import org.jooq.lambda.tuple.Tuple2;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -25,19 +23,21 @@ public class Records {
 
 
    // TODO Use-case: Tuples (see Stream Wreck)
-   public Map<CustomerId, List<ProductBoughtCount>> extremeFP() {
+//   public Map<CustomerId, List<ProductBoughtCount>> extremeFP() {
+   public List<CustomerProducts> extremeFP() {
       Long customerId = 1L;
       Integer product1Count = 2;
       Integer product2Count = 4;
-      return Map.of(new CustomerId(customerId), List.of(
+      return List.of(new CustomerProducts(new CustomerId(customerId), List.of(
           new ProductBoughtCount(new ProductName("Table"), product1Count),
           new ProductBoughtCount(new ProductName("Chair"), product2Count)
-      ));
+      )));
    }
 
    record ProductName(String name) {}
    record CustomerId(Long id) {}
    record ProductBoughtCount(ProductName productName, int count) {}
+   record CustomerProducts(CustomerId id, List<ProductBoughtCount> products) {}
 
    class UserFactoryForGarbageData {}
    @Test
@@ -52,15 +52,22 @@ public class Records {
 //      var map = extremeFP(); // var never in production . only in tests
 
       // customerId -> [{productName->count}]
-      Map<CustomerId, List<ProductBoughtCount>> map = extremeFP();
+//      Map<CustomerId, List<ProductBoughtCount>> map = extremeFP(); // lacking abstraction
+      List<CustomerProducts> list = extremeFP();
       // Joke: try "var" above :)
 
-      for (CustomerId customerId : map.keySet()) { // code smell  <<<<
-         List<ProductBoughtCount> value = map.get(customerId);
-         String pl = value.stream()
+
+      // sonar tells you to iterate over entries
+      // I (victor) tell you that you are having a design isue
+      // iterating over entries of keySet is a code smell IF you only do that thing with the map
+//      for (CustomerId customerId : map.keySet()) {
+//         List<ProductBoughtCount> value = map.get(customerId);
+
+      for (CustomerProducts customerProducts : list) {
+         String pl = customerProducts.products.stream()
              .map(t -> t.count + " of " + t.productName.name)
              .collect(joining(" and "));
-         System.out.println("cid=" + customerId.id + " bought " + pl);
+         System.out.println("cid=" + customerProducts.id.id + " bought " + pl);
       }
    }
 
