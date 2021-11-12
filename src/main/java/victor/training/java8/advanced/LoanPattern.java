@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import victor.training.java8.advanced.repo.OrderRepo;
 
 @Service
-class OrderExporter {
+class FileExporter {
    @Autowired
    private OrderRepo orderRepo;
    @Value("${export.folder.out}")
@@ -29,7 +29,7 @@ class OrderExporter {
          writer.write("OrderID;Date\n");
 
 //			orderRepo.findByActiveTrue()
-//				.map(o -> o.getId() + ";" + o.getCreationDate())
+//				.map(o -> o.getId() + ";" + o.getCreationDate() + "\n")
 //				.forEach(writer::write);
          System.out.println("File export completed: " + file.getAbsolutePath());
       } catch (Exception e) {
@@ -48,10 +48,11 @@ public class LoanPattern implements CommandLineRunner {
       SpringApplication.run(LoanPattern.class, args);
    }
 
-   private final OrderExporter orderExporter;
+   private final FileExporter fileExporter;
    public void run(String... args) throws Exception {
-      orderExporter.exportFile();
+      fileExporter.exportFile();
 
+      // TODO implement export of users too
    }
 }
 
