@@ -26,12 +26,16 @@ public class OptionalAdvancedApp implements CommandLineRunner {
       System.out.println(productRepo.findByNameContaining("re"));
 //      System.out.println(productRepo.findByNameContaining("rx")); // finds nothing
 
-      // Optional Abuse?
+      // ## --- Optional Abuse? ---
+      // Abuse 1: **All** callers doing .get / .orElseThrow on your Optional<>
       // Product p = productRepo.findById(13L);
 
+      // Abuse 2: Optional created and terminated in the same method.
       excessOpt(new DeliveryDto());
 
-      // Streaming queries
+      // Abuse 3: Optional<> as method argument => SRP violation
+
+      // ## Streaming queries
       // productRepo.streamAllByDeletedTrue().forEach(System.out::println);
    }
 
