@@ -30,9 +30,9 @@ public class ExceptionsTest {
       List<String> dates = List.of("2020-10-11", "2020-nov-12", "2020-dec-01");
       IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> exceptions.parseDates(dates));
 
-//      Assertions.assertThat(e.getMessage())
-//          .contains("2020-nov-12")
-//          .contains("2020-dec-01");
+      Assertions.assertThat(e.getMessage())
+          .contains("2020-nov-12")
+          .contains("2020-dec-01");
    }
    @Test
    public void noneValid() {
