@@ -1,5 +1,6 @@
 package victor.training.java.advanced;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -27,7 +28,11 @@ public class ExceptionsTest {
    @Test
    public void mostInvalid() {
       List<String> dates = List.of("2020-10-11", "2020-nov-12", "2020-dec-01");
-      assertThrows(IllegalArgumentException.class, () -> exceptions.parseDates(dates));
+      IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> exceptions.parseDates(dates));
+
+//      Assertions.assertThat(e.getMessage())
+//          .contains("2020-nov-12")
+//          .contains("2020-dec-01");
    }
    @Test
    public void noneValid() {

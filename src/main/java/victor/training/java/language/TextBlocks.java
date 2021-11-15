@@ -28,7 +28,7 @@ public class TextBlocks {
    @Test
    void test() throws Exception {
       mockMvc.perform(post("/product/search")
-              .contentType("application/json")
+//              .contentType("application/json")
               .content("{\"name\":\"somth\"}") // add one more criteria
           )
           .andExpect(status().isOk()) // 200
