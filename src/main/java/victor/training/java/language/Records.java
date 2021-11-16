@@ -15,7 +15,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class Records {
 
-
    // TODO Use-case: Tuples (see Stream Wreck)
    public Map<Long, List<Tuple2<String, Integer>>> extremeFP() {
       Long customerId = 1L;
@@ -32,8 +31,10 @@ public class Records {
       Map<Long, List<Tuple2<String, Integer>>> map = extremeFP();
       // Joke: try "var" above :)
 
-      for (Long cid : map.keySet()) { // code smell
-         String pl = map.get(cid).stream().map(t -> t.v2 + " of " + t.v1).collect(joining());
+      for (Long cid : map.keySet()) {
+         String pl = map.get(cid).stream()
+             .map(t -> t.v2 + " of " + t.v1)
+             .collect(joining(", "));
          System.out.println("cid=" + cid + " bought " + pl);
       }
    }
