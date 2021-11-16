@@ -1,109 +1,85 @@
 package victor.training.java.language;
 
 import org.junit.jupiter.api.Test;
-import victor.training.java.language.Filter.BhFilter;
-import victor.training.java.language.Filter.DnFilter;
-import victor.training.java.language.Filter.FrFilter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.fail;
-
 public class Sealed {
+   private static final List<Shape> shapes = List.of(
+       new Circle(10),
+       new Square(10),
+       new Square(5));
 
    @Test
-   void test() {
-      List<Filter> filters = Arrays.asList(
-          new DnFilter(10),
-          new FrFilter(10),
-          new BhFilter(5),
-          new FrFilter(5));
-
-
-      List<String> jaxbFilters = new ArrayList<>();
-      for (Filter filter : filters) {
-         jaxbFilters.add(toJaxkFilter(filter));
+   void perimeter() {
+      double totalPerimeter = 0;
+      for (Shape shape : shapes) {
+         // TODO
       }
-
-      System.out.println("Total perimeter: " + 0); // TODO
+      System.out.println("Total perimeter: " + totalPerimeter);
    }
 
-   private String toJaxkFilter(Filter filter) { // NOT OOP. but you might have good reasons.
-      return  switch (filter) {
-         case DnFilter dn -> "DN " + dn.radius();
-         case FrFilter fr -> "FR " + fr.edge();
-         case BhFilter bh -> "BH " + bh.radius();
-      };
-   }
-
-   @Test
-   void handle11Test() throws InstantiationException, IllegalAccessException {
-      List<Class<?>> filterSubtypes = List.of(DnFilter.class, FrFilter.class, BhFilter.class); // TODO  // hard to find all subtypes of the Filter interface: https://stackoverflow.com/questions/492184/how-do-you-find-all-subclasses-of-a-given-class-in-java
-      for (Class<?> filterClass : filterSubtypes) {
-         try {
-            handle11((Filter) filterClass.newInstance());
-         } catch (MySpecialCaseNotFoundException e) {
-            fail("subtype not supported : " +filterClass);
-         } catch(Exception whatever ) {
-            // ignore
-         }
+   public static void main(String[] args) {
+      for (Shape shape : shapes) {
+         // TODO display all shapes
       }
-   }
-
-   public String handle11(Filter filter) {
-      if (filter instanceof DnFilter) {
-         DnFilter dn = (DnFilter) filter;
-         return  "DN " + dn.radius();
-      }
-      if (filter instanceof FrFilter) {
-         FrFilter fr = (FrFilter) filter;
-         return  "FR " + fr.edge();
-      }
-      if (filter instanceof BhFilter) {
-         BhFilter bh = (BhFilter) filter;
-         return  "BH " + bh.radius();
-      }
-      throw new MySpecialCaseNotFoundException();
+      // examples
+      DisplayShape.display(graphics -> {
+         graphics.drawOval(10, 10, 10, 20);
+      });
+      DisplayShape.display(graphics -> {
+         graphics.drawRect(10, 10, 10, 30);
+      });
    }
 
 }
 
-class MySpecialCaseNotFoundException extends RuntimeException {
-   
+
+interface Shape {
+
 }
 
-//java21 sep 2022
-sealed interface Filter {
-   record BhFilter(int radius) implements Filter {
+final class Circle implements Shape {
+   private final int radius;
+
+   Circle(int radius) {
+      this.radius = radius;
    }
 
-   record DnFilter(int radius) implements Filter {
+   public int radius() {
+      return radius;
+   }
+}
+
+final class Square implements Shape {
+   private final int edge;
+
+   Square(int edge) {
+      this.edge = edge;
    }
 
-   record FrFilter(int edge) implements Filter {
+   public int edge() {
+      return edge;
    }
-
 }
 
 // ======== HAZARD AREA: VISITOR PATTERN ==========
 interface ShapeVisitor {
-   void visit(FrFilter square);
+   void visit(Square square);
 
-   void visit(BhFilter circle);
+   void visit(Circle circle);
 }
 
 class PerimeterCalculatorVisitor implements ShapeVisitor {
    private double total;
 
    @Override
-   public void visit(FrFilter square) {
+   public void visit(Square square) {
       total += 4 * square.edge();
    }
 
    @Override
-   public void visit(BhFilter circle) {
+   public void visit(Circle circle) {
       total += circle.radius() * 2 * Math.PI;
    }
 

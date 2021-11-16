@@ -15,7 +15,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class Records {
 
-   // TODO Use-case: Tuples (see Stream Wreck)
    public Map<Long, List<Tuple2<String, Integer>>> extremeFP() {
       Long customerId = 1L;
       Integer product1Count = 2;

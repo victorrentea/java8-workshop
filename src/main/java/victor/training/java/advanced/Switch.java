@@ -37,5 +37,8 @@ public class Switch {
             System.out.println("CRITICAL: new release return delayed by " + delayDays);break;
       }
    }
+}
 
+
+class MySpecialCaseNotFoundException extends RuntimeException {
 }
