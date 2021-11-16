@@ -1,4 +1,4 @@
-package victor.training.java.language;
+package victor.training.java.java17;
 
 import javax.swing.*;
 import java.awt.*;

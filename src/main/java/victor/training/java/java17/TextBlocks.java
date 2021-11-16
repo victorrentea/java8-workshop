@@ -1,4 +1,4 @@
-package victor.training.java.language;
+package victor.training.java.java17;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.test.web.servlet.MockMvc;
 import victor.training.java.stream.order.entity.Order;
 
-import java.awt.PageAttributes.MediaType;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;

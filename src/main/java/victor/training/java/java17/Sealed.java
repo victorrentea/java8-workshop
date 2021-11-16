@@ -1,4 +1,4 @@
-package victor.training.java.language;
+package victor.training.java.java17;
 
 import org.junit.jupiter.api.Test;
 
