@@ -1,12 +1,8 @@
 package victor.training.java.language;
 
-import org.jooq.lambda.tuple.Tuple;
-import org.jooq.lambda.tuple.Tuple2;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
@@ -15,26 +11,65 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class Records {
 
+//   {
+//      var v = extremeFP2();
+//   }
 
    // TODO Use-case: Tuples (see Stream Wreck)
-   public Map<Long, List<Tuple2<String, Integer>>> extremeFP() {
+//   public <T extends Consumer<String> & Supplier<String>> T extremeFP2() {
+//
+//   }
+   record ProductOrderCounts(String productName, int count) {
+   }
+
+   record CustomerId(long id) {
+   }
+
+   record CustomerProductOrderHistory(CustomerId customerId, List<ProductOrderCounts> products) {
+   }
+
+   //   public Map<CustomerId, List<ProductOrderCounts>> extremeFP() {
+   public List<CustomerProductOrderHistory> extremeFP() {
+      // takes 500 ms.
       Long customerId = 1L;
       Integer product1Count = 2;
       Integer product2Count = 4;
-      return Map.of(customerId, List.of(
-          Tuple.tuple("Table", product1Count),
-          Tuple.tuple("Chair", product2Count)
-      ));
+      CustomerProductOrderHistory elem = new CustomerProductOrderHistory(
+          new CustomerId(customerId),
+          List.of(
+              new ProductOrderCounts("Table", product1Count),
+              new ProductOrderCounts("Chair", product2Count)
+          ));
+      return List.of(elem);
    }
-   
+
+//   void lackOfAbstractions() {
+//      Map<Long, List<Tuple2<String, Integer>>> map = extremeFP();
+//      var mapMistakeVar = extremeFP();
+//
+//      for (var longListEntry : map.entrySet()) { // ok var
+//      }
+//
+//      Map<Long, List<Tuple2<String, Integer>>> map2bis = new HashMap<>();
+//      var map2 = new HashMap<Long, List<Tuple2<String, Integer>>>();
+
    @Test
    void lackOfAbstractions() {
-      Map<Long, List<Tuple2<String, Integer>>> map = extremeFP();
-      // Joke: try "var" above :)
+//      Map<CustomerId, List<ProductOrderCounts>> map = extremeFP();
+//      for (Long cid : map.keySet()) {  // Sonar told us that loopin on entries is better than on keySet()
+//         List<Tuple2<String, Integer>> value = map.get(cid); // O(1)
 
-      for (Long cid : map.keySet()) { // code smell
-         String pl = map.get(cid).stream().map(t -> t.v2 + " of " + t.v1).collect(joining());
-         System.out.println("cid=" + cid + " bought " + pl);
+//      for (var entry : map.entrySet()) { // code smell
+//         CustomerId customerId = entry.getKey();
+
+      List<CustomerProductOrderHistory> map = extremeFP();
+
+      for (CustomerProductOrderHistory history : map) {
+
+         String pl = history.products().stream()
+             .map(t -> t.count() + " of " + t.productName())
+             .collect(joining(" and "));
+         System.out.println("cid=" + history.customerId().id() + " bought " + pl);
       }
    }
 
