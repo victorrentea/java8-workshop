@@ -13,7 +13,16 @@ public class FunctionsOnEnums {
       System.out.println(computePrice(MovieType.CHILDREN, 2));
    }
 
-   public static int computePrice(MovieType type, int days) {
+   public static int computePrice(MovieType typeEnum, int days) {
+      int v = switch (typeEnum) {
+         case REGULAR -> days + 1;
+         case NEW_RELEASE -> days * 2;
+         case CHILDREN -> 5;
+      };
+      return v;
+   }
+
+   public static int computePrice11(MovieType type, int days) {
       switch (type) {
          case REGULAR:
             return days + 1;
@@ -21,8 +30,9 @@ public class FunctionsOnEnums {
             return days * 2;
          case CHILDREN:
             return 5;
+         default:
+            throw new IllegalStateException("Unexpected value: " + type);
       }
-      return 0; // Oups! Free movies!!
    }
 
 }
