@@ -11,25 +11,22 @@ import java.util.Map.Entry;
 
 import static java.util.stream.Collectors.*;
 
-// get the products frequently ordered during the past year
-
-
 public class StreamWreck {
-	private ProductRepo productRepo;
+   private ProductRepo productRepo;
 
-	public List<Product> getFrequentOrderedProducts(List<Order> orders) {
-		return orders.stream()
-				.filter(o -> o.getCreationDate().isAfter(LocalDate.now().minusYears(1)))
-				.flatMap(o -> o.getOrderLines().stream())
-				.collect(groupingBy(OrderLine::getProduct, summingInt(OrderLine::getItemCount)))
-				.entrySet()
-				.stream()
-				.filter(e -> e.getValue() >= 10)
-				.map(Entry::getKey)
-				.filter(p -> !p.isDeleted())
-				.filter(p -> !productRepo.findByHiddenTrue().contains(p))
-				.collect(toList());
-	}
+   public List<Product> getFrequentOrderedProducts(List<Order> orders) {
+      return orders.stream()
+          .filter(o -> o.getCreationDate().isAfter(LocalDate.now().minusYears(1)))
+          .flatMap(o -> o.getOrderLines().stream())
+          .collect(groupingBy(OrderLine::getProduct, summingInt(OrderLine::getItemCount)))
+          .entrySet()
+          .stream()
+          .filter(e -> e.getValue() >= 10)
+          .map(Entry::getKey)
+          .filter(p -> !p.isDeleted())
+          .filter(p -> !productRepo.findByHiddenTrue().contains(p))
+          .collect(toList());
+   }
 }
 
 

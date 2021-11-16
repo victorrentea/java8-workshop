@@ -17,7 +17,7 @@ public class ParallelStreams {
 
       long t0 = System.currentTimeMillis();
 
-      List<Integer> list = asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+      List<Integer> list = IntStream.range(1,100).boxed().collect(toList());
 
       List<Integer> result = list.stream()
           .filter(i -> {

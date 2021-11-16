@@ -12,7 +12,7 @@ public interface ProductRepo extends CustomJpaRepository<Product, Long> {
 
    Product findByNameContaining(String namePart);
 
-   Stream<Product> streamAllByDeletedTrue();
+   Stream<Product> findAllByDeletedFalse();
 
    Product findExactlyOneById(long l);
 }

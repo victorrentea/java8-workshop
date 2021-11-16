@@ -27,13 +27,13 @@ class FileExporter {
          System.out.println("Starting export to: " + file.getAbsolutePath());
 
          writer.write("OrderID;Date\n");
-
 //			orderRepo.findByActiveTrue()
 //				.map(o -> o.getId() + ";" + o.getCreationDate() + "\n")
 //				.forEach(writer::write);
+
          System.out.println("File export completed: " + file.getAbsolutePath());
       } catch (Exception e) {
-         // TODO send email notification
+         System.out.println("Imagine: Send Error Notification Email");
          throw new RuntimeException("Error exporting data", e);
       } finally {
          System.out.println("Export finished in: " + (System.currentTimeMillis()-t0));

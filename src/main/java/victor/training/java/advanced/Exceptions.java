@@ -8,8 +8,11 @@ import static java.util.stream.Collectors.toList;
 
 public class Exceptions {
 
-   // TODO Return parsable dates if >= 50% valid; otherwise throw IllegalArgumentException (Hint: average)
-   // Run tests!
+   // ** Requirements **
+   // Some dates might have invalid format
+   // - if >= 50% valid => return the parseable dates,
+   // - else => throw IllegalArgumentException
+   /* @see tests */
    public List<LocalDate> parseDates(List<String> dateStrList) {
       DateTimeFormatter pattern = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 

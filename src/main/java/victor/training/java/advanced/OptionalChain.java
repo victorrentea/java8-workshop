@@ -1,6 +1,6 @@
 package victor.training.java.advanced;
 
-public class Optional_Chain {
+public class OptionalChain {
 	static MyMapper mapper = new MyMapper();
    public static void main(String[] args) {
 		Parcel parcel = new Parcel()
@@ -18,7 +18,7 @@ class MyMapper {
       return dto;
    }
 
-   public DeliveryDto convertSafeJava7(Parcel parcel) {
+   public DeliveryDto pyramidOfNull(Parcel parcel) {
       DeliveryDto dto = new DeliveryDto();
       if (
           parcel!=null &&
