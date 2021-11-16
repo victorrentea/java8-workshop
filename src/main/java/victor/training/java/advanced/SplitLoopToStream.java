@@ -7,29 +7,24 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SplitLoopToStream {
-   public static void main(String[] args) {
-      new SplitLoopToStream().bossLevel(Arrays.asList(
-          new User().setId(1L).setTicketsRaised(5).setUsername("jdoe"),
-          new User().setId(2L).setTicketsRaised(65).setUsername("hero").setActive(false)
-      ));
-   }
 
+   // see tests
    public void bossLevel(List<User> users) {
       List<String> allUsernames = new ArrayList<>();
-      int noLanguageCount = 0;
+      int missingLanguageCount = 0;
       int totalTickets = 0;
       for (User user : users) {
          allUsernames.add(user.getUsername());
+         if (user.getLanguage() == null) {
+            missingLanguageCount++;
+         }
          if (!user.getActive()) {
-            insertAlertInactive(user.getId());
+            insertInactiveAlert(user.getId());
             continue;
          }
          totalTickets += user.getTicketsRaised();
-         if (user.getLanguage() == null) {
-            noLanguageCount++;
-         }
       }
-      double noLanguagePercent = 100d * noLanguageCount / users.size();
+      double noLanguagePercent = 100d * missingLanguageCount / users.size();
       System.out.printf("No language set  = %.2f%%\n", noLanguagePercent);
       System.out.printf("Number of tickets = %d\n", totalTickets);
       writeToFile(allUsernames);
@@ -40,7 +35,7 @@ public class SplitLoopToStream {
       // omitted
    }
 
-   private void insertAlertInactive(Long userId) {
+   private void insertInactiveAlert(Long userId) {
       System.out.println("Alert inactive user: " + userId);
       // omitted
    }
