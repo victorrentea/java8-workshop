@@ -1,6 +1,7 @@
 package victor.training.java.advanced.model;
 
 import lombok.*;
+import org.hibernate.annotations.Immutable;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,6 +12,7 @@ import static lombok.AccessLevel.PRIVATE;
 @Getter
 @Setter
 @Entity
+//@Immutable
 @NoArgsConstructor(access = PRIVATE)
 public class Product {
    @Id

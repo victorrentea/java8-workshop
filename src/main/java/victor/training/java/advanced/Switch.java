@@ -13,8 +13,8 @@ enum MovieType {
 
 @Service
 public class Switch {
-   @Value("${children.price}")
-   private int childrenPrice;
+//   @Value("${children.price}")
+//   private int childrenPrice;
 
    // @see tests
    public static int computePrice(MovieType type, int days) {

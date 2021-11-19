@@ -103,10 +103,10 @@ public class LoanPattern implements CommandLineRunner {
    private final Exports exports;
 
    public void run(String... args) throws Exception {
-      fileExporter.exportFile("orders.csv", exports::writeOrders);
+//      fileExporter.exportFile("orders.csv", exports::writeOrders);
 
 
-      fileExporter.exportFile("users.csv", exports::writeUsers);
+//      fileExporter.exportFile("users.csv", exports::writeUsers);
 
 
 //      fileExporter.exportFile("a", cw);
