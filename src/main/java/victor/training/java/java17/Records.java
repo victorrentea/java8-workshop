@@ -5,17 +5,18 @@ import org.checkerframework.checker.units.qual.A;
 import org.jooq.lambda.tuple.Tuple;
 import org.jooq.lambda.tuple.Tuple2;
 import org.junit.jupiter.api.Test;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.joining;
 import static org.assertj.core.api.Assertions.assertThat;
+    record ProductCounts(String productName, int count) {}
+    record CustomerId(Long id) {} // might eat memory if many > 10k +
 
 public class Records {
 
-   private static record ProductCounts(String productName, int count) {}
-   private static record CustomerId(Long id) {} // might eat memory if many > 10k +
 
    public Map<CustomerId, List<ProductCounts>> extremeFP() {
       CustomerId customerId = new CustomerId(1L);
