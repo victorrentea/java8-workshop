@@ -35,6 +35,7 @@ public class Exceptions {
       long errors = tries.stream().filter(Try::isFailure).count();
       long success = tries.stream().filter(Try::isSuccess).count();
 
+      // can i commit emojis?
       if (success < errors) {
          String message = tries.stream().filter(Try::isFailure)
              .map(Try::getCause)
