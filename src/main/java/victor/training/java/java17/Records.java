@@ -1,12 +1,12 @@
 package victor.training.java.java17;
 
+import com.google.common.collect.ImmutableList;
+import org.checkerframework.checker.units.qual.A;
 import org.jooq.lambda.tuple.Tuple;
 import org.jooq.lambda.tuple.Tuple2;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.joining;
@@ -14,33 +14,46 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class Records {
 
-   public Map<Long, List<Tuple2<String, Integer>>> extremeFP() {
-      Long customerId = 1L;
+   private static record ProductCounts(String productName, int count) {}
+   private static record CustomerId(Long id) {} // might eat memory if many > 10k +
+
+   public Map<CustomerId, List<ProductCounts>> extremeFP() {
+      CustomerId customerId = new CustomerId(1L);
       Integer product1Count = 2;
       Integer product2Count = 4;
       return Map.of(customerId, List.of(
-          Tuple.tuple("Table", product1Count),
-          Tuple.tuple("Chair", product2Count)
+          new ProductCounts("Table", product1Count),
+          new ProductCounts("Chair", product2Count)
       ));
    }
    
    @Test
    void lackOfAbstractions() {
-      Map<Long, List<Tuple2<String, Integer>>> map = extremeFP();
+      Map<CustomerId, List<ProductCounts>> map = extremeFP();
       // Joke: try "var" above :)
 
-      for (Long cid : map.keySet()) {
+      for (CustomerId cid : map.keySet()) {
          String pl = map.get(cid).stream()
-             .map(t -> t.v2 + " of " + t.v1)
+             .map(t -> t.count() + " of " + t.productName())
              .collect(joining(", "));
-         System.out.println("cid=" + cid + " bought " + pl);
+         System.out.println("cid=" + cid.id() + " bought " + pl);
       }
    }
 
+
+
+
+
+
+
+
+
+
+
    @Test
    void immutables() {
-      List<Integer> numbers = IntStream.range(1, 10).boxed().toList();
-      Immutable obj = new Immutable("John", new Other("halo"), numbers);
+      List<Integer> numbers = new ArrayList<>(IntStream.range(1, 10).boxed().toList());
+      Immutable obj = new Immutable(Optional.of("John"), new Other("halo"), ImmutableList.copyOf(numbers));
 
       String original = obj.toString();
       System.out.println(obj);
@@ -54,63 +67,46 @@ public class Records {
 
    private static void unkownFierceCode(Immutable obj) {
       // TODO what can go wrong here ?
+//      obj.list().add(-1);
    }
 }
 
 // -- RECORD --
 // methods: add extra, overriding generated
-// constructor:
+// constructor: +overloaded
 // inheritance:
 
+interface I {
+   Other other();
+}
+record Immutable(Optional<String> name,
+                 Other other,
+                 ImmutableList<Integer> list) implements I {
 
-class Immutable {
-   private final String name;
-   private final Other other;
-   private final List<Integer> list;
-
-   public Immutable(String name, Other other, List<Integer> list) {
-      this.name = name;
-      this.other = other;
-      this.list = list;
+   Immutable {
+      Objects.requireNonNull(other);
    }
 
-   public String getName() {
-      return name;
-   }
 
-   public Other getOther() {
-      return other;
-   }
-
-   public List<Integer> getList() {
-      return list;
+   public String getStuff() {
+      return name + other.getData();
    }
 
    @Override
-   public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
-      Immutable immutable = (Immutable) o;
-      return Objects.equals(name, immutable.name) && Objects.equals(other, immutable.other) && Objects.equals(list, immutable.list);
-   }
-
-   @Override
-   public int hashCode() {
-      return Objects.hash(name, other, list);
-   }
-
-   @Override
-   public String toString() {
-      return "Immutable{" +
-             "name='" + name + '\'' +
-             ", other=" + other +
-             ", list=" + list +
-             '}';
+   public Optional<String> name() {
+      return name.map(String::toUpperCase);
    }
 }
 
+//@Value // i love @Value, but i hate @Data
+//class ImmutableLombok {
+//   String name;
+//   Other other;
+//   ImmutableList<Integer> list;
+//}
+
 class Other {
-   private String data;
+   private final String data;
 
    public Other(String data) {
       this.data = data;
@@ -118,11 +114,6 @@ class Other {
 
    public String getData() {
       return data;
-   }
-
-   public Other setData(String data) {
-      this.data = data;
-      return this;
    }
 
    @Override
