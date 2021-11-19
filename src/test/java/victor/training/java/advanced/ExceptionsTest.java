@@ -21,7 +21,9 @@ public class ExceptionsTest {
           "2020-12-01"
       );
       assertThat(exceptions.parseDates(dates)).containsExactly(
-          parse("2020-10-11"), parse("2020-11-12"), parse("2020-12-01"));
+          parse("2020-10-11"),
+          parse("2020-11-12"),
+          parse("2020-12-01"));
    }
    @Test
    public void mostValid() {
@@ -31,7 +33,8 @@ public class ExceptionsTest {
           "2020-12-01"
       );
       assertThat(exceptions.parseDates(dates)).containsExactly(
-          parse("2020-10-11"), parse("2020-12-01"));
+          parse("2020-10-11"),
+          parse("2020-12-01"));
    }
    @Test
    public void mostInvalid() {
@@ -41,13 +44,17 @@ public class ExceptionsTest {
           "2020-dec-01" // INVALID
       );
       assertThatThrownBy(() -> exceptions.parseDates(dates))
-          .isInstanceOf(IllegalArgumentException.class);
+          .isInstanceOf(IllegalArgumentException.class)
+          .hasMessageContaining("2020-nov-12")
+          .hasMessageContaining("2020-dec-01")
+      ;
    }
    @Test
    public void noneValid() {
       List<String> dates = List.of("a");
 
       assertThatThrownBy(() -> exceptions.parseDates(dates))
-          .isInstanceOf(IllegalArgumentException.class);
+          .isInstanceOf(IllegalArgumentException.class)
+          ;
    }
 }
