@@ -43,6 +43,7 @@ public class ExceptionsTest {
           "2020-nov-12", // INVALID
           "2020-dec-01" // INVALID
       );
+
       assertThatThrownBy(() -> exceptions.parseDates(dates))
           .isInstanceOf(IllegalArgumentException.class)
           .hasMessageContaining("2020-nov-12")
