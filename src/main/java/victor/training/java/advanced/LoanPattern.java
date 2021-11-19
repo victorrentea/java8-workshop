@@ -9,11 +9,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Service;
+import victor.training.java.advanced.FileExporter.ContentWriter;
 import victor.training.java.advanced.repo.OrderRepo;
 import victor.training.java.advanced.repo.UserRepo;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Writer;
 import java.util.function.Consumer;
 
@@ -36,14 +38,18 @@ class FileExporter {
    @Value("${export.folder.out}")
    private File folder;
 
+   @FunctionalInterface
+   interface ContentWriter {
+      void writeContentTo(Writer writer) throws IOException;
+   }
    //   @Timed // micrometer >> measures and reports the ex time of this function over actuator to prometheus > grafana
-   public void exportFile(String fileName, Consumer<Writer> contentWriterFunction) {
+   public void exportFile(String fileName, ContentWriter contentWriterFunction) {
       File file = new File(folder, fileName);
       long t0 = System.currentTimeMillis();
       try (Writer writer = new FileWriter(file)) {
          System.out.println("Starting export to: " + file.getAbsolutePath());
 
-         contentWriterFunction.accept(writer);
+         contentWriterFunction.writeContentTo(writer);
 
          System.out.println("File export completed: " + file.getAbsolutePath());
       } catch (Exception e) {
@@ -62,8 +68,8 @@ class Exports {
    @Autowired
    private OrderRepo orderRepo;
 
-   @SneakyThrows
-   public void writeOrders(Writer writer) {
+//   @SneakyThrows
+   public void writeOrders(Writer writer) throws IOException {
       writer.write("OrderID;Date\n");
       orderRepo.findByActiveTrue()
           .map(o -> o.getId() + ";" + o.getCreationDate() + "\n")
@@ -73,8 +79,8 @@ class Exports {
    @Autowired
    UserRepo userRepo;
 
-   @SneakyThrows
-   public void writeUsers(Writer writer) {
+//   @SneakyThrows
+   public void writeUsers(Writer writer) throws IOException {
       writer.write("username;fullname\n");
       userRepo.findAll()
           .stream().map(u -> u.getUsername() + ";" + u.getFullName() + "\n")
@@ -99,6 +105,11 @@ public class LoanPattern implements CommandLineRunner {
 
 
       fileExporter.exportFile("users.csv", exports::writeUsers);
+
+
+//      fileExporter.exportFile("a", cw);
+
+
 
       // TODO implement export of users too "the same way yo exported the orders"
    }
