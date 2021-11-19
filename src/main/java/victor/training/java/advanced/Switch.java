@@ -4,6 +4,7 @@ package victor.training.java.advanced;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 enum MovieType {
@@ -11,11 +12,12 @@ enum MovieType {
    NEW_RELEASE(Switch::computeNewReleasePrice),
    CHILDREN (Switch::computeChildrenPrice);
 
-   private final Function<Integer, Integer> computer;
-   MovieType(Function<Integer, Integer> computer) { // or a Function
+   private final BiFunction<Switch, Integer, Integer> computer;
+   MovieType(BiFunction<Switch, Integer, Integer> computer) { // or a Function
       this.computer = computer;
    }
-   public Function<Integer, Integer> getComputer() {
+
+   public BiFunction<Switch, Integer, Integer> getComputer() {
       return computer;
    }
 }
@@ -25,23 +27,23 @@ enum MovieType {
 @Service
 public class Switch {
    @Value("${children.price}")
-   public int childrenPrice;
+   public int childrenPrice = 5;
 
-   public static int computeRegularPrice(int days) {
+   public int computeRegularPrice(int days) {
       return days + 1;
    }
 
-   public static int computeNewReleasePrice(int days) {
+   public int computeNewReleasePrice(int days) {
       return days * 2;
    }
 
-   public static int computeChildrenPrice(int days) {
-      return 5;
+   public int computeChildrenPrice(int days) {
+      return childrenPrice;
    }
 
    // @see tests
-   public static int computePrice(MovieType type, int days) {
-      return type.getComputer().apply(days);
+   public int computePrice(MovieType type, int days) {
+      return type.getComputer().apply(this, days);
 //      switch (type) {
 //         case REGULAR:
 //            return days + 1;
