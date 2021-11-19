@@ -3,8 +3,10 @@ package victor.training.java.advanced;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
+import java.util.function.Consumer;
 
 import lombok.RequiredArgsConstructor;
+import org.jooq.lambda.Unchecked;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -13,6 +15,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Service;
 import victor.training.java.advanced.repo.OrderRepo;
 
+
+@FunctionalInterface
+ interface MyConsumer<T> {
+
+   void accept(T t) throws Exception
+       ;
+}
 @Service
 class FileExporter {
    @Autowired
@@ -20,16 +29,19 @@ class FileExporter {
    @Value("${export.folder.out}")
    private File folder;
 
+//   @Timed // micrometer >> measures and reports the ex time of this function over actuator to prometheus > grafana
    public void exportFile() {
       File file = new File(folder, "orders.csv");
       long t0 = System.currentTimeMillis();
       try (Writer writer = new FileWriter(file)) {
          System.out.println("Starting export to: " + file.getAbsolutePath());
 
+
          writer.write("OrderID;Date\n");
-//			orderRepo.findByActiveTrue()
-//				.map(o -> o.getId() + ";" + o.getCreationDate() + "\n")
-//				.forEach(writer::write);
+			orderRepo.findByActiveTrue()
+				.map(o -> o.getId() + ";" + o.getCreationDate() + "\n")
+//				.forEach(wrapChecked(writer::write));
+				.forEach(Unchecked.consumer(writer::write));
 
          System.out.println("File export completed: " + file.getAbsolutePath());
       } catch (Exception e) {
@@ -39,6 +51,26 @@ class FileExporter {
          System.out.println("Export finished in: " + (System.currentTimeMillis()-t0));
       }
    }
+
+   public static <T> Consumer<T> wrapChecked(MyConsumer<T> function) {
+      return str -> {
+         try {
+            function.accept(str);
+         } catch (Exception e) {
+            throw new RuntimeException(e);
+         }
+
+      };
+   }
+
+//   @SneakyThrows
+//   private void writeSafely(Writer writer, String str) {
+//      try {
+//         writer.write(str);
+//      } catch (IOException e) {
+//         throw new RuntimeException(e);
+//      }
+//   }
 }
 
 @RequiredArgsConstructor
