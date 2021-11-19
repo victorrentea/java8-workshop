@@ -33,7 +33,7 @@ public class Records {
          String pl = map.get(cid).stream()
              .map(t -> t.v2 + " of " + t.v1)
              .collect(joining(", "));
-         System.out.println("cid=" + cid + " bought " + pl);
+         System.out.println("cid=" + cid + " got " + pl);
       }
    }
 
@@ -45,14 +45,14 @@ public class Records {
       String original = obj.toString();
       System.out.println(obj);
 
-      unkownFierceCode(obj);
+      unknownFierceCode(obj);
 
       System.out.println(obj);
 
       assertThat(original).describedAs("State should not change!").isEqualTo(obj.toString());
    }
 
-   private static void unkownFierceCode(Immutable obj) {
+   private static void unknownFierceCode(Immutable obj) {
       // TODO what can go wrong here ?
    }
 }

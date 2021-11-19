@@ -42,7 +42,7 @@ class FileExporter {
 }
 
 @RequiredArgsConstructor
-@SpringBootApplication
+//@SpringBootApplication // enable on demand.
 public class LoanPattern implements CommandLineRunner {
    public static void main(String[] args) {
       SpringApplication.run(LoanPattern.class, args);

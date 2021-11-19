@@ -14,7 +14,7 @@ enum MovieType {
 @Service
 public class Switch {
    @Value("${children.price}")
-   private int childrenPrice;
+   private int childrenPrice = 5; // pretend Spring is ON
 
    // @see tests
    public static int computePrice(MovieType type, int days) {
