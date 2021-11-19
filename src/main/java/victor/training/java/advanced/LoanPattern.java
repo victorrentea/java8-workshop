@@ -6,6 +6,7 @@ import java.io.Writer;
 import java.util.function.Consumer;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.jooq.lambda.Unchecked;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,15 +14,23 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Service;
+import victor.training.java.advanced.MyException.ErrorCode;
 import victor.training.java.advanced.repo.OrderRepo;
 
+//
+//   public static <T> Consumer<T> wrapChecked(MyConsumer<T> function) {
+//      return str -> {
+//         try {
+//            function.accept(str);
+//         } catch (RuntimeException e) {
+//            throw e;
+//         } catch (Exception e) {
+//            throw new RuntimeException(e);
+//         }
+//      };
+//   }
 
-@FunctionalInterface
- interface MyConsumer<T> {
-
-   void accept(T t) throws Exception
-       ;
-}
+//@FunctionalInterfacec
 @Service
 class FileExporter {
    @Autowired
@@ -40,7 +49,6 @@ class FileExporter {
          writer.write("OrderID;Date\n");
 			orderRepo.findByActiveTrue()
 				.map(o -> o.getId() + ";" + o.getCreationDate() + "\n")
-//				.forEach(wrapChecked(writer::write));
 				.forEach(Unchecked.consumer(writer::write));
 
          System.out.println("File export completed: " + file.getAbsolutePath());
@@ -50,17 +58,6 @@ class FileExporter {
       } finally {
          System.out.println("Export finished in: " + (System.currentTimeMillis()-t0));
       }
-   }
-
-   public static <T> Consumer<T> wrapChecked(MyConsumer<T> function) {
-      return str -> {
-         try {
-            function.accept(str);
-         } catch (Exception e) {
-            throw new RuntimeException(e);
-         }
-
-      };
    }
 
 //   @SneakyThrows
@@ -88,3 +85,14 @@ public class LoanPattern implements CommandLineRunner {
    }
 }
 
+class MyException extends RuntimeException{
+   MyException(ErrorCode errorCode) {
+      this.errorCode = errorCode;
+   }
+
+   enum ErrorCode {
+      GENERAL,
+      SOMET_BAD_IN_PLACE_X
+   }
+   private final ErrorCode errorCode;
+}
