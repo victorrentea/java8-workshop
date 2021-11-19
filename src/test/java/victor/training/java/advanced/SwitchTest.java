@@ -7,6 +7,7 @@ import org.springframework.boot.test.system.CapturedOutput;
 import org.springframework.boot.test.system.OutputCaptureExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.fail;
 import static victor.training.java.advanced.MovieType.*;
 
 class SwitchTest {
@@ -17,6 +18,19 @@ class SwitchTest {
       @Test
       void regular() {
          assertThat(target.computePrice(REGULAR, 2)).isEqualTo(3);
+      }
+
+      @Test
+      void allEnumsCovered() {
+         for (MovieType type : values()) {
+            try {
+               target.computePrice(type, null);
+            } catch (MySpecialCaseNotFoundException e) {
+               fail();
+            } catch (Exception e) {
+               //
+            }
+         }
       }
 
       @Test

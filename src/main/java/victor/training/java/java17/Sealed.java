@@ -14,53 +14,57 @@ public class Sealed {
    void perimeter() {
       double totalPerimeter = 0;
       for (Shape shape : shapes) {
-         // TODO
+         totalPerimeter += shape.getPerimeter();
       }
       System.out.println("Total perimeter: " + totalPerimeter);
    }
 
    public static void main(String[] args) {
       for (Shape shape : shapes) {
-         // TODO display all shapes
+         switch (shape) {
+            case Circle circle -> DisplayShape.display(graphics -> graphics.drawOval(circle.radius(), circle.radius(), circle.radius(), circle.radius()));
+            case Square square ->  DisplayShape.display(graphics -> graphics.drawRect(square.edge(), square.edge(), square.edge(), square.edge()));
+         }
+//         Ellipsis(radiusX,radiusY) = methodCalLreturningCircle();
+
+//         if (shape instanceof Circle circle) {
+//            DisplayShape.display(graphics -> {
+//               graphics.drawOval(circle.radius(), circle.radius(), circle.radius(), circle.radius());
+//            });
+//         } else if (shape instanceof Square square) {
+//            DisplayShape.display(graphics -> {
+//               graphics.drawRect(square.edge(), square.edge(), square.edge(), square.edge());
+//            });
+//         }
       }
       // examples
-      DisplayShape.display(graphics -> {
-         graphics.drawOval(10, 10, 10, 20);
-      });
-      DisplayShape.display(graphics -> {
-         graphics.drawRect(10, 10, 10, 30);
-      });
+//      DisplayShape.display(graphics -> {
+//         graphics.drawRect(10, 10, 10, 30);
+//      });
    }
 
 }
 
 
-interface Shape {
-
+sealed interface Shape permits Circle,Square{
+   double getPerimeter();
 }
 
-final class Circle implements Shape {
-   private final int radius;
+record Circle(int radius) implements Shape {
 
-   Circle(int radius) {
-      this.radius = radius;
-   }
-
-   public int radius() {
-      return radius;
+   @Override
+   public double getPerimeter() {
+      return 2 * Math.PI * radius;
    }
 }
 
-final class Square implements Shape {
-   private final int edge;
+record Square(int edge) implements Shape {
 
-   Square(int edge) {
-      this.edge = edge;
+   @Override
+   public double getPerimeter() {
+      return 4 * edge;
    }
 
-   public int edge() {
-      return edge;
-   }
 }
 
 // ======== HAZARD AREA: VISITOR PATTERN ==========

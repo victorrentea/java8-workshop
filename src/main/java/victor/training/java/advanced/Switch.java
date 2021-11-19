@@ -10,7 +10,9 @@ import java.util.function.Function;
 enum MovieType {
    REGULAR(Switch::computeRegularPrice),
    NEW_RELEASE(Switch::computeNewReleasePrice),
-   CHILDREN (Switch::computeChildrenPrice);
+   CHILDREN (Switch::computeChildrenPrice),
+   ELDERS(null)
+   ;
 
    private final BiFunction<Switch, Integer, Integer> computer;
    MovieType(BiFunction<Switch, Integer, Integer> computer) { // or a Function
@@ -21,8 +23,6 @@ enum MovieType {
       return computer;
    }
 }
-
-
 
 @Service
 public class Switch {
@@ -42,27 +42,38 @@ public class Switch {
    }
 
    // @see tests
-   public int computePrice(MovieType type, int days) {
-      return type.getComputer().apply(this, days);
-//      switch (type) {
-//         case REGULAR:
-//            return days + 1;
-//         case NEW_RELEASE:
-//            return days * 2;
-//         case CHILDREN:
-//            return 5;
-//         default:
-//            throw new IllegalStateException("Unexpected value: " + type);
-//      }
+   public int computePrice(MovieType type, Integer days) {
+//      return type.getComputer().apply(this, days);
+//      return switch (type) {
+//         case REGULAR -> days + 1;
+//         case NEW_RELEASE -> days * 2;
+//         case CHILDREN -> 5;
+//      };
+      switch (type) {
+         case REGULAR:
+            return days + 1;
+         case NEW_RELEASE:
+            return days * 2;
+         case CHILDREN:
+            return 5;
+         default:
+            throw new MySpecialCaseNotFoundException();
+      }
    }
 
    public void auditDelayReturn(MovieType movieType, int delayDays) {
       switch (movieType) {
-         case REGULAR:
-            System.out.println("Regular delayed by " + delayDays);break;
-         case NEW_RELEASE:
-            System.out.println("CRITICAL: new release return delayed by " + delayDays);break;
+         case REGULAR,CHILDREN -> forRegular(delayDays);
+         case NEW_RELEASE -> System.out.println("CRITICAL: new release return delayed by " + delayDays);
       }
+   }
+
+   private void forRegular(int delayDays) {
+      System.out.println("Regular delayed by " + delayDays);
+      System.out.println("Regular delayed by " + delayDays);
+      System.out.println("Regular delayed by " + delayDays);
+      System.out.println("Regular delayed by " + delayDays);
+      System.out.println("Regular delayed by " + delayDays);
    }
 }
 
