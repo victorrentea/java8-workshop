@@ -1,10 +1,5 @@
 package victor.training.java.advanced;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.Writer;
-import java.util.function.Consumer;
-
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jooq.lambda.Unchecked;
@@ -14,8 +9,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Service;
-import victor.training.java.advanced.MyException.ErrorCode;
 import victor.training.java.advanced.repo.OrderRepo;
+import victor.training.java.advanced.repo.UserRepo;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.Writer;
+import java.util.function.Consumer;
 
 //
 //   public static <T> Consumer<T> wrapChecked(MyConsumer<T> function) {
@@ -33,41 +33,55 @@ import victor.training.java.advanced.repo.OrderRepo;
 //@FunctionalInterfacec
 @Service
 class FileExporter {
-   @Autowired
-   private OrderRepo orderRepo;
    @Value("${export.folder.out}")
    private File folder;
 
-//   @Timed // micrometer >> measures and reports the ex time of this function over actuator to prometheus > grafana
-   public void exportFile() {
-      File file = new File(folder, "orders.csv");
+   //   @Timed // micrometer >> measures and reports the ex time of this function over actuator to prometheus > grafana
+   public void exportFile(String fileName, Consumer<Writer> contentWriterFunction) {
+      File file = new File(folder, fileName);
       long t0 = System.currentTimeMillis();
       try (Writer writer = new FileWriter(file)) {
          System.out.println("Starting export to: " + file.getAbsolutePath());
 
-
-         writer.write("OrderID;Date\n");
-			orderRepo.findByActiveTrue()
-				.map(o -> o.getId() + ";" + o.getCreationDate() + "\n")
-				.forEach(Unchecked.consumer(writer::write));
+         contentWriterFunction.accept(writer);
 
          System.out.println("File export completed: " + file.getAbsolutePath());
       } catch (Exception e) {
          System.out.println("Imagine: Send Error Notification Email");
          throw new RuntimeException("Error exporting data", e);
       } finally {
-         System.out.println("Export finished in: " + (System.currentTimeMillis()-t0));
+         System.out.println("Export finished in: " + (System.currentTimeMillis() - t0));
       }
    }
+}
+// garbage
+// -------------------- arch = the art of drawing lines
+// what i care about; bugs/cr will be here
+@Service
+class Exports {
+   @Autowired
+   private OrderRepo orderRepo;
 
-//   @SneakyThrows
-//   private void writeSafely(Writer writer, String str) {
-//      try {
-//         writer.write(str);
-//      } catch (IOException e) {
-//         throw new RuntimeException(e);
-//      }
-//   }
+   @SneakyThrows
+   public void writeOrders(Writer writer) {
+      writer.write("OrderID;Date\n");
+      orderRepo.findByActiveTrue()
+          .map(o -> o.getId() + ";" + o.getCreationDate() + "\n")
+          .forEach(Unchecked.consumer(writer::write));
+   }
+
+   @Autowired
+   UserRepo userRepo;
+
+   @SneakyThrows
+   public void writeUsers(Writer writer) {
+      writer.write("username;fullname\n");
+      userRepo.findAll()
+          .stream().map(u -> u.getUsername() + ";" + u.getFullName() + "\n")
+          .forEach(Unchecked.consumer(writer::write));
+   }
+
+
 }
 
 @RequiredArgsConstructor
@@ -78,14 +92,19 @@ public class LoanPattern implements CommandLineRunner {
    }
 
    private final FileExporter fileExporter;
-   public void run(String... args) throws Exception {
-      fileExporter.exportFile();
+   private final Exports exports;
 
-      // TODO implement export of users too
+   public void run(String... args) throws Exception {
+      fileExporter.exportFile("orders.csv", exports::writeOrders);
+
+
+      fileExporter.exportFile("users.csv", exports::writeUsers);
+
+      // TODO implement export of users too "the same way yo exported the orders"
    }
 }
 
-class MyException extends RuntimeException{
+class MyException extends RuntimeException {
    MyException(ErrorCode errorCode) {
       this.errorCode = errorCode;
    }
@@ -94,5 +113,6 @@ class MyException extends RuntimeException{
       GENERAL,
       SOMET_BAD_IN_PLACE_X
    }
+
    private final ErrorCode errorCode;
 }

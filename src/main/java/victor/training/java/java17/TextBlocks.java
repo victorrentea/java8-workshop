@@ -16,9 +16,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class TextBlocks {
 
    interface SomeSpringDataRepo extends JpaRepository<Order, Long> {
-      @Query("SELECT t FROM TeachingActivity a JOIN a.teachers t WHERE "
-         + "a.id IN (SELECT c.id FROM StudentsYear y JOIN y.courses c WHERE y.id = :yearId) "
-         + "OR a.id IN (SELECT lab.id FROM StudentsYear y JOIN y.groups g JOIN g.labs lab WHERE y.id = :yearId)")
+      @Query("""
+          SELECT t
+          FROM TeachingActivity a
+            JOIN a.teachers t
+            WHERE a.id IN (SELECT c.id 
+               FROM StudentsYear y 
+               JOIN y.courses c 
+               WHERE y.id = :yearId)
+          OR a.id IN (SELECT lab.id FROM StudentsYear y JOIN y.groups g JOIN g.labs lab WHERE y.id = :yearId)
+          """)
       List<Order> complexQuery(long id1, long id2); // bogus
    }
 
@@ -28,7 +35,11 @@ public class TextBlocks {
    void test() throws Exception {
       mockMvc.perform(post("/product/search")
               .contentType("application/json")
-              .content("{\"name\":\"somth\"}") // add one more criteria
+              .content("""
+                  {
+                     "name":"somth"
+                  }
+                  """) // add one more criteria
           )
           .andExpect(status().isOk()) // 200
           .andExpect(jsonPath("$", hasSize(1)));
