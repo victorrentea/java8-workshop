@@ -4,7 +4,10 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
@@ -12,24 +15,26 @@ import static victor.training.java.advanced.tricks.ConcurrencyUtil.sleepq;
 
 @Slf4j
 public class ParallelStreams {
-   public static void main(String[] args) {
+   public static void main(String[] args) throws ExecutionException, InterruptedException {
 //      Enemy.parallelRequest();
 
       long t0 = System.currentTimeMillis();
 
-      List<Integer> list = IntStream.range(1,100).boxed().collect(toList());
+      List<Integer> list = IntStream.range(1,100000).boxed().collect(toList());
 
-      List<Integer> result = list.stream()
+      Stream<Integer> stream = list.stream()
           .filter(i -> {
-             log.debug("Filter " + i);
+//             log.debug("Filter " + i);
              return i % 2 == 0;
           })
           .map(i -> {
-             log.debug("Map " + i);
-             sleepq(100); // do some 'paralellizable' I/O work (DB, REST, SOAP)
+//             log.debug("Map " + i);
+//             sleepq(100); // http/db call
              return i * 2;
-          })
-          .collect(toList());
+          });
+
+      ForkJoinPool pool = new ForkJoinPool(20);
+      List<Integer> result = pool.submit(  () -> stream.collect(toList())  ).get() ;
       log.debug("Got result: " + result);
 
       long t1 = System.currentTimeMillis();
