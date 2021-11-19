@@ -4,20 +4,18 @@ package victor.training.java.advanced;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-enum MovieType {
-   REGULAR(days -> days + 1),
-   NEW_RELEASE(days -> days * 2),
-   CHILDREN (days -> 5);
+import java.util.function.Function;
 
-   private final PriceComputer computer;
-   @FunctionalInterface
-   interface PriceComputer {
-      int computePrice(int days);
-   }
-   MovieType(PriceComputer computer) { // or a Function
+enum MovieType {
+   REGULAR(Switch::computeRegularPrice),
+   NEW_RELEASE(Switch::computeNewReleasePrice),
+   CHILDREN (Switch::computeChildrenPrice);
+
+   private final Function<Integer, Integer> computer;
+   MovieType(Function<Integer, Integer> computer) { // or a Function
       this.computer = computer;
    }
-   public PriceComputer getComputer() {
+   public Function<Integer, Integer> getComputer() {
       return computer;
    }
 }
@@ -26,12 +24,24 @@ enum MovieType {
 
 @Service
 public class Switch {
-//   @Value("${children.price}")
-//   private int childrenPrice;
+   @Value("${children.price}")
+   public int childrenPrice;
+
+   public static int computeRegularPrice(int days) {
+      return days + 1;
+   }
+
+   public static int computeNewReleasePrice(int days) {
+      return days * 2;
+   }
+
+   public static int computeChildrenPrice(int days) {
+      return 5;
+   }
 
    // @see tests
    public static int computePrice(MovieType type, int days) {
-      return type.getComputer().computePrice(days);
+      return type.getComputer().apply(days);
 //      switch (type) {
 //         case REGULAR:
 //            return days + 1;
