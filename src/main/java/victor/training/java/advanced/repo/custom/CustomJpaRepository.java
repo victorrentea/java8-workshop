@@ -7,7 +7,10 @@ import java.io.Serializable;
 
 @NoRepositoryBean
 public interface CustomJpaRepository<T, ID extends Serializable> extends JpaRepository<T, ID> {
-    
-    T getExactlyOne(ID id);
-
+    /**
+     * @param id the PK to lookup
+     * @return the Entity. Never null.
+     * @throws javax.persistence.EntityNotFoundException when ID not found in DB
+     */
+    T findOneById(ID id);
 }
