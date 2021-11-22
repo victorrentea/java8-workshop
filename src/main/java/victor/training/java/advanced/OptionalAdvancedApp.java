@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
 import victor.training.java.advanced.model.Order;
 import victor.training.java.advanced.model.Product;
 import victor.training.java.advanced.repo.ProductRepo;
@@ -23,6 +24,7 @@ public class OptionalAdvancedApp implements CommandLineRunner {
 
    private final ProductRepo productRepo;
 
+   @Transactional
    public void run(String... args) throws Exception {
       productRepo.save(new Product("Tree"));
       // ## --- Streaming queries ---
@@ -41,8 +43,10 @@ public class OptionalAdvancedApp implements CommandLineRunner {
       // Product p = productRepo.findById(13L);
 
 
-      System.out.println("Search finds: " + productRepo.findByNameContaining("re"));
-      System.out.println("Search DOESN'T find: " + productRepo.findByNameContaining("rx"));
+      System.out.println("When search finds: ");
+      System.out.println(productRepo.findByNameContaining("re"));
+      System.out.println("When search DOESN'T find, repo returns:");
+      System.out.println(productRepo.findByNameContaining("rx"));
 
    }
 

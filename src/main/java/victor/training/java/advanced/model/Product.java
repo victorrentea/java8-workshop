@@ -10,6 +10,7 @@ import static lombok.AccessLevel.PRIVATE;
 
 @Getter
 @Setter
+@ToString
 @Entity
 @NoArgsConstructor(access = PRIVATE)
 public class Product {
