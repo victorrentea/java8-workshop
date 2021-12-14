@@ -2,9 +2,13 @@ package victor.training.java.advanced;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Writer;
+import java.util.function.Consumer;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import org.jooq.lambda.Unchecked;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -27,9 +31,9 @@ class FileExporter {
          System.out.println("Starting export to: " + file.getAbsolutePath());
 
          writer.write("OrderID;Date\n");
-//			orderRepo.findByActiveTrue()
-//				.map(o -> o.getId() + ";" + o.getCreationDate() + "\n")
-//				.forEach(writer::write);
+			orderRepo.findByActiveTrue()
+				.map(o -> o.getId() + ";" + o.getCreationDate() + "\n")
+				.forEach(Unchecked.consumer(writer::write));
 
          System.out.println("File export completed: " + file.getAbsolutePath());
       } catch (Exception e) {
@@ -39,7 +43,31 @@ class FileExporter {
          System.out.println("Export finished in: " + (System.currentTimeMillis()-t0));
       }
    }
+
+//   public static  <T>  Consumer<T> wrapException(ThrowingConsumer<T> throwingC) {
+//      return s -> {
+//         try {
+//            throwingC.accept(s);
+//         } catch (Exception e) {
+//            throw new RuntimeException(e);
+//         }
+//      };
+//   }
+
+//   private void writeSafely(Writer writer, String str) {
+//      try {
+//         writer.write(str);
+//      } catch (IOException e) {
+//         throw new RuntimeException(e);
+//      }
+//   }
 }
+
+@FunctionalInterface
+interface ThrowingConsumer<T> {
+   void accept(T t) throws Exception;
+}
+
 
 @RequiredArgsConstructor
 //@SpringBootApplication // enable on demand.
