@@ -29,7 +29,10 @@ public class SplitLoopToStream {
          }
       }
 //      int totalTickets = users.stream().filter(User::getActive).map(User::getTicketsRaised).reduce(0, Integer::sum);
-      int totalTickets = users.stream().filter(User::getActive).mapToInt(User::getTicketsRaised).sum();
+      int totalTickets = users.stream()
+          .filter(User::getActive)
+          .mapToInt(User::getTicketsRaised)
+          .sum();
 
       double noLanguagePercent = 100d * missingLanguageCount / users.size();
       System.out.printf("No language set  = %.2f%%\n", noLanguagePercent);

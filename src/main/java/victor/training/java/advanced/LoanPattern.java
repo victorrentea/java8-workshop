@@ -7,67 +7,65 @@ import java.io.Writer;
 import java.util.function.Consumer;
 
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.jooq.lambda.Unchecked;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Service;
 import victor.training.java.advanced.repo.OrderRepo;
+import victor.training.java.advanced.repo.UserRepo;
 
+@RequiredArgsConstructor
 @Service
 class FileExporter {
-   @Autowired
-   private OrderRepo orderRepo;
    @Value("${export.folder.out}")
    private File folder;
 
-   public void exportFile() {
-      File file = new File(folder, "orders.csv");
+   @FunctionalInterface
+   interface ContentWriteFunction {
+      void writeContent(Writer writer) throws IOException;
+   }
+
+   public void exportFile(String fileName, ContentWriteFunction contentWriter) {
+      File file = new File(folder, fileName);
       long t0 = System.currentTimeMillis();
       try (Writer writer = new FileWriter(file)) {
          System.out.println("Starting export to: " + file.getAbsolutePath());
 
-         writer.write("OrderID;Date\n");
-			orderRepo.findByActiveTrue()
-				.map(o -> o.getId() + ";" + o.getCreationDate() + "\n")
-				.forEach(Unchecked.consumer(writer::write));
-
+         // start tx ; setup stuff
+         contentWriter.writeContent(writer);
+//end; clean stuff
          System.out.println("File export completed: " + file.getAbsolutePath());
       } catch (Exception e) {
          System.out.println("Imagine: Send Error Notification Email");
          throw new RuntimeException("Error exporting data", e);
       } finally {
-         System.out.println("Export finished in: " + (System.currentTimeMillis()-t0));
+         System.out.println("Export finished in: " + (System.currentTimeMillis() - t0));
       }
    }
-
-//   public static  <T>  Consumer<T> wrapException(ThrowingConsumer<T> throwingC) {
-//      return s -> {
-//         try {
-//            throwingC.accept(s);
-//         } catch (Exception e) {
-//            throw new RuntimeException(e);
-//         }
-//      };
-//   }
-
-//   private void writeSafely(Writer writer, String str) {
-//      try {
-//         writer.write(str);
-//      } catch (IOException e) {
-//         throw new RuntimeException(e);
-//      }
-//   }
 }
+@RequiredArgsConstructor
+@Service
+class Exports {
+   private final OrderRepo orderRepo;
+   public void writeOrderContent(Writer writer) throws IOException {
+      writer.write("OrderID;Date\n");
+      orderRepo.findByActiveTrue()
+         .map(o -> o.getId() + ";" + o.getCreationDate() + "\n")
+         .forEach(Unchecked.consumer(writer::write));
+   }
 
-@FunctionalInterface
-interface ThrowingConsumer<T> {
-   void accept(T t) throws Exception;
+   private final UserRepo userRepo;
+   public void writeUserContent(Writer writer) throws IOException {
+      writer.write("username;fullname\n");
+      userRepo.findAll().stream()
+         .map(u->u.getUsername() + ";" +u.getFullName() + "\n")
+         .forEach(Unchecked.consumer(writer::write));
+   }
+
 }
-
+// how much refactoring is fine?
 
 @RequiredArgsConstructor
 //@SpringBootApplication // enable on demand.
@@ -77,10 +75,13 @@ public class LoanPattern implements CommandLineRunner {
    }
 
    private final FileExporter fileExporter;
+   private final Exports exports;
    public void run(String... args) throws Exception {
-      fileExporter.exportFile();
+      fileExporter.exportFile("orders.csv", exports::writeOrderContent);
 
-      // TODO implement export of users too
+      fileExporter.exportFile("users.csv", exports::writeUserContent);
+
+      // TODO implement export of users too "just like you exported orders"
    }
 }
 
