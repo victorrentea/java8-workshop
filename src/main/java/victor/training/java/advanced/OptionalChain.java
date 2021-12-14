@@ -14,6 +14,7 @@ public class OptionalChain {
 class MyMapper {
    public DeliveryDto convert(Parcel parcel) {
       DeliveryDto dto = new DeliveryDto();
+      // Game: how many NPE can you spot below ?
       dto.recipientPerson = parcel.getDelivery().getAddress().getContactPerson().getName().toUpperCase();
       return dto;
    }
