@@ -21,7 +21,9 @@ public class ExceptionsTest {
           "2020-12-01"
       );
       assertThat(exceptions.parseDates(dates)).containsExactly(
-          parse("2020-10-11"), parse("2020-11-12"), parse("2020-12-01"));
+          parse("2020-10-11"),
+          parse("2020-11-12"),
+          parse("2020-12-01"));
    }
    @Test
    public void mostValid() {
@@ -31,7 +33,8 @@ public class ExceptionsTest {
           "2020-12-01"
       );
       assertThat(exceptions.parseDates(dates)).containsExactly(
-          parse("2020-10-11"), parse("2020-12-01"));
+          parse("2020-10-11"),
+          parse("2020-12-01"));
    }
    @Test
    public void mostInvalid() {

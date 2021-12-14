@@ -1,10 +1,16 @@
 package victor.training.java.advanced;
 
+import java.util.Locale;
+import java.util.Optional;
+
+import static java.util.Objects.requireNonNull;
+import static java.util.Optional.ofNullable;
+
 public class OptionalChain {
 	static MyMapper mapper = new MyMapper();
    public static void main(String[] args) {
 		Parcel parcel = new Parcel()
-          .setDelivery(new Delivery(new Address().setContactPerson(new ContactPerson("John"))));
+          .setDelivery(new Delivery(null));
 
 		DeliveryDto dto = mapper.convert(parcel);
       System.out.println(dto);
@@ -14,38 +20,26 @@ public class OptionalChain {
 class MyMapper {
    public DeliveryDto convert(Parcel parcel) {
       DeliveryDto dto = new DeliveryDto();
-      dto.recipientPerson = parcel.getDelivery().getAddress().getContactPerson().getName().toUpperCase();
+      dto.recipientPerson = parcel.getDelivery()
+          .flatMap(delivery -> delivery.getAddress().getContactPerson())
+          .map(person -> person.getName().toUpperCase())
+          .orElse(null);
       return dto;
    }
-
-   public DeliveryDto pyramidOfNull(Parcel parcel) {
-      DeliveryDto dto = new DeliveryDto();
-      if (
-          parcel!=null &&
-          parcel.getDelivery()!=null &&
-          parcel.getDelivery().getAddress()!=null &&
-          parcel.getDelivery().getAddress().getContactPerson()!=null &&
-          parcel.getDelivery().getAddress().getContactPerson().getName()!=null) { // null terror
-         dto.recipientPerson = parcel.getDelivery().getAddress().getContactPerson().getName().toUpperCase();
-      } else {
-         dto.recipientPerson = "<NOT SET>";
-      }
-      return dto;
-   }
-
 
 }
 
 class DeliveryDto {
-	public String recipientPerson;
+	public String recipientPerson; // as json
 }
 
 class Parcel {
    private Delivery delivery; // NULL until a delivery is scheduled
 
-   public Delivery getDelivery() {
-      return delivery;
+   public Optional<Delivery> getDelivery() {
+      return ofNullable(delivery);
    }
+
 	public Parcel setDelivery(Delivery delivery) {
       this.delivery = delivery;
       return this;
@@ -54,14 +48,15 @@ class Parcel {
 
 
 class Delivery {
+//   @NotNull
    private Address address; // 'NOT NULL' IN DB
 
    public Delivery(Address address) {
-      this.address = address;
+      setAddress(address);
    }
 
 	public void setAddress(Address address) {
-		this.address = address; // TODO null safe
+      this.address = requireNonNull(address); // TODO null safe
 	}
 
 	public Address getAddress() {
@@ -80,8 +75,8 @@ class Address {
       return this;
    }
 
-   public ContactPerson getContactPerson() {
-      return contactPerson;
+   public Optional<ContactPerson> getContactPerson() {
+      return ofNullable(contactPerson);
    }
 }
 
@@ -89,7 +84,7 @@ class ContactPerson {
    private final String name; // 'NOT NULL' in DB
 
    public ContactPerson(String name) {
-      this.name = name;
+      this.name = requireNonNull(name);
    }
 
    public String getName() {

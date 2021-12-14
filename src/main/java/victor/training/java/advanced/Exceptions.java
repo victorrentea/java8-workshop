@@ -1,8 +1,11 @@
 package victor.training.java.advanced;
 
+import io.vavr.control.Try;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static java.util.stream.Collectors.toList;
 
@@ -16,10 +19,27 @@ public class Exceptions {
    public List<LocalDate> parseDates(List<String> dateStrList) {
       DateTimeFormatter pattern = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-      List<LocalDate> dates = dateStrList.stream()
-          .map(text -> LocalDate.parse(text, pattern))
+      List<Try<LocalDate>> tries = dateStrList.stream()
+          .map(text -> Try.of(() -> LocalDate.parse(text, pattern)))
           .collect(toList());
 
-      return dates;
+      long successes = tries.stream().filter(Try::isSuccess).count();
+      System.out.println(successes);
+      if (successes >= dateStrList.size()/2.0) {
+         return tries.stream().filter(Try::isSuccess).map(Try::get).collect(toList());
+      }
+
+      throw new IllegalArgumentException();
+
+
    }
+
+//   public CompletableFuture<String> method() {
+//      return CompletableFuture.failedFuture(new IllegalArgumentException());
+//   }
+//   public Mono<String> method() {
+//      return Mono.error(new IllegalArgumentException());
+//   }
+
+
 }
