@@ -8,6 +8,7 @@ enum MovieType {
    REGULAR,
    NEW_RELEASE,
    CHILDREN,
+   BABACI,
 
 }
 
@@ -18,15 +19,14 @@ public class Switch {
 
    // @see tests
    public static int computePrice(MovieType type, int days) {
-      switch (type) {
-         case REGULAR:
-            return days + 1;
-         case NEW_RELEASE:
-            return days * 2;
-         case CHILDREN:
-            return 5;
-      }
-      return 0; // opinions?
+      int v = switch (type) {
+         case REGULAR -> days + 1;
+         case NEW_RELEASE -> days * 2;
+         case CHILDREN -> 5;
+         case BABACI ->  -1;
+      };
+      return v;
+      // opinions?
    }
 
    public void auditDelayReturn(MovieType movieType, int delayDays) {
@@ -35,6 +35,7 @@ public class Switch {
             System.out.println("Regular delayed by " + delayDays);break;
          case NEW_RELEASE:
             System.out.println("CRITICAL: new release return delayed by " + delayDays);break;
+
       }
    }
 }

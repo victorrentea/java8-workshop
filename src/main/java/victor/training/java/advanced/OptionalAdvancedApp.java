@@ -59,8 +59,10 @@ public class OptionalAdvancedApp implements CommandLineRunner {
       // Abuse 2: Optional created and terminated in the same method.
       excessOpt(new DeliveryDto());
 
+      // Abuse 3bis: Optional pe getteri de DTO --> JSON
+
       // Abuse 3: **All** callers do .get / .orElseThrow on the Optional<> you return
-      // Product p = productRepo.findById(13L);
+       Product p = productRepo.findOneById(13L);
 
 
       System.out.println("When search finds: ");
@@ -85,9 +87,15 @@ public class OptionalAdvancedApp implements CommandLineRunner {
    }
 
    public static void excessOpt(DeliveryDto dto) {
-      boolean duplicate = Optional.ofNullable(dto.recipientPerson)
-          .map(name -> existsByName(name))
-          .orElse(false);
+//      boolean duplicate = Optional.ofNullable(dto.recipientPerson)
+//          .map(name -> existsByName(name))
+//          .orElse(false);
+
+      boolean duplicate = false;
+      if (dto.recipientPerson != null) {
+         duplicate = existsByName(dto.recipientPerson);
+      }
+
       if (duplicate) {
          System.out.println("DUPLICATE person!");
       }

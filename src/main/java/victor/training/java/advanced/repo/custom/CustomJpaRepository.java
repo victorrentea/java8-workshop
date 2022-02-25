@@ -6,7 +6,8 @@ import org.springframework.data.repository.NoRepositoryBean;
 import java.io.Serializable;
 
 @NoRepositoryBean
-public interface CustomJpaRepository<T, ID extends Serializable> extends JpaRepository<T, ID> {
+public interface CustomJpaRepository<T, ID extends Serializable>
+    extends JpaRepository<T, ID> {
     /**
      * @param id the PK to lookup
      * @return the Entity. Never null.

@@ -13,6 +13,11 @@ public class Customer {
       this.memberCard = profile;
    }
 
+   public Customer setMemberCard(MemberCard memberCard) {
+      this.memberCard = memberCard;
+      return this;
+   }
+
    public Optional<MemberCard> getMemberCard() {
       return Optional.ofNullable(memberCard);
    }

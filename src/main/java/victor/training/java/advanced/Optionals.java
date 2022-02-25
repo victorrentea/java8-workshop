@@ -39,10 +39,10 @@ public class Optionals {
       if (card == null) {
          return Optional.empty();
       }
-      if (card.getFidelityPoints() >= 100) {
+      if (card.fidelityPoints() >= 100) {
          return Optional.of(new Discount(5));
       }
-      if (card.getFidelityPoints() >= 50) {
+      if (card.fidelityPoints() >= 50) {
          return Optional.of(new Discount(3));
       }
       return Optional.empty();
