@@ -1,6 +1,7 @@
 package victor.training.java.advanced;
 
 import lombok.RequiredArgsConstructor;
+import org.jooq.lambda.Unchecked;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,6 +16,8 @@ import javax.persistence.EntityManager;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.Optional;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RequiredArgsConstructor
@@ -65,8 +68,21 @@ public class OptionalAdvancedApp implements CommandLineRunner {
       System.out.println("When search DOESN'T find, repo returns:");
       System.out.println(productRepo.findByNameContaining("rx"));
 
+
    }
 
+   public void chemi() {
+      Supplier<Stream<String>> supplierDeStreamuri = Unchecked.supplier(() -> Files.lines(new File("test.ok.txt").toPath()));
+      method(supplierDeStreamuri);
+   }
+
+   public void method(Supplier<Stream<String>> a) {
+      try (Stream<String> stringStream = a.get()) {
+         stringStream.collect(Collectors.toList());
+      }
+
+      a.get().collect(Collectors.toList());
+   }
 
    public static void excessOpt(DeliveryDto dto) {
       boolean duplicate = Optional.ofNullable(dto.recipientPerson)

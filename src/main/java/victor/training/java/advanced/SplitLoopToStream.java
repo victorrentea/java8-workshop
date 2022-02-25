@@ -1,23 +1,25 @@
 package victor.training.java.advanced;
 
+import org.springframework.stereotype.Service;
 import victor.training.java.advanced.model.User;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
+import java.util.stream.Collectors;
 public class SplitLoopToStream {
 
    // see tests
    public void bossLevel(List<User> users) {
-      List<String> allUsernames = new ArrayList<>();
-      int missingLanguageCount = 0;
+      int missingLanguageCount;
       int totalTickets = 0;
+
+      List<String> allUsernames = users.stream().map(User::getUsername).collect(Collectors.toList());
+
+      missingLanguageCount = (int) users.stream()
+          .filter(user -> user.getLanguage() == null).count();
+
       for (User user : users) {
-         allUsernames.add(user.getUsername());
-         if (user.getLanguage() == null) {
-            missingLanguageCount++;
-         }
          if (!user.getActive()) {
             insertInactiveAlert(user.getId());
             continue;
