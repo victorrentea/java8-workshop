@@ -1,7 +1,7 @@
 package victor.training.java.advanced;
 
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
+import org.jooq.lambda.Unchecked;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -11,8 +11,8 @@ import victor.training.java.advanced.repo.OrderRepo;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.Writer;
+import java.util.function.Consumer;
 
 @Service
 class FileExporter {
@@ -21,6 +21,10 @@ class FileExporter {
    @Value("${export.folder.out}")
    private File folder;
 
+   @FunctionalInterface
+   public interface ConsumerChecked<T> {
+      void accept(T t) throws Exception;
+   }
    public void exportFile() {
       File file = new File(folder, "orders.csv");
       long t0 = System.currentTimeMillis();
@@ -31,7 +35,7 @@ class FileExporter {
 
          orderRepo.findByActiveTrue()
              .map(order -> order.getId() + ";" + order.getCreationDate() + "\n")
-             .forEach(str -> writeSafely(writer, str));
+             .forEach(Unchecked.consumer(writer::write));
 
          System.out.println("File export completed: " + file.getAbsolutePath());
       } catch (Exception e) {
@@ -42,10 +46,17 @@ class FileExporter {
       }
    }
 
-   @SneakyThrows
-   private void writeSafely(Writer writer, String str) {
-      writer.write(str);
+   // 2nd level higher order function : primeste si intoarce fct: evita sa scrii TU asa ceva: greu debug
+   public static <T>  Consumer<T> wrapChecked(ConsumerChecked<T> consumerChecked) {
+      return s -> {
+         try {
+            consumerChecked.accept(s);
+         } catch (Exception e) {
+            throw new RuntimeException(e);
+         }
+      };
    }
+
 }
 
 @RequiredArgsConstructor
