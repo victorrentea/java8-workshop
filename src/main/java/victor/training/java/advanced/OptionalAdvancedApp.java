@@ -12,6 +12,7 @@ import victor.training.java.advanced.model.Product;
 import victor.training.java.advanced.repo.ProductRepo;
 import victor.training.java.advanced.repo.custom.CustomJpaRepositoryFactoryBean;
 
+import javax.persistence.EntityManager;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -23,13 +24,25 @@ public class OptionalAdvancedApp implements CommandLineRunner {
    }
 
    private final ProductRepo productRepo;
+   private final EntityManager entityManager;
 
-   @Transactional
+@Transactional
    public void run(String... args) throws Exception {
       productRepo.save(new Product("Tree"));
+
+
       // ## --- Streaming queries ---
       productRepo.findAllByDeletedFalse() // imagine 1M products
+          .peek(product -> entityManager.detach(product)) // good practice daca intorci Stream<> din met din SPring Data JPA
           .forEach(System.out::println);
+
+
+
+
+
+
+
+
       // Also see JdbcTemplate#queryForStream
 
       // ## --- Optional Abuse? ---
