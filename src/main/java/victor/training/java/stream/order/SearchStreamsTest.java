@@ -92,7 +92,7 @@ public class SearchStreamsTest {
 		Order order4 = new Order().setCreationDate(LocalDate.parse("2016-01-04"));
 		
 		Customer customer = new Customer(order1, order2, order3, order4);
-		assertEquals(Arrays.asList(order4,order3,order2), service.p6_getLast3Orders(customer));
+		assertEquals(Arrays.asList(order4,order3,order2), service.p6_getLatestOrders(customer));
 	}
 	
 	@Test
@@ -101,13 +101,13 @@ public class SearchStreamsTest {
 		Order order2 = new Order().setCreationDate(LocalDate.parse("2016-01-02"));
 		
 		Customer customer = new Customer(order1, order2);
-		assertEquals(Arrays.asList(order2, order1), service.p6_getLast3Orders(customer));
+		assertEquals(Arrays.asList(order2, order1), service.p6_getLatestOrders(customer));
 	}
 	
 	@Test
 	public void p6_getLast3Orders_whenNoOrders() {
 		Customer customer = new Customer();
-		assertEquals(Arrays.asList(), service.p6_getLast3Orders(customer));
+		assertEquals(Arrays.asList(), service.p6_getLatestOrders(customer));
 	}
 	
 

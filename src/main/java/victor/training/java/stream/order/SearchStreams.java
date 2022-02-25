@@ -8,14 +8,6 @@ import victor.training.java.stream.order.entity.Customer;
 import victor.training.java.stream.order.entity.Order;
 
 public class SearchStreams {
-	
-	/**
-	 * FIRST OF ALL: Add the following "Favourite" static imports:
-	 * Eclipse: Window > Preferences > type "Favo" > Favorites >
-	 * 					> New Type > Browse > and type the class name for:
-		java.util.stream.Collectors
-	 */
-	
 	/**
 	 * - shorten/clean it up
 	 */
@@ -26,19 +18,11 @@ public class SearchStreams {
 	}
 	
 	/**
-	 * @return the Order in the list with the given id  
-	 * - ...Any or ...First ?
-	 * - what do you do when you don't find it ? null/throw/Optional ?
+	 * @return the Order in the list with the given id, or null if not found
+	 * - findAny or findFirst ?
 	 */
 	public Order p2_getOrderById(List<Order> orders, long orderId) {
-		return orders.stream()
-				.filter(order -> order.getId() == orderId)
-				.findFirst()
-				.orElse(null);
-				// you do elseThrow if you want a custom exception.
-				// .orElseThrow(() -> new MyException("There is no Order in the provided list that matches the id provided: " + orderId));
-				// Better, keeps the reader focused:
-//				.orElseThrow(() -> new MyException(MYErrorCode.NO_ORDER, orderId));
+		return null;
 	}
 	
 	/**
@@ -56,10 +40,8 @@ public class SearchStreams {
 		return true; // order.getOrderLines().stream() 
 	}
 	
-	// ---------- select the best ------------
-	
 	/**
-	 * The Order with maximum getTotalPrice. 
+	 * Return the Order with maximum getTotalPrice.
 	 * i.e. the most expensive Order, or null if no Orders
 	 * - Challenge: return an Optional<creationDate>
 	 */
@@ -70,7 +52,7 @@ public class SearchStreams {
 	/**
 	 * last 3 Orders sorted descending by creationDate
 	 */
-	public List<Order> p6_getLast3Orders(Customer customer) {
+	public List<Order> p6_getLatestOrders(Customer customer) {
 		return null; 
 	}
 	

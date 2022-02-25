@@ -22,7 +22,7 @@ public class TransformStreams {
 
 	/**
 	 * Transform all entities to DTOs.
-	 * Discussion:.. Make it cleanest!
+	 * use .map
 	 */
 	public List<OrderDto> p01_toDtos(List<Order> orders) {
 		
