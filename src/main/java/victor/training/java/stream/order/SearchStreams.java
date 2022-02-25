@@ -21,12 +21,12 @@ public class SearchStreams {
 	 */
 	public List<Order> p1_getActiveOrders(Customer customer) {	
 		return customer.getOrders().stream()
-				.filter(order -> order.getStatus() == Order.Status.ACTIVE)
+				.filter(Order::isActive)
 				.collect(toList());
 	}
 	
 	/**
-	 * @return the Order in the list with the given id  
+	 * @return the Order in the list with the given id  or null if not found
 	 * - ...Any or ...First ?
 	 * - what do you do when you don't find it ? null/throw/Optional ?
 	 */
