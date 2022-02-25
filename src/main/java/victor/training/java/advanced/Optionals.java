@@ -1,7 +1,7 @@
 package victor.training.java.advanced;
 
 import lombok.Data;
-import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import victor.training.java.advanced.model.Customer;
 import victor.training.java.advanced.model.MemberCard;
 
@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
 @SuppressWarnings("ConstantConditions")
 public class Optionals {
    public static void main(String[] args) {
@@ -19,15 +20,25 @@ public class Optionals {
    }
 
    public static String getDiscountLine(Customer customer) {
-		return getApplicableDiscountPercentage(customer.getMemberCard())
-			.map(discount -> "Discount: " + discount.getGlobalPercentage())
-			.orElse("");
+
+      Runnable r = ()->{};
+//      customer.getMemberCard().map(x -> 1).orElse(0);
+      customer.getMemberCard().ifPresentOrElse(x -> {}, ()->log.error("OUPS"));
+
+      if (customer.getMemberCard().isEmpty()) {
+         log.error("OUPS");
+      }
+
+      return customer.getMemberCard()
+          .flatMap(card -> getApplicableDiscountPercentage(card))
+          .map(discount -> "Discount: " + discount.getGlobalPercentage())
+          .orElse("");
    }
 
    private static Optional<Discount> getApplicableDiscountPercentage(MemberCard card) {
-		if (card == null) {
-			return Optional.empty();
-		}
+      if (card == null) {
+         return Optional.empty();
+      }
       if (card.getFidelityPoints() >= 100) {
          return Optional.of(new Discount(5));
       }
