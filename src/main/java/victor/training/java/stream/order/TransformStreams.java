@@ -6,12 +6,15 @@ import victor.training.java.stream.order.entity.Order;
 import victor.training.java.stream.order.entity.Order.PaymentMethod;
 import victor.training.java.stream.order.entity.Product;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.*;
@@ -128,7 +131,19 @@ public class TransformStreams {
     * Sum of all Order.getTotalPrice(), truncated to Long.
     */
    public Long p09_getApproximateTotalOrdersPrice(Customer customer) {
+//      IntStream.range(1,10_000).boxed().map(Obj::new)
       // TODO +, longValue(), reduce()
-      return null;
+      BinaryOperator<BigDecimal> op = (bigDecimal, bigDecimal2) -> bigDecimal.add(bigDecimal2);
+      BiFunction<BigDecimal,BigDecimal,BigDecimal> op2 = (bigDecimal, bigDecimal2) -> bigDecimal.add(bigDecimal2);
+      BiFunction<BigDecimal,BigDecimal,BigDecimal> op3 = BigDecimal::add;
+
+      return customer.getOrders().stream()
+//          .map(Order::getTotalPrice)
+//          .reduce(BigDecimal.ZERO, BigDecimal::add) // de evitat, greu de citit
+//          .longValue();
+
+          .mapToLong(order -> order.getTotalPrice().longValue())
+          .sum();
+
    }
 }
