@@ -2,10 +2,13 @@ package victor.training.java.stream.order;
 
 import static java.util.stream.Collectors.toList;
 
+import java.util.Comparator;
 import java.util.List;
 
 import victor.training.java.stream.order.entity.Customer;
 import victor.training.java.stream.order.entity.Order;
+import victor.training.java.stream.order.entity.Order.Status;
+import victor.training.java.stream.order.entity.OrderLine;
 
 public class SearchStreams {
 	
@@ -31,14 +34,21 @@ public class SearchStreams {
 	 * - what do you do when you don't find it ? null/throw/Optional ?
 	 */
 	public Order p2_getOrderById(List<Order> orders, long orderId) {
-		return null; // TODO
+		return orders.stream()
+			.filter(order -> order.getId().equals(orderId))
+			.findFirst()
+			.orElse(null)
+			;
 	}
 	
 	/**
 	 * @return true if customer has at least one order with status ACTIVE
 	 */
 	public boolean p3_hasActiveOrders(Customer customer) {
-		return true; // TODO
+		return customer.getOrders().stream().anyMatch(Order::isActive);
+		// short-circuiting: pt ca streamurile se evalueaza lazy ( de la coada la cap )
+		// s-a putut implemente ca atunci cand anyAMatch gaseste true pt un element,
+		// se opreste procesare
 	}
 
 	/**
@@ -46,7 +56,8 @@ public class SearchStreams {
 	 * any OrderLine with isSpecialOffer()==true
 	 */
 	public boolean p4_canBeReturned(Order order) {
-		return true; // TODO
+		return order.getOrderLines().stream()
+			.noneMatch(OrderLine::isSpecialOffer);
 	}
 	
 	// ---------- select the best ------------
@@ -57,14 +68,19 @@ public class SearchStreams {
 	 * - Challenge: return an Optional<creationDate>
 	 */
 	public Order p5_getMaxPriceOrder(Customer customer) {
-		return null; // TODO
+		return customer.getOrders().stream()
+			.max(Comparator.comparing(Order::getTotalPrice))
+			.orElse(null);
 	}
 	
 	/**
 	 * last 3 Orders sorted descending by creationDate
 	 */
 	public List<Order> p6_getLast3Orders(Customer customer) {
-		return null; 
+		return customer.getOrders().stream()
+			.sorted(Comparator.comparing(Order::getCreationDate).reversed())
+			.limit(3)
+			.collect(toList());
 	}
 	
 	
