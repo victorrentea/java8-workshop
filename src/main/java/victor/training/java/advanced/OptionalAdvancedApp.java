@@ -5,7 +5,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import victor.training.java.advanced.model.Order;
 import victor.training.java.advanced.model.Product;
@@ -13,7 +12,10 @@ import victor.training.java.advanced.repo.ProductRepo;
 import victor.training.java.advanced.repo.custom.CustomJpaRepositoryFactoryBean;
 
 import javax.persistence.EntityManager;
+import java.io.File;
+import java.nio.file.Files;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @EnableJpaRepositories(repositoryFactoryBeanClass = CustomJpaRepositoryFactoryBean.class)
@@ -26,21 +28,23 @@ public class OptionalAdvancedApp implements CommandLineRunner {
    private final ProductRepo productRepo;
    private final EntityManager entityManager;
 
-@Transactional
+   @Transactional
    public void run(String... args) throws Exception {
       productRepo.save(new Product("Tree"));
 
+//      List<String> stringuri =  new ArrayList<>();
+//      stringuri.stream()
+
+      File f = new File("test.ok.txt");
+      try (Stream<String> linesStream = Files.lines(f.toPath())) {
+         linesStream.forEach(System.out::println);
+      }
+//      f.delete();
 
       // ## --- Streaming queries ---
       productRepo.findAllByDeletedFalse() // imagine 1M products
           .peek(product -> entityManager.detach(product)) // good practice daca intorci Stream<> din met din SPring Data JPA
           .forEach(System.out::println);
-
-
-
-
-
-
 
 
       // Also see JdbcTemplate#queryForStream
