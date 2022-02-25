@@ -23,10 +23,16 @@ public class StreamWreck {
           .stream()
           .filter(e -> e.getValue() >= 10)
           .map(Entry::getKey)
-          .filter(p -> !p.isDeleted())
+          
+          
+          .filter(Product::isActive)
+          
+          
+          
           .filter(p -> !productRepo.findByHiddenTrue().contains(p))
           .collect(toList());
    }
+
 }
 
 

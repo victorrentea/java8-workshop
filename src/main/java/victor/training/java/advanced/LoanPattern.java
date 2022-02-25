@@ -1,17 +1,18 @@
 package victor.training.java.advanced;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.Writer;
-
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Service;
 import victor.training.java.advanced.repo.OrderRepo;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 
 @Service
 class FileExporter {
@@ -27,17 +28,23 @@ class FileExporter {
          System.out.println("Starting export to: " + file.getAbsolutePath());
 
          writer.write("OrderID;Date\n");
-//			orderRepo.findByActiveTrue()
-//				.map(o -> o.getId() + ";" + o.getCreationDate() + "\n")
-//				.forEach(writer::write);
+
+         orderRepo.findByActiveTrue()
+             .map(order -> order.getId() + ";" + order.getCreationDate() + "\n")
+             .forEach(str -> writeSafely(writer, str));
 
          System.out.println("File export completed: " + file.getAbsolutePath());
       } catch (Exception e) {
          System.out.println("Imagine: Send Error Notification Email");
          throw new RuntimeException("Error exporting data", e);
       } finally {
-         System.out.println("Export finished in: " + (System.currentTimeMillis()-t0));
+         System.out.println("Export finished in: " + (System.currentTimeMillis() - t0));
       }
+   }
+
+   @SneakyThrows
+   private void writeSafely(Writer writer, String str) {
+      writer.write(str);
    }
 }
 
@@ -49,6 +56,7 @@ public class LoanPattern implements CommandLineRunner {
    }
 
    private final FileExporter fileExporter;
+
    public void run(String... args) throws Exception {
       fileExporter.exportFile();
 

@@ -1,15 +1,11 @@
 package victor.training.java.stream.order;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toMap;
-
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
+import java.util.*;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import victor.training.java.stream.order.dto.OrderDto;
 import victor.training.java.stream.order.entity.Customer;
@@ -18,23 +14,37 @@ import victor.training.java.stream.order.entity.OrderLine;
 import victor.training.java.stream.order.entity.Product;
 import victor.training.java.stream.order.entity.Order.PaymentMethod;
 
+import static java.util.stream.Collectors.*;
+
 public class TransformStreams {
 
+	interface Mea {
+		Date f();
+	}
 	/**
 	 * Transform all entities to DTOs.
 	 * Discussion:.. Make it cleanest!
 	 */
 	public List<OrderDto> p01_toDtos(List<Order> orders) {
-		
-		List<OrderDto> dtos = new ArrayList<>();
-		for (Order order : orders) {
-			OrderDto dto = new OrderDto();
-			dto.totalPrice = order.getTotalPrice();
-			dto.creationDate = order.getCreationDate();
-			dtos.add(dto);
-		}
+
+		// prin target typing, javac iti 'instantiaza' interfata ceruta in cod pe baza lambde/met ref tau
+		Mea s4= Date::new;
+		Supplier<Date> s= Date::new;
+		Function<Long,Date> s2= Date::new;
+
+		// asta nu compileaza pentru ca Javac nu stie la ce INTERFATA FUNCTIONALA sa atribuie expresia ta.
+//		var f2 = TransformStreams::toDto;
+		BiFunction<TransformStreams,Order, OrderDto> f = TransformStreams::toDto;
+		List<OrderDto> dtos = orders.stream().map(this::toDto).collect(toList());
 		return dtos;
 		
+	}
+
+	private OrderDto toDto(Order order) {
+		OrderDto dto = new OrderDto();
+		dto.totalPrice = order.getTotalPrice();
+		dto.creationDate = order.getCreationDate();
+		return dto;
 	}
 
 	/**

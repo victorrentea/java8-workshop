@@ -1,5 +1,6 @@
 package victor.training.java.advanced.model;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +13,7 @@ import static javax.persistence.EnumType.STRING;
 @Getter
 @Setter
 @Entity
-public class User {
+public class User{
    @Id
    private Long id;
    private String username;
