@@ -32,8 +32,7 @@ import java.util.function.Consumer;
 
 @Service
 class FileExporter {
-   @Autowired
-   private OrderRepo orderRepo;
+
    @Value("${export.folder.out}")
    private File folder;
 
@@ -41,6 +40,7 @@ class FileExporter {
    interface ExportFileWriter {
       void writeContent(Writer writer) throws IOException;
    }
+
    public void exportFile(String fileName, ExportFileWriter contentWriter) {
       File file = new File(folder, fileName);
       long t0 = System.currentTimeMillis();
@@ -57,6 +57,11 @@ class FileExporter {
          System.out.println("Export finished in: " + (System.currentTimeMillis() - t0));
       }
    }
+}
+@RequiredArgsConstructor
+@Service
+class OrderExportContentService {
+   private final OrderRepo orderRepo;
 
    public void writeContent(Writer writer) throws IOException {
       writer.write("OrderID;Date\n");
@@ -65,8 +70,11 @@ class FileExporter {
           .forEach(Unchecked.consumer(writer::write));
    }
 
-   @Autowired
-   private UserRepo userRepo;
+}
+@RequiredArgsConstructor
+@Service
+class UserExportContentService {
+   private final UserRepo userRepo;
 
    public void writeUserContent(Writer writer) throws IOException {
       writer.write("username;fullname\n");
@@ -74,8 +82,6 @@ class FileExporter {
           .map(user -> user.getUsername() + ";" + user.getFullName() + "\n")
           .forEach(Unchecked.consumer(writer::write));
    }
-
-
 }
 
 @RequiredArgsConstructor
@@ -86,11 +92,13 @@ public class LoanPattern implements CommandLineRunner {
    }
 
    private final FileExporter fileExporter;
+   private final OrderExportContentService orderExportContentService;
+   private final UserExportContentService userExportContentService;
 
    public void run(String... args) throws Exception {
-      fileExporter.exportFile("orders.csv", fileExporter::writeContent);
+      fileExporter.exportFile("orders.csv", orderExportContentService::writeContent);
 
-      fileExporter.exportFile("users.csv", fileExporter::writeUserContent);
+      fileExporter.exportFile("users.csv", userExportContentService::writeUserContent);
       // TODO implement export of users too
    }
 }
