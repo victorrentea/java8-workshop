@@ -2,7 +2,6 @@ package victor.training.java.advanced;
 
 import lombok.RequiredArgsConstructor;
 import org.jooq.lambda.Unchecked;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -14,7 +13,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.function.Consumer;
 //   @FunctionalInterface
 //   public interface ConsumerChecked<T> {
 //      void accept(T t) throws Exception;

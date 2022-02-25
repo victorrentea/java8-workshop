@@ -31,21 +31,14 @@ public class SearchStreams {
 	 * - what do you do when you don't find it ? null/throw/Optional ?
 	 */
 	public Order p2_getOrderById(List<Order> orders, long orderId) {
-		return orders.stream()
-				.filter(order -> order.getId() == orderId)
-				.findFirst()
-				.orElse(null);
-				// you do elseThrow if you want a custom exception.
-				// .orElseThrow(() -> new MyException("There is no Order in the provided list that matches the id provided: " + orderId));
-				// Better, keeps the reader focused:
-//				.orElseThrow(() -> new MyException(MYErrorCode.NO_ORDER, orderId));
+		return null; // TODO
 	}
 	
 	/**
 	 * @return true if customer has at least one order with status ACTIVE
 	 */
 	public boolean p3_hasActiveOrders(Customer customer) {
-		return true; 
+		return true; // TODO
 	}
 
 	/**
@@ -53,7 +46,7 @@ public class SearchStreams {
 	 * any OrderLine with isSpecialOffer()==true
 	 */
 	public boolean p4_canBeReturned(Order order) {
-		return true; // order.getOrderLines().stream() 
+		return true; // TODO
 	}
 	
 	// ---------- select the best ------------
@@ -64,7 +57,7 @@ public class SearchStreams {
 	 * - Challenge: return an Optional<creationDate>
 	 */
 	public Order p5_getMaxPriceOrder(Customer customer) {
-		return null; 
+		return null; // TODO
 	}
 	
 	/**

@@ -35,9 +35,7 @@ public class TransformStreams {
 		// asta nu compileaza pentru ca Javac nu stie la ce INTERFATA FUNCTIONALA sa atribuie expresia ta.
 //		var f2 = TransformStreams::toDto;
 		BiFunction<TransformStreams,Order, OrderDto> f = TransformStreams::toDto;
-		List<OrderDto> dtos = orders.stream().map(this::toDto).collect(toList());
-		return dtos;
-		
+		return orders.stream().map(this::toDto).collect(toList());
 	}
 
 	private OrderDto toDto(Order order) {
