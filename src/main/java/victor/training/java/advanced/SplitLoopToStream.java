@@ -5,16 +5,24 @@ import victor.training.java.advanced.model.User;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SplitLoopToStream {
 
    // see tests
    public void bossLevel(List<User> users) {
-      List<String> allUsernames = new ArrayList<>();
       int missingLanguageCount = 0;
       int totalTickets = 0;
+
+
+      List<String> allUsernames = users.stream().map(User::getUsername).collect(Collectors.toList());
+      //      List<String> allUsernames = new ArrayList<>();
+//      for (User user : users) {
+//         allUsernames.add(user.getUsername());
+//      }
+//      usual for vs forEach?
+
       for (User user : users) {
-         allUsernames.add(user.getUsername());
          if (user.getLanguage() == null) {
             missingLanguageCount++;
          }

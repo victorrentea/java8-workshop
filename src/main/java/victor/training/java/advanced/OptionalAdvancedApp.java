@@ -40,7 +40,7 @@ public class OptionalAdvancedApp implements CommandLineRunner {
       excessOpt(new DeliveryDto());
 
       // Abuse 3: **All** callers do .get / .orElseThrow on the Optional<> you return
-      // Product p = productRepo.findById(13L);
+       Product p = productRepo.findOneById(13L);
 
 
       System.out.println("When search finds: ");
@@ -52,13 +52,23 @@ public class OptionalAdvancedApp implements CommandLineRunner {
 
 
    public static void excessOpt(DeliveryDto dto) {
-      boolean duplicate = Optional.ofNullable(dto.recipientPerson)
-          .map(name -> existsByName(name))
-          .orElse(false);
+//      boolean duplicate = Optional.ofNullable(dto.recipientPerson)
+//          .map(name -> existsByName(name))
+//          .orElse(false);
+
+      boolean duplicate = dto.recipientPerson == null || existsByName(dto.recipientPerson);
       if (duplicate) {
          System.out.println("DUPLICATE person!");
       }
    }
+//   public static void excessOpt(DeliveryDto dto) {
+//      boolean duplicate = Optional.ofNullable(dto.recipientPerson)
+//          .map(name -> existsByName(name))
+//          .orElse(false);
+//      if (duplicate) {
+//         System.out.println("DUPLICATE person!");
+//      }
+//   }
 
    private static boolean existsByName(String name) {
       return true;
