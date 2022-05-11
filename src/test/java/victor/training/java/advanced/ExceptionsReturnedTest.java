@@ -43,6 +43,17 @@ public class ExceptionsReturnedTest {
           .isInstanceOf(IllegalArgumentException.class);
    }
    @Test
+   public void mostInvalidExCuMesaj() {
+      List<String> dates = List.of(
+          "2020-10-11",
+          "2020-nov-12", // INVALID
+          "2020-dec-01" // INVALID
+      );
+      assertThatThrownBy(() -> exceptionsReturned.parseDates(dates))
+           .isInstanceOf(IllegalArgumentException.class)
+           .hasMessageContainingAll("2020-nov-12", "2020-dec-01");
+   }
+   @Test
    public void noneValid() {
       List<String> dates = List.of("a");
 
