@@ -6,12 +6,12 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.function.Consumer;
 
+import io.vavr.collection.Stream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Service;
 import victor.training.java.advanced.repo.OrderRepo;
 
@@ -21,7 +21,10 @@ class FileExporter {
     private OrderRepo orderRepo;
     @Value("${export.folder.out}")
     private File folder;
-
+    @FunctionalInterface
+    public interface ConsumeruMeuCareArunca<T> {
+        void accept(T t) throws Exception;
+    }
     public void exportFile() {
         File file = new File(folder, "orders.csv");
         long t0 = System.currentTimeMillis();
@@ -29,9 +32,12 @@ class FileExporter {
             System.out.println("Starting export to: " + file.getAbsolutePath());
 
             writer.write("OrderID;Date\n"); // header
+            ConsumeruMeuCareArunca<String> ceameu = orderString -> writer.write(orderString);
+
+            Consumer<String> consumer = imbraca(ceameu);
             orderRepo.findByActiveTrue()
                     .map(o -> o.getId() + ";" + o.getCreationDate() + "\n")
-                    .forEach(orderString -> tryWrite(writer, orderString));
+                    .forEach(consumer);
 
             System.out.println("File export completed: " + file.getAbsolutePath());
         } catch (Exception e) {
@@ -42,15 +48,16 @@ class FileExporter {
         }
     }
 
-    private void tryWrite(Writer writer, String orderString) { // ai creat-o pentru ca
-        // CHECKED exceptions ('95) intr-o lambda (2012) -
-        // o fct pusa in codul  tau pt ca java e batran.
-        try {
-            writer.write(orderString);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public static <T> Consumer<T> imbraca(ConsumeruMeuCareArunca<T> originala) {
+        return s -> {
+            try { // mai tarziu
+                originala.accept(s);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        };
     }
+
 }
 
 @RequiredArgsConstructor
