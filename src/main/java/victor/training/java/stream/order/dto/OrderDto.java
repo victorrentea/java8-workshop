@@ -15,4 +15,8 @@ public class OrderDto {
         totalPrice = order.getTotalPrice();
         creationDate = order.getCreationDate();
     }
+
+    public OrderDto() {
+
+    }
 }

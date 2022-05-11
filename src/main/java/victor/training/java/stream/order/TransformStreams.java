@@ -1,13 +1,12 @@
 package victor.training.java.stream.order;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
+import java.util.*;
+import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import victor.training.java.stream.order.dto.OrderDto;
 import victor.training.java.stream.order.entity.Customer;
@@ -26,9 +25,25 @@ public class TransformStreams {
      */
     public List<OrderDto> p01_toDtos(List<Order> orders) {
 
+        BiFunction<TransformStreams, Order,OrderDto> surpriza = TransformStreams::toDto;  // daca referi o metoda de instanta din numele clasei, primul param al fct trebuise sa fie instanta pe care chemi acea metoda
+        Function<Order,OrderDto> nu = this::toDto;
+
+        String s = "wow";
+        Supplier<Integer> x = s::length; // f()
+
+//        new Date(123L)
+        Function<Long, Date> f1 = Date::new;
+        Supplier<Date> f2 = Date::new;
+
         Function<Order, OrderDto> f = OrderDto::new;
         return orders.stream().map(f).collect(toList());
+    }
 
+    public OrderDto toDto(Order order) {
+        OrderDto dto = new OrderDto();
+        dto.totalPrice = order.getTotalPrice();
+        dto.creationDate = order.getCreationDate();
+        return dto;
     }
 
     /**
@@ -72,23 +87,26 @@ public class TransformStreams {
      */
     public Map<Product, Long> p06_getProductCount(Customer customer) {
 
-        List<OrderLine> allLines = customer.getOrders().stream()
+        return customer.getOrders().stream()
                 .flatMap(order -> order.getOrderLines().stream())
-                .collect(toList());
-
+                .collect(groupingBy(OrderLine::getProduct, summingLong(OrderLine::getCount)));
 //		 return allLines.stream().collect(groupingBy(OrderLine::getProduct, reducing(0L, line -> (Long) (long) line.getCount(),
 //				 (acc, valNoua) -> acc + valNoua)));
-		return allLines.stream().collect(groupingBy(OrderLine::getProduct, summingLong(OrderLine::getCount)));
-
-
     }
+    // filtrezi cat mai agresiv datele in baza (nu aduci 100.000 de obiecte Java sa le filtrezi, ci pui un WHERE  care sa reduca la 100)
+    // e ok sa aduci cateva sute in java sa le filtrezi/procesezi daca ai LOGICA GREA de biz de implementat
 
     /**
      * All the unique products bought by the customer,
      * sorted by Product.name.
      */
     public List<Product> p07_getAllOrderedProducts(Customer customer) {
-        return null;
+        return customer.getOrders().stream()
+                .flatMap(o -> o.getOrderLines().stream())
+                .map(OrderLine::getProduct)
+                .distinct()
+                .sorted(Comparator.comparing(Product::getName))
+                .collect(toList());
     }
 
 
@@ -99,7 +117,9 @@ public class TransformStreams {
      * Hint: Reuse the previous function.
      */
     public String p08_getProductsJoined(Customer customer) {
-        return null;
+        return p07_getAllOrderedProducts(customer).stream()
+                .map(Product::getName)
+                .collect(joining(","));
     }
 
     /**
@@ -107,6 +127,11 @@ public class TransformStreams {
      */
     public Long p09_getApproximateTotalOrdersPrice(Customer customer) {
         // TODO +, longValue(), reduce()
-        return null;
+        return customer.getOrders().stream()
+                .map(Order::getTotalPrice)
+                //                .mapToLong(BigDecimal::longValue)
+                //                .sum();
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .longValue();
     }
 }
