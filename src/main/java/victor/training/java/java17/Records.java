@@ -18,6 +18,8 @@ record ProductCount(String productName, int count) {}
 
 public class Records {
 
+   private Integer product2Count;
+
    public Map<Long, List<ProductCount>> extremeFP() {
       Long customerId = 1L;
       Integer product1Count = 2;
