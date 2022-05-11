@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.function.Consumer;
 
-import io.vavr.collection.Stream;
 import lombok.RequiredArgsConstructor;
 import org.jooq.lambda.Unchecked;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +14,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.stereotype.Service;
 import victor.training.java.advanced.repo.OrderRepo;
+import victor.training.java.advanced.repo.UserRepo;
 
 @Service
 class FileExporter {
@@ -26,17 +26,15 @@ class FileExporter {
     public interface ConsumeruMeuCareArunca<T> {
         void accept(T t) throws Exception;
     }
-    public void exportFile() {
-        File file = new File(folder, "orders.csv");
+
+ // infrastructura pura
+    public void exportFile(String fileName, Consumer<Writer> contentWriter) {
+        File file = new File(folder, fileName);
         long t0 = System.currentTimeMillis();
         try (Writer writer = new FileWriter(file)) {
             System.out.println("Starting export to: " + file.getAbsolutePath());
 
-            writer.write("OrderID;Date\n"); // header
-
-            orderRepo.findByActiveTrue()
-                    .map(o -> o.getId() + ";" + o.getCreationDate() + "\n")
-                    .forEach(Unchecked.consumer(writer::write));
+            contentWriter.accept(writer);
 
             System.out.println("File export completed: " + file.getAbsolutePath());
         } catch (Exception e) {
@@ -46,32 +44,62 @@ class FileExporter {
             System.out.println("Export finished in: " + (System.currentTimeMillis() - t0));
         }
     }
+}
+//------si .. la un nivel de abstractie superior. adica logica mai putin "tehnica"
 
-    public static <T> Consumer<T> imbraca(ConsumeruMeuCareArunca<T> originala) {
-        return s -> {
-            try { // mai tarziu
-                originala.accept(s);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        };
+@Service
+@RequiredArgsConstructor
+class OrderContentWriter {
+    private final OrderRepo orderRepo;
+
+    public void writeOrders(Writer writer) throws IOException {
+        writer.write("OrderID;Date\n"); // header
+
+        orderRepo.findByActiveTrue()
+                .map(o -> o.getId() + ";" + o.getCreationDate() + "\n")
+                .forEach(Unchecked.consumer(writer::write));
     }
+}
+@Service
+class UserContentWriter {
+    @Autowired
+    private UserRepo userRepo;
 
+    public void writeUsers(Writer writer) throws IOException {
+        writer.write("username;fullname\n"); // header
+
+        userRepo.findAll().stream()
+                .map(u -> u.getUsername() + ";" + u.getFullName() + "\n")
+                .forEach(Unchecked.consumer(writer::write));
+    }
 }
 
 @RequiredArgsConstructor
 //@SpringBootApplication // enable on demand.
 public class LoanPattern implements CommandLineRunner {
     private final FileExporter fileExporter;
+private final OrderContentWriter orderContentWriter;
+private final UserContentWriter userContentWriter;
 
     public static void main(String[] args) {
         SpringApplication.run(LoanPattern.class, args);
     }
 
     public void run(String... args) throws Exception {
-        fileExporter.exportFile();
+        fileExporter.exportFile("orders.csv", Unchecked.consumer(orderContentWriter::writeOrders));
+
+        fileExporter.exportFile("users.csv", Unchecked.consumer(userContentWriter::writeUsers));
 
         // TODO implement export of users too
     }
 }
 
+//    public static <T> Consumer<T> imbraca(ConsumeruMeuCareArunca<T> originala) {
+//        return s -> {
+//            try { // mai tarziu
+//                originala.accept(s);
+//            } catch (Exception e) {
+//                throw new RuntimeException(e);
+//            }
+//        };
+//    }
