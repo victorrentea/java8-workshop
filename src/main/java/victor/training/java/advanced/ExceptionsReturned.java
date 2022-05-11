@@ -6,7 +6,7 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-public class Exceptions {
+public class ExceptionsReturned {
 
    // ** Requirements **
    // Some dates might have invalid format
