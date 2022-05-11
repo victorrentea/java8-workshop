@@ -94,7 +94,9 @@ public class TransformStreamsTest {
 		Product table = new Product("Table");
 		
 		Order order1 = new Order(
-				new OrderLine(chair, 3));
+				new OrderLine(chair, 2),
+				new OrderLine(chair, 1)
+		);
 		Order order2 = new Order(
 				new OrderLine(table, 1),
 				new OrderLine(chair, 1));

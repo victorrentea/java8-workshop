@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.MethodOrderer.MethodName;
 import org.junit.jupiter.api.Test;
@@ -71,17 +72,20 @@ public class SearchStreamsTest {
 	
 	@Test
 	public void p5_getMaxPriceOrder() {
+
 		LocalDate yesterday = now().minusDays(1);
 		Order order1 = new Order().setTotalPrice(BigDecimal.ONE).setCreationDate(now());
 		Order order2 = new Order().setTotalPrice(BigDecimal.TEN).setCreationDate(yesterday);
-		assertEquals(order2, service.p5_getMaxPriceOrder(new Customer(order1, order2)));
+		Optional<Order> opt = service.p5_getMaxPriceOrder(new Customer(order1, order2));
+		assertEquals(order2, opt.get());
 		// assertEquals(yesterday, service.p5_getMaxPriceOrder(new Customer(order1, order2)).get());
 	}
 	
 	@Test
 	public void p5_getMaxPriceOrder_whenNoOrders_returnsNothing() {
-		assertNull(service.p5_getMaxPriceOrder(new Customer()));
-		// assertFalse(service.p5_getMaxPriceOrder(new Customer()).isPresent());
+		var magarie = service.p5_getMaxPriceOrder(new Customer());
+//		assertNull(magarie);
+		 assertFalse(magarie.isPresent());
 	}
 	
 	@Test
