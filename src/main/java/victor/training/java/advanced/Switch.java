@@ -27,8 +27,7 @@ enum MovieType {
       public int computePrice(int days) {
          return 5;
       }
-   },
-   BABACI;
+   };
    public abstract int computePrice(int days);
 }
 
@@ -39,16 +38,8 @@ public class Switch {
 
    // @see tests
    public static int computePrice(MovieType type, int days) {
-      switch (type) {
-         case REGULAR:
-            return days + 1;
-         case NEW_RELEASE:
-            return days * 2;
-         case CHILDREN:
-            return 5;
-         default:
-            throw new IllegalStateException("Unexpected value: " + type);
-      }
+      return type.computePrice(days);
+
    }
 //   public static int computePrice(MovieType type, int days) {
 //      switch (type) {
