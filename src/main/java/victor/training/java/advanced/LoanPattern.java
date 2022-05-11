@@ -32,12 +32,10 @@ class FileExporter {
             System.out.println("Starting export to: " + file.getAbsolutePath());
 
             writer.write("OrderID;Date\n"); // header
-            ConsumeruMeuCareArunca<String> ceameu = orderString -> writer.write(orderString);
 
-            Consumer<String> consumer = imbraca(ceameu);
             orderRepo.findByActiveTrue()
                     .map(o -> o.getId() + ";" + o.getCreationDate() + "\n")
-                    .forEach(consumer);
+                    .forEach(imbraca(writer::write));
 
             System.out.println("File export completed: " + file.getAbsolutePath());
         } catch (Exception e) {
