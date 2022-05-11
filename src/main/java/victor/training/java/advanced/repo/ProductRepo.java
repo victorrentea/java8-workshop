@@ -11,7 +11,7 @@ public interface ProductRepo extends CustomJpaRepository<Product, Long> {
    List<Product> findByHiddenTrue();
 
    Product findByNameContaining(String namePart);
-   List<Long> getHiddenProductIds();
+//   List<Long> getHiddenProductIds();
 
    Stream<Product> findAllByDeletedFalse();
 

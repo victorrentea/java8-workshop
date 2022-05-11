@@ -12,6 +12,8 @@ import victor.training.java.advanced.model.Product;
 import victor.training.java.advanced.repo.ProductRepo;
 import victor.training.java.advanced.repo.custom.CustomJpaRepositoryFactoryBean;
 
+import javax.persistence.EntityManager;
+import java.sql.ResultSet;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -23,17 +25,23 @@ public class OptionalAdvancedApp implements CommandLineRunner {
    }
 
    private final ProductRepo productRepo;
+   private final EntityManager entityManager;
 
-   @Transactional
+   @Transactional // => 2GB in RAM
    public void run(String... args) throws Exception {
       productRepo.save(new Product("Tree"));
       // ## --- Streaming queries ---
-      productRepo.findAllByDeletedFalse() // imagine 1M products
-          .forEach(System.out::println);
+
+      productRepo.findAllByDeletedFalse()
+              .peek(e -> entityManager.detach(e)) // leak fara asta !
+              // imagine 1M products
+             .forEach(System.out::println);
       // Also see JdbcTemplate#queryForStream
 
       // ## --- Optional Abuse? ---
       // Abuse 1: Optional<> as method argument => SRP violation
+      mare(1,2,Optional.of("pret"));
+      cuPret("pret");
       // TODO @see victor.training.java.advanced.Optionals
 
       // Abuse 2: Optional created and terminated in the same method.
@@ -50,11 +58,28 @@ public class OptionalAdvancedApp implements CommandLineRunner {
 
    }
 
+   private void mare(int id, int i1, Optional<String> pret) {
+      System.out.println(id);
+      System.out.println(i1);
+   }
+   private void cuPret(String p) {
+         System.out.println("LOgica cu pret " + p);
+   }
+
 
    public static void excessOpt(DeliveryDto dto) {
-      boolean duplicate = Optional.ofNullable(dto.recipientPerson)
-          .map(name -> existsByName(name))
-          .orElse(false);
+      // deschid optional in fct si il termin tot in fct mea
+
+//      boolean duplicate = Optional.ofNullable(dto.recipientPerson)
+//          .map(name -> existsByName(name))
+//          .orElse(false);
+
+      boolean duplicate = false;
+      if (dto.recipientPerson != null) {
+         duplicate = existsByName(dto.recipientPerson);
+      }
+
+
       if (duplicate) {
          System.out.println("DUPLICATE person!");
       }

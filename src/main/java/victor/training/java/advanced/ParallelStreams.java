@@ -12,20 +12,23 @@ import static victor.training.java.advanced.tricks.ConcurrencyUtil.sleepq;
 
 @Slf4j
 public class ParallelStreams {
+   static int acc;
    public static void main(String[] args) {
-//      Enemy.parallelRequest();
+      Enemy.parallelRequest();
 
       long t0 = System.currentTimeMillis();
 
       List<Integer> list = IntStream.range(1,100).boxed().collect(toList());
 
-      List<Integer> result = list.stream()
+      List<Integer> result = list.parallelStream() // poti sa saturezi complet cele N procesoare DACA ....
           .filter(i -> {
              log.debug("Filter " + i);
              return i % 2 == 0;
           })
           .map(i -> {
-             log.debug("Map " + i);
+             log.debug("Map " + i); // de fapt e un call de network. SELECT/ REST/ WSDL
+//             restTemplaetget
+             acc++;
              sleepq(100); // do some 'paralellizable' I/O work (DB, REST, SOAP)
              return i * 2;
           })

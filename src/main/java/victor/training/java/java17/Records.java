@@ -1,5 +1,7 @@
 package victor.training.java.java17;
 
+import lombok.Data;
+import lombok.Value;
 import org.jooq.lambda.tuple.Tuple;
 import org.jooq.lambda.tuple.Tuple2;
 import org.junit.jupiter.api.Test;
@@ -12,28 +14,31 @@ import java.util.stream.IntStream;
 import static java.util.stream.Collectors.joining;
 import static org.assertj.core.api.Assertions.assertThat;
 
+record ProductCount(String productName, int count) {}
+
 public class Records {
 
-   public Map<Long, List<Tuple2<String, Integer>>> extremeFP() {
+   public Map<Long, List<ProductCount>> extremeFP() {
       Long customerId = 1L;
       Integer product1Count = 2;
       Integer product2Count = 4;
       return Map.of(customerId, List.of(
-          Tuple.tuple("Table", product1Count),
-          Tuple.tuple("Chair", product2Count)
+          new ProductCount("Table", product1Count),
+          new ProductCount("Chair", product2Count)
       ));
    }
-   
+
+
    @Test
    void lackOfAbstractions() {
-      Map<Long, List<Tuple2<String, Integer>>> map = extremeFP();
+      Map<Long, List<ProductCount>> map = extremeFP();
       // Joke: try "var" above :)
 
-      for (Long cid : map.keySet()) {
-         String pl = map.get(cid).stream()
-             .map(t -> t.v2 + " of " + t.v1)
+      for (Long customerId : map.keySet()) {
+         String productList = map.get(customerId).stream()
+             .map(t -> t.count() + " of " + t.productName())
              .collect(joining(", "));
-         System.out.println("cid=" + cid + " got " + pl);
+         System.out.println("cid=" + customerId + " got " + productList);
       }
    }
 

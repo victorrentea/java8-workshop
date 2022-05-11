@@ -6,7 +6,10 @@ import java.util.function.Function;
 public class Currying {
    // please skip me !
    public static void main(String[] args) {
-      Function<Integer, Integer> add1 = partialApply(Integer::sum, 1);
+
+      BiFunction<Integer, Integer, Integer> doi = (a, b) -> Integer.sum(a, b);
+
+      Function<Integer, Integer> add1 = partialApply(doi, 1);
       System.out.println(add1.apply(2));
 
       Function<Integer, Integer> max2 = partialApply(Integer::max, 2);

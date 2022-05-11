@@ -24,7 +24,7 @@ public class StreamWreck {
       new StreamWreck().getFrequentOrderedProducts(Collections.emptyList());
    }
    public List<Product> getFrequentOrderedProducts(List<Order> orders) {
-      Set<Long> hiddenProductIds = new HashSet<>(productRepo.getHiddenProductIds());
+      Set<Long> hiddenProductIds = new HashSet<>(/*productRepo.getHiddenProductIds()*/ );
       Map<Product, Integer> recentBoughtProducts = countRecentProducts(orders);
       List<Product> frequentRecentProducts = recentBoughtProducts.entrySet().stream()
               .filter(e -> e.getValue() >= 10)
