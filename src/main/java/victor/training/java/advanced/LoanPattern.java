@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 
 import io.vavr.collection.Stream;
 import lombok.RequiredArgsConstructor;
+import org.jooq.lambda.Unchecked;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -35,7 +36,7 @@ class FileExporter {
 
             orderRepo.findByActiveTrue()
                     .map(o -> o.getId() + ";" + o.getCreationDate() + "\n")
-                    .forEach(imbraca(writer::write));
+                    .forEach(Unchecked.consumer(writer::write));
 
             System.out.println("File export completed: " + file.getAbsolutePath());
         } catch (Exception e) {
