@@ -25,6 +25,9 @@ public class StreamWreck {
               .filter(e -> e.getValue() >= 10)
               .map(Entry::getKey)
               .collect(toList());
+
+      // CR: if  many frequen
+
       return frequentRecentProducts.stream()
 //				.filter(p -> !p.isDeleted())
               .filter(not(Product::isDeleted))
