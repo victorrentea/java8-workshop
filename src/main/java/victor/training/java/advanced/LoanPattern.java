@@ -28,13 +28,18 @@ class FileExporter {
     }
 
  // infrastructura pura
-    public void exportFile(String fileName, Consumer<Writer> contentWriter) {
+
+    @FunctionalInterface
+    interface ExportFileWriter {
+        void writeContent(Writer writer) throws IOException;
+    }
+    public void exportFile(String fileName, ExportFileWriter contentWriter) {
         File file = new File(folder, fileName);
         long t0 = System.currentTimeMillis();
         try (Writer writer = new FileWriter(file)) {
             System.out.println("Starting export to: " + file.getAbsolutePath());
 
-            contentWriter.accept(writer);
+            contentWriter.writeContent(writer);
 
             System.out.println("File export completed: " + file.getAbsolutePath());
         } catch (Exception e) {
@@ -86,10 +91,12 @@ private final UserContentWriter userContentWriter;
     }
 
     public void run(String... args) throws Exception {
-        fileExporter.exportFile("orders.csv", Unchecked.consumer(orderContentWriter::writeOrders));
+        fileExporter.exportFile("orders.csv", orderContentWriter::writeOrders);
 
-        fileExporter.exportFile("users.csv", Unchecked.consumer(userContentWriter::writeUsers));
+        fileExporter.exportFile("users.csv", userContentWriter::writeUsers);
 
+
+//        fileExporter.exportFile("aa", );
         // TODO implement export of users too
     }
 }
