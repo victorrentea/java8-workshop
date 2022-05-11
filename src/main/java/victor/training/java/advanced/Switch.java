@@ -1,34 +1,25 @@
 package victor.training.java.advanced;
 
 
+import org.assertj.core.util.TriFunction;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.function.BiFunction;
+import java.util.function.Function;
+
 enum MovieType {
-   REGULAR{
-      @Override
-      public int computePrice(int days) {
-         // cod cod cod
-         // cod cod cod
-         // cod cod cod
-         // cod cod cod
-         // cod cod cod
-         return days +1;
-      }
-   },
-   NEW_RELEASE {
-      @Override
-      public int computePrice(int days) {
-         return days * 2;
-      }
-   },
-   CHILDREN {
-      @Override
-      public int computePrice(int days) {
-         return 5;
-      }
-   };
-   public abstract int computePrice(int days);
+   REGULAR(Switch::computeRegularPrice),
+   NEW_RELEASE(Switch::computeNewReleasePrice),
+   CHILDREN(Switch::computeChildrenPrice),
+   BABACI(null)
+//   BABACI((t,days) ->days  + 5)
+   ;
+   public final BiFunction<Switch, Integer,Integer> priceFunction;
+
+   MovieType(BiFunction<Switch, Integer,Integer> priceFunction) {
+      this.priceFunction = priceFunction;
+   }
 }
 
 @Service
@@ -36,22 +27,29 @@ public class Switch {
    @Value("${children.price}")
    private int childrenPrice = 5; // pretend Spring is ON
 
-   // @see tests
    public static int computePrice(MovieType type, int days) {
-      return type.computePrice(days);
-
+      return switch (type) {
+         case REGULAR -> days + 1;
+         case NEW_RELEASE -> days * 2;
+         case CHILDREN -> 5;
+         case BABACI -> -1;
+      };
+      // opinions?
    }
-//   public static int computePrice(MovieType type, int days) {
-//      switch (type) {
-//         case REGULAR:
-//            return days + 1;
-//         case NEW_RELEASE:
-//            return days * 2;
-//         case CHILDREN:
-//            return 5;
-//      }
-//      return 0; // opinions?
-//   }
+   // @see tests
+   //   public int computePrice(MovieType type, int days) {
+   //      return type.priceFunction.apply(this,days); // mod geek de a evita sa uiti sa definesti behavior PER ENUM VALUE
+   //   }
+   //
+   public int computeRegularPrice(int days) {
+      return days + 1;
+   }
+   public int computeNewReleasePrice(int days) {
+      return days * 2;
+   }
+   public int computeChildrenPrice(int days) {
+      return childrenPrice;
+   }
 
    public void auditDelayReturn(MovieType movieType, int delayDays) {
       switch (movieType) {
