@@ -28,19 +28,32 @@ public class Switch {
    private int childrenPrice = 5; // pretend Spring is ON
 
    public static int computePrice(MovieType type, int days) {
-      return switch (type) {
-         case REGULAR -> days + 1;
-         case NEW_RELEASE -> days * 2;
-         case CHILDREN -> 5;
-         case BABACI -> -1;
-      };
+      switch (type) {
+         case REGULAR:
+            return days + 1;
+         case NEW_RELEASE:
+            return days * 2;
+         case CHILDREN:
+            return 5;
+         case BABACI:
+            return -1;
+         default:
+            throw new ExMea();
+      }
+      //java17 :)
+//      return switch (type) {
+//         case REGULAR -> days + 1;
+//         case NEW_RELEASE -> days * 2;
+//         case CHILDREN -> 5;
+//         case BABACI -> -1;
+//      };
       // opinions?
    }
    // @see tests
-   //   public int computePrice(MovieType type, int days) {
-   //      return type.priceFunction.apply(this,days); // mod geek de a evita sa uiti sa definesti behavior PER ENUM VALUE
-   //   }
-   //
+//      public int computePrice(MovieType type, int days) {
+//         return type.priceFunction.apply(this,days); // mod geek de a evita sa uiti sa definesti behavior PER ENUM VALUE
+//      }
+
    public int computeRegularPrice(int days) {
       return days + 1;
    }

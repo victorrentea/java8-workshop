@@ -7,11 +7,28 @@ import org.springframework.boot.test.system.CapturedOutput;
 import org.springframework.boot.test.system.OutputCaptureExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.fail;
 import static victor.training.java.advanced.MovieType.*;
 
 class SwitchTest {
    Switch target = new Switch();
 
+   @Test
+   void test() {
+      for (MovieType value : values()) {
+         try {
+            Switch.computePrice(value, 1);
+         } catch (Exception e) {
+            if (e instanceof ExMea) {
+               fail(" Nu ai acoperit " + value);
+            } else {
+               // nimic e ok
+            }
+         }
+      }
+   }
+   
+   
    @Nested
    class ComputePrice {
       @Test
