@@ -1,11 +1,15 @@
 package victor.training.java.advanced;
 
+import io.vavr.control.Try;
+import org.aspectj.runtime.CFlow;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
@@ -19,23 +23,24 @@ public class ExceptionsReturned {
    /* @see tests */
    public List<LocalDate> parseDates(List<String> dateStrList) {
       DateTimeFormatter pattern = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-      List<String> errorDates = new ArrayList<>();
-      List<LocalDate> dates = dateStrList.stream()
-          .map(text -> {
-             try {
-                return LocalDate.parse(text, pattern);
-             } catch(DateTimeParseException e) {
-                errorDates.add(text);
-                return null;
-             }
-          })
-           .filter(Objects::nonNull)
-          .collect(toList());
+      List<Try<LocalDate>> tries = dateStrList.stream()
+              .map(text ->
+                      Try.of(() -> LocalDate.parse(text, pattern))
+              )
+              .collect(toList());
 
-      if (dates.size() > dateStrList.size()/ 2) {
-      return dates;
+      CompletableFuture<String> failed =
+              CompletableFuture.completedFuture("a")
+//              CompletableFuture.failedFuture(new IllegalArgumentException(""))
+              ;
 
-      } else throw new IllegalArgumentException(errorDates.stream().collect(Collectors.joining(",")));
+      double successRate = tries.stream().mapToDouble(t -> t.isSuccess() ? 1 : 0).average().orElse(1);
+      if (successRate > 0.5) {
+         return tries.stream().filter(Try::isSuccess).map(Try::get).collect(toList());
+      } else {
+         String message = tries.stream().filter(Try::isFailure).map(Try::getCause).map(Throwable::getMessage).collect(Collectors.joining(","));
+         throw new IllegalArgumentException(message);
+      }
 
    }
 }

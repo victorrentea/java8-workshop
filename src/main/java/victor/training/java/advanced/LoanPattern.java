@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.nio.file.Files;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import io.vavr.control.Either;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +45,11 @@ class FileExporter {
       long t0 = System.currentTimeMillis();
       try (Writer writer = new FileWriter(file)) {
          System.out.println("Starting export to: " + file.getAbsolutePath());
+
+//         try (Stream<String> lines = Files.lines(file.toPath())) {
+//            lines.forEach(s -> {
+//            });
+//         }
 
          contentWriter.writeContent(writer);
 //         writeContent(writer);

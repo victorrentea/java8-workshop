@@ -5,10 +5,26 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 enum MovieType {
-   REGULAR,
-   NEW_RELEASE,
-   CHILDREN,
-
+   REGULAR{
+      @Override
+      public int computePrice(int days) {
+         return days + 1;
+      }
+   },
+   NEW_RELEASE {
+      @Override
+      public int computePrice(int days) {
+         return days * 2;
+      }
+   },
+   CHILDREN {
+      @Override
+      public int computePrice(int days) {
+         return 5;
+      }
+   },
+//ELDERS
+   ;public abstract int computePrice(int days);
 }
 
 @Service
@@ -18,15 +34,19 @@ public class Switch {
 
    // @see tests
    public static int computePrice(MovieType type, int days) {
-      switch (type) {
-         case REGULAR:
-            return days + 1;
-         case NEW_RELEASE:
-            return days * 2;
-         case CHILDREN:
-            return 5;
-      }
-      return 0; // opinions?
+      return type.computePrice(days);
+//      switch (type) {
+//         case REGULAR:
+//            return days + 1;
+//         case NEW_RELEASE:
+//            return days * 2;
+//         case CHILDREN:
+//            return 5;
+//
+//         default:
+//            throw new IllegalStateException("Unexpected value: " + type);
+//      }
+//      return 0; // opinions?
    }
 
    public void auditDelayReturn(MovieType movieType, int delayDays) {
