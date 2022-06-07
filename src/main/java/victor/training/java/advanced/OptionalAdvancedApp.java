@@ -32,6 +32,10 @@ public class OptionalAdvancedApp implements CommandLineRunner {
           .forEach(System.out::println);
       // Also see JdbcTemplate#queryForStream
 
+
+
+
+
       // ## --- Optional Abuse? ---
       // Abuse 1: Optional<> as method argument => SRP violation
       // TODO @see victor.training.java.advanced.Optionals
