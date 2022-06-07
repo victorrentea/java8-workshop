@@ -2,9 +2,11 @@ package victor.training.java.advanced;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Writer;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -27,9 +29,9 @@ class FileExporter {
          System.out.println("Starting export to: " + file.getAbsolutePath());
 
          writer.write("OrderID;Date\n");
-//			orderRepo.findByActiveTrue()
-//				.map(o -> o.getId() + ";" + o.getCreationDate() + "\n")
-//				.forEach(writer::write);
+         orderRepo.findByActiveTrue()
+				.map(o -> o.getId() + ";" + o.getCreationDate() + "\n")
+				.forEach(str -> writeSafely(writer, str));
 
          System.out.println("File export completed: " + file.getAbsolutePath());
       } catch (Exception e) {
@@ -39,10 +41,19 @@ class FileExporter {
          System.out.println("Export finished in: " + (System.currentTimeMillis()-t0));
       }
    }
+
+   @SneakyThrows
+   private void writeSafely(Writer writer, String str) {
+//      try {
+         writer.write(str);
+//      } catch (IOException e) {
+//         throw new RuntimeException(e);
+//      }
+   }
 }
 
 @RequiredArgsConstructor
-//@SpringBootApplication // enable on demand.
+@SpringBootApplication // enable on demand.
 public class LoanPattern implements CommandLineRunner {
    public static void main(String[] args) {
       SpringApplication.run(LoanPattern.class, args);
