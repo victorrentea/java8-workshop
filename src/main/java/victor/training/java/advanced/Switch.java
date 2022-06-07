@@ -29,16 +29,11 @@ public class Switch {
    // @see tests
    public int computePrice(MovieType type, int days) {
       return type.priceAlgo.apply(this, days);
-//      switch (type) {
-//         case REGULAR:
-//            return regularPrice(days);
-//         case NEW_RELEASE:
-//            return newReleasePrice(days);
-//         case CHILDREN:
-//            return childrenPrice(days);
-//         default:
-//            throw new IllegalStateException("Unexpected value: " + type);
-//      }
+//      return switch (type) {
+//         case REGULAR -> regularPrice(days);
+//         case NEW_RELEASE -> newReleasePrice(days);
+//         case CHILDREN -> childrenPrice(days);
+//      };
    }
 
    public int childrenPrice(int days) {

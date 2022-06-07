@@ -13,13 +13,13 @@ import static victor.training.java.advanced.tricks.ConcurrencyUtil.sleepq;
 @Slf4j
 public class ParallelStreams {
    public static void main(String[] args) {
-//      Enemy.parallelRequest();
+      Enemy.parallelRequest();
 
       long t0 = System.currentTimeMillis();
 
       List<Integer> list = IntStream.range(1,100).boxed().collect(toList());
 
-      List<Integer> result = list.stream()
+      List<Integer> result = list.parallelStream()
           .filter(i -> {
              log.debug("Filter " + i);
              return i % 2 == 0;
