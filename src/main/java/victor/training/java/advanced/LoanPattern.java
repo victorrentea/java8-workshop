@@ -4,24 +4,36 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.function.Consumer;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.jooq.lambda.Unchecked;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import victor.training.java.advanced.repo.OrderRepo;
 
+import javax.persistence.EntityManager;
+
+@FunctionalInterface
+ interface MyThrowingConsumer<T> {
+   void accept(T t) throws Exception;
+}
 @Service
 class FileExporter {
    @Autowired
    private OrderRepo orderRepo;
    @Value("${export.folder.out}")
    private File folder;
+   @Autowired
+   private EntityManager entityManager;
 
+   @Transactional
    public void exportFile() {
       File file = new File(folder, "orders.csv");
       long t0 = System.currentTimeMillis();
@@ -30,8 +42,9 @@ class FileExporter {
 
          writer.write("OrderID;Date\n");
          orderRepo.findByActiveTrue()
+                 .peek(entityManager::detach)
 				.map(o -> o.getId() + ";" + o.getCreationDate() + "\n")
-				.forEach(str -> writeSafely(writer, str));
+				.forEach(Unchecked.consumer(writer::write));
 
          System.out.println("File export completed: " + file.getAbsolutePath());
       } catch (Exception e) {
@@ -42,14 +55,16 @@ class FileExporter {
       }
    }
 
-   @SneakyThrows
-   private void writeSafely(Writer writer, String str) {
-//      try {
-         writer.write(str);
-//      } catch (IOException e) {
-//         throw new RuntimeException(e);
-//      }
+   public static <T> Consumer<T> convert(MyThrowingConsumer<T> target) {
+      return s -> {
+         try {
+            target.accept(s);
+         } catch (Exception e) {
+            throw new RuntimeException(e);
+         }
+      };
    }
+
 }
 
 @RequiredArgsConstructor

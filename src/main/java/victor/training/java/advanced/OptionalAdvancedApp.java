@@ -45,13 +45,13 @@ public class OptionalAdvancedApp implements CommandLineRunner {
 
       // Abuse 3: **All** callers do .get / .orElseThrow on the Optional<> you return
 //       Product p = productRepo.findById(13L).orElseThrow();
-       Product p = productRepo.findOneById(13L);
-
-
-      System.out.println("When search finds: ");
-      System.out.println(productRepo.findByNameContaining("re"));
-      System.out.println("When search DOESN'T find, repo returns:");
-      System.out.println(productRepo.findByNameContaining("rx"));
+//       Product p = productRepo.findOneById(13L);
+//
+//
+//      System.out.println("When search finds: ");
+//      System.out.println(productRepo.findByNameContaining("re"));
+//      System.out.println("When search DOESN'T find, repo returns:");
+//      System.out.println(productRepo.findByNameContaining("rx"));
 
    }
 
