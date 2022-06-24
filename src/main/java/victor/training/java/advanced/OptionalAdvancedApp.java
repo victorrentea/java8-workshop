@@ -1,6 +1,7 @@
 package victor.training.java.advanced;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,6 +13,7 @@ import victor.training.java.advanced.model.Product;
 import victor.training.java.advanced.repo.ProductRepo;
 import victor.training.java.advanced.repo.custom.CustomJpaRepositoryFactoryBean;
 
+import javax.persistence.EntityManager;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -23,13 +25,16 @@ public class OptionalAdvancedApp implements CommandLineRunner {
    }
 
    private final ProductRepo productRepo;
+   @Autowired
+   private EntityManager entityManager;
 
    @Transactional
    public void run(String... args) throws Exception {
       productRepo.save(new Product("Tree"));
       // ## --- Streaming queries ---
       productRepo.findAllByDeletedFalse() // imagine 1M products
-          .forEach(System.out::println);
+            .peek(entityManager::detach) // OTHERWISE : MEMORY LEAK
+            .forEach(System.out::println);
       // Also see JdbcTemplate#queryForStream
 
       // ## --- Optional Abuse? ---
