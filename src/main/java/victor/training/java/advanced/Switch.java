@@ -39,7 +39,10 @@ enum MovieType {
    REGULAR(PriceService::computeRegularPrice),
    NEW_RELEASE(PriceService::computeNewReleasePrice),
    CHILDREN(PriceService::computeChildrenPrice),
-   ELDERS(PriceService::computeEldersPrice);
+   ELDERS(PriceService::computeEldersPrice)
+   ,
+   ROMANCE(null)
+   ;
    public final BiFunction<PriceService, Integer, Integer> priceAlgo;
 
    MovieType(BiFunction<PriceService, Integer, Integer> priceAlgo) {
@@ -53,20 +56,15 @@ public class Switch {
    private int childrenPrice = 5; // pretend Spring is ON
 
    // @see tests
-//   public static int computePrice(MovieType type, int days) {
-//      return type.priceAlgo.apply(days);
-//      //      switch (type) {
-//      //         case REGULAR:
-//      //            return days + 1;
-//      //         case NEW_RELEASE:
-//      //            return days * 2;
-//      //         case CHILDREN:
-//      //            return 5;
-//      //
-//      //         default:
-//      //            throw new IllegalStateException("Unexpected value: " + type);
-//      //      }
-//   }
+   public static int computePrice(MovieType type, int days) {
+      return switch (type) {
+         case REGULAR -> days + 1;
+         case NEW_RELEASE -> days * 2;
+         case CHILDREN -> 5;
+         case ELDERS -> days /2;
+         case ROMANCE -> days + 3;
+      };
+   }
 
    public void auditDelayReturn(MovieType movieType, int delayDays) {
       switch (movieType) {
