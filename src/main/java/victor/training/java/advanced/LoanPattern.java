@@ -2,16 +2,23 @@ package victor.training.java.advanced;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Writer;
+import java.util.function.Consumer;
 
 import lombok.RequiredArgsConstructor;
+import org.jooq.lambda.Unchecked;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Service;
 import victor.training.java.advanced.repo.OrderRepo;
+
+@FunctionalInterface
+ interface ThrowingConsumer<T> {
+   void accept(T t) throws IOException;
+}
 
 @Service
 class FileExporter {
@@ -26,10 +33,11 @@ class FileExporter {
       try (Writer writer = new FileWriter(file)) {
          System.out.println("Starting export to: " + file.getAbsolutePath());
 
-         writer.write("OrderID;Date\n");
-//			orderRepo.findByActiveTrue()
-//				.map(o -> o.getId() + ";" + o.getCreationDate() + "\n")
-//				.forEach(writer::write);
+         writer.write("OrderID;Date\n"); // header
+
+         orderRepo.findByActiveTrue()
+				.map(o -> o.getId() + ";" + o.getCreationDate() + "\n")
+				.forEach(Unchecked.consumer(writer::write));
 
          System.out.println("File export completed: " + file.getAbsolutePath());
       } catch (Exception e) {
@@ -39,6 +47,17 @@ class FileExporter {
          System.out.println("Export finished in: " + (System.currentTimeMillis()-t0));
       }
    }
+
+   public static <T> Consumer<T> convert(ThrowingConsumer<T> f) {
+      return s->{
+         try {
+            f.accept(s);
+         } catch (IOException e) {
+            throw new RuntimeException(e);
+         }
+      };
+   }
+
 }
 
 @RequiredArgsConstructor
