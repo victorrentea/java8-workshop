@@ -2,7 +2,9 @@ package victor.training.java.advanced;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Writer;
+import java.util.function.Consumer;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +38,14 @@ class FileExporter {
          orderRepo.findByActiveTrue()
 //              .peek(entity -> em.detach(entity)) // avoid mem leak by telling hib to remove that @Entity from the PersistenceContext
              .map(o -> o.getId() + ";" + o.getCreationDate() + "\n")
-             .forEach(writer::write);
+             .forEach(str -> {
+                // groaznic
+                try {
+                   writer.write(str);
+                } catch (IOException e) {
+                   throw new RuntimeException(e);
+                }
+             });
 
          System.out.println("File export completed: " + file.getAbsolutePath());
       } catch (Exception e) {
