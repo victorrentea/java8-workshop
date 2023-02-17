@@ -7,6 +7,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class YatzyTest {
 
+
     @Test
     void chance_scores_sum_of_all_dice() {
         int expected = 15;

@@ -11,7 +11,11 @@ import java.util.List;
 
 public class Order {
 
-	public enum Status {
+	public boolean isActive() {
+		return status == Status.ACTIVE;
+	}
+
+  public enum Status {
 		DRAFT, ACTIVE, INACTIVE
 	}
 	

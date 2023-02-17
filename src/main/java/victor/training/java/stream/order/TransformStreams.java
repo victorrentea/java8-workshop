@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.function.*;
+import java.util.stream.Collectors;
 
 import victor.training.java.stream.order.dto.OrderDto;
 import victor.training.java.stream.order.entity.Customer;
@@ -25,16 +27,38 @@ public class TransformStreams {
 	 * use .map
 	 */
 	public List<OrderDto> p01_toDtos(List<Order> orders) {
+
+		// REFERIREA unei metoda de instana printr-un mod STATIC TransformStreams::
+		// nu merge pentru ca fct referita asa primeste ca prim parametru INSTANTA pe care ruleaza
+//		Function<Order, OrderDto> nu= TransformStreams::toDto;
+
+		BiFunction<TransformStreams, Order, OrderDto> da= TransformStreams::toDto;
+		OrderDto r = da.apply(this, new Order());
+
+		Function<Order, OrderDto> ff= this::toDto;
+		OrderDto r2 = ff.apply(new Order());
+
+		String firstName = "a";
+		Supplier<Integer> s = firstName::length; // f():int
+
+		Predicate<Order> o = Order::isActive;
+
+		Consumer<Object> c = System.out::println;
+		orders.forEach(System.out::println);
+
+		Function<Order, OrderDto> omg = OrderDto::new;
+		return orders.stream()
+//						.map(this::toDto)
+						.map(omg)
+						.collect(Collectors.toList());
 		
-		List<OrderDto> dtos = new ArrayList<>();
-		for (Order order : orders) {
-			OrderDto dto = new OrderDto();
-			dto.totalPrice = order.getTotalPrice();
-			dto.creationDate = order.getCreationDate();
-			dtos.add(dto);
-		}
-		return dtos;
-		
+	}
+
+	private OrderDto toDto(Order order) {
+		OrderDto dto = new OrderDto();
+		dto.totalPrice = order.getTotalPrice();
+		dto.creationDate = order.getCreationDate();
+		return dto;
 	}
 
 	/**
