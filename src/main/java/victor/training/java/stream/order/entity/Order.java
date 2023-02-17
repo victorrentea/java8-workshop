@@ -63,8 +63,9 @@ public class Order {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public Order setId(Long id) {
 		this.id = id;
+		return this;
 	}
 
 	public Status getStatus() {

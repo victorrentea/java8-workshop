@@ -90,19 +90,20 @@ public class TransformStreamsTest {
 	
 	@Test
 	public void p06_getProductCount() {
-		Product chair = new Product("Chair");
-		Product table = new Product("Table");
+		Product hartieIgienica = new Product("HIgienica");
+		Product chocolax = new Product("Chocolax");
 		
 		Order order1 = new Order(
-				new OrderLine(chair, 3));
+				new OrderLine(chocolax, 1),
+				new OrderLine(hartieIgienica, 1));
+
 		Order order2 = new Order(
-				new OrderLine(table, 1),
-				new OrderLine(chair, 1));
-		
+				new OrderLine(hartieIgienica, 3));
+
 		Map<Product, Long> actual = service.p06_getProductCount(new Customer(order1, order2));
 		Map<Product, Long> expected = new HashMap<Product, Long>(){{
-			put(chair, 4L);
-			put(table, 1L);
+			put(hartieIgienica, 4L);
+			put(chocolax, 1L);
 		}};
 		assertEquals(expected, actual);
 	}
