@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.joining;
@@ -39,7 +41,8 @@ public class Records {
 
    @Test
    void immutables() {
-      List<Integer> numbers = IntStream.range(1, 10).boxed().toList();
+//      List<Integer> numbers = IntStream.range(1, 10).boxed().collect(Collectors.toList()); // intoarce mutable list
+      List<Integer> numbers = IntStream.range(1, 10).boxed().toList(); // java 17 immutable list
       Immutable obj = new Immutable("John", new Other("halo"), numbers);
 
       String original = obj.toString();
@@ -54,6 +57,7 @@ public class Records {
 
    private static void unknownFierceCode(Immutable obj) {
       // TODO what can go wrong here ?
+      obj.list().add(1);
    }
 }
 
@@ -63,53 +67,31 @@ public class Records {
 // inheritance:
 
 
-class Immutable {
-   private final String name;
-   private final Other other;
-   private final List<Integer> list;
+// un fel de @Value din Lombok
+record Immutable(String name, Other other, List<Integer> list) {
+   // campuri finale private
+   // constructor cu toti param
+   // getter
+   // hash/equals pe toate campurile
+   // toString
 
-   public Immutable(String name, Other other, List<Integer> list) {
-      this.name = name;
-      this.other = other;
-      this.list = list;
-   }
+//   @Override
+//   public Optional<String> name() {
+//      return name;
+//   }
 
-   public String getName() {
-      return name;
-   }
 
-   public Other getOther() {
-      return other;
-   }
+   // hands-on practic:
+   // JSON Jackson stie sa marshall/unmarshall -> Dto = record
+   // Hibernate = NU va stii vreodata
+   // Mongo,/nosql = STIU
 
-   public List<Integer> getList() {
-      return list;
-   }
-
-   @Override
-   public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
-      Immutable immutable = (Immutable) o;
-      return Objects.equals(name, immutable.name) && Objects.equals(other, immutable.other) && Objects.equals(list, immutable.list);
-   }
-
-   @Override
-   public int hashCode() {
-      return Objects.hash(name, other, list);
-   }
-
-   @Override
-   public String toString() {
-      return "Immutable{" +
-             "name='" + name + '\'' +
-             ", other=" + other +
-             ", list=" + list +
-             '}';
-   }
 }
 
-class Other {
+
+
+
+final class Other {
    private String data;
 
    public Other(String data) {

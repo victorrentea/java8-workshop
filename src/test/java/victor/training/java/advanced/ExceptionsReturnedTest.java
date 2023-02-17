@@ -10,7 +10,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class ExceptionsReturnedTest {
 
-   private final ExceptionsReturned exceptionsReturned = new ExceptionsReturned();
+//   private final ExceptionsReturned exceptionsReturned = new ExceptionsReturned();
+   private final ExceptionsReturnedCuOptionalStream exceptionsReturned = new ExceptionsReturnedCuOptionalStream();
 
    @Test
    public void allValid() {
