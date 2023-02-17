@@ -11,7 +11,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import victor.training.java.advanced.repo.OrderRepo;
+
+import javax.persistence.EntityManager;
 
 @Service
 class FileExporter {
@@ -19,7 +22,10 @@ class FileExporter {
    private OrderRepo orderRepo;
    @Value("${export.folder.out}")
    private File folder;
+   EntityManager em;
 
+   @Transactional // necesar pentru a-i spune lui spring sa aloce o connex JDBC pentru intreaga durata
+   // a acestei metode, pentru ca REsultSet sa poata fi traversat
    public void exportFile() {
       File file = new File(folder, "orders.csv");
       long t0 = System.currentTimeMillis();
@@ -27,9 +33,10 @@ class FileExporter {
          System.out.println("Starting export to: " + file.getAbsolutePath());
 
          writer.write("OrderID;Date\n");
-//			orderRepo.findByActiveTrue()
-//				.map(o -> o.getId() + ";" + o.getCreationDate() + "\n")
-//				.forEach(writer::write);
+         orderRepo.findByActiveTrue()
+//              .peek(entity -> em.detach(entity)) // avoid mem leak by telling hib to remove that @Entity from the PersistenceContext
+             .map(o -> o.getId() + ";" + o.getCreationDate() + "\n")
+             .forEach(writer::write);
 
          System.out.println("File export completed: " + file.getAbsolutePath());
       } catch (Exception e) {

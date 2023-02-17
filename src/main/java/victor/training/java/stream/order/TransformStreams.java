@@ -78,9 +78,17 @@ public class TransformStreams {
    * Note: Order.getCreationDate()
    */
   public SortedSet<LocalDate> p03_getOrderDatesAscending(Customer customer) {
-    return customer.getOrders().stream()
+//    return customer.getOrders().stream()
+//            .map(Order::getCreationDate)
+//            .collect(toCollection(TreeSet::new));
+
+    // GRESIT. NON-FP ca face side effects
+    TreeSet<LocalDate> set = new TreeSet<>();
+
+    customer.getOrders().stream()
             .map(Order::getCreationDate)
-            .collect(toCollection(TreeSet::new));
+            .forEach(e -> set.add(e)); // side effects
+     return set;
   }
 
 
@@ -129,6 +137,15 @@ public class TransformStreams {
   }
 
 
+  // TODO suma orderului platite cu cardul
+  public long method(Customer c) {
+    return c.getOrders().stream()
+            .filter(o -> o.getPaymentMethod() == PaymentMethod.CARD)
+            .mapToLong(o -> o.getTotalPrice().longValue())
+            .sum();
+  }
+
+
   /**
    * The names of all the products bought by Customer,
    * sorted and then concatenated by ",".
@@ -163,8 +180,17 @@ public class TransformStreams {
     Stream<Long> altceva;
 
     // Asa da: streamuri numerice
-    return customer.getOrders().stream()
-            .map(Order::getTotalPrice)
+
+
+    Stream<BigDecimal> streamInVariabila = customer.getOrders().stream()
+            .map(Order::getTotalPrice);
+
+    // PERICULOS SA TII UN STREAM INTR-O VARIABLA pentru ca cineva ar putea fi tentat sa-l foloeasca de 2 ori
+//    if (streamInVariabila.count() > 4) {
+//      System.out.println("URAA!!");
+//    }
+
+    return streamInVariabila
             .mapToLong(BigDecimal::longValue)
             .sum();
 
