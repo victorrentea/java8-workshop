@@ -45,15 +45,17 @@ public class Switch {
     //      return type.priceFunction.apply(this,days);
     // PROBLEMA switchului este ca atunci cand adaugi un tip nou de film, e posibil sa uiti sa adaugi case: necesar aici
      // java 17 ftw!!
-     int v = switch (type) { // javac vede ca switchu asta intoarce o valoare, el trebuie sa se asigure ca
+//     return type==null? 1: 0 ;
+
+     return switch (type) { // javac vede ca switchu asta intoarce o valoare, el trebuie sa se asigure ca
         // ai definit valoare pe toate bransele. dar javac vede si enumu cu 3 valori.
         // daca maine apare a 4a valoare in enum => javac va crapa compilarea !!=> heaven
         case REGULAR -> computeRegularPrice(days);
         case NEW_RELEASE -> computeNewReleasePrice(days);
         case CHILDREN -> computeChildrenPrice(days);
+        case ELDERS -> 1;
 //        default -> throw new IllegalStateException("Unexpected value: " + type); not recommended daca faci return switch(enum)
      };
-     return v;
   }
 
   public int computeRegularPrice(int days) {
